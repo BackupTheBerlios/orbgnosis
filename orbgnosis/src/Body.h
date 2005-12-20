@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.h,v 1.2 2005/12/20 19:19:44 trs137 Exp $
+ * $Id: Body.h,v 1.3 2005/12/20 22:46:58 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -45,14 +45,16 @@ class Body
                 Body (void);
         virtual ~Body (void);
 
-        double  kineticEnergy (void);   // kinetic energy of body
-        double  transMomentum (void);  // translational momentum
+                Body (const Body&);       // copy constructor
+
+        double  kineticEnergy (void);     // kinetic energy of body
+        double  transMomentum (void);     // translational momentum
 //        double  ang_momentum (void);    // rotational momentum
 
         void    move (Vector);
         void    accelerate (Vector);
 
-        Vector  findForce (void);       // sum of all forces on Body
+        Vector  findForce (void);         // sum of all forces on Body
 };
 
 #endif /* _BODY_H_ */

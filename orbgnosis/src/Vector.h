@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.2 2005/12/20 19:19:44 trs137 Exp $
+ * $Id: Vector.h,v 1.3 2005/12/20 22:46:58 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -34,10 +34,13 @@
 class Vector
 {
     public:
-                    Vector (void);
+                    Vector (void);          // no args - 0,0,0
+
                     Vector (double xin,
                             double yin,
                             double zin);
+
+                    Vector (const Vector&); // copy constructor
 
                     void setX (double);
                     void setY (double);
@@ -49,9 +52,9 @@ class Vector
                     double getY (void);
                     double getZ (void);
 
-                    double norm (void);
+                    double norm (void); // pythagorean theorem in 3D
 
-        virtual     ~Vector (void);
+        virtual     ~Vector (void);     // virtual desctructor
 
     private:
         double x, y, z;

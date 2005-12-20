@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.2 2005/12/20 19:19:44 trs137 Exp $
+ * $Id: Body.cpp,v 1.3 2005/12/20 22:46:58 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -41,6 +41,16 @@ Body::Body (void)
 Body::~Body (void)
 {
     //
+}
+
+Body::Body (const Body& copy)
+{
+    name = copy.name;  // this is wrong
+    mass = copy.mass;
+    position = new Vector();
+    position = copy.position;
+    velocity = new Vector();
+    velocity = copy.velocity;
 }
 
 double

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.2 2005/12/20 19:19:44 trs137 Exp $
+ * $Id: Vector.cpp,v 1.3 2005/12/20 22:46:58 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -46,6 +46,13 @@ Vector::Vector (double xin, double yin, double zin)
 Vector::~Vector (void)
 {
     //
+}
+
+Vector::Vector (const Vector& copy)
+{
+    x = copy.x;
+    y = copy.y;
+    z = copy.z;
 }
 
 void
