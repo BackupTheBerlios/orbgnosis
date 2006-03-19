@@ -1,5 +1,5 @@
-/*
- * Copyright 2006 Ted Stodgell. All rights reserved.
+/*-
+ * Copyright 2006 (c) Ted Stodgell. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.cpp,v 1.1 2006/03/19 02:44:10 trs137 Exp $
+ * $Id: Stumpff.cpp,v 1.2 2006/03/19 22:05:34 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
