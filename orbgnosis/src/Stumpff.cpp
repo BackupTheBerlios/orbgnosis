@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.cpp,v 1.2 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Stumpff.cpp,v 1.3 2006/03/20 03:52:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -39,7 +39,7 @@
 #include <iostream>
 using namespace std;
 
-double
+inline double
 stumpff_C0(double z)
 {
     if (0.0 == z) return 1.0;        // C0(0) = 1;
@@ -54,7 +54,7 @@ stumpff_C0(double z)
     }
 }
 
-double
+inline double
 stumpff_C1(double z)
 {
     if (0.0 == z) return 1.0;        // C1(0) = 1;
@@ -69,7 +69,7 @@ stumpff_C1(double z)
     }
 }
 
-double
+inline double
 stumpff_C2(double z)
 {
     if (0.0 == z) return 0.5;        // C2(0) = 1/2;
@@ -84,7 +84,7 @@ stumpff_C2(double z)
     }
 }
 
-double
+inline double
 stumpff_C3(double z)
 {
     if (0.0 == z) return (1.0/6.0);      // C3(0) = 1/6;

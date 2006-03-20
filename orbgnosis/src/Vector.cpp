@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.7 2006/03/20 02:21:56 trs137 Exp $
+ * $Id: Vector.cpp,v 1.8 2006/03/20 03:52:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -99,6 +99,12 @@ dot (const Vector &a, const Vector &b)
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
+double
+norm (const Vector&q)
+{
+    return sqrt (q.x*q.x + q.y*q.y + q.z*q.z);
+}
+
 ostream&
 operator << (ostream& s, Vector q)
 {
@@ -129,12 +135,6 @@ double
 Vector::getZ (void)
 {
     return z;
-}
-
-double
-Vector::norm (void)
-{
-    return ( sqrt (x*x + y*y + z*z) );
 }
 
 inline Vector

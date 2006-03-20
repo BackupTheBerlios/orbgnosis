@@ -23,58 +23,58 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.4 2006/03/20 02:21:56 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.5 2006/03/20 03:52:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
- *
- * This file contains the first four Stumpff functions C_k(z).
- * Note that z = alpha * chi^2.  
- *
- * Stumpff functions C_k(z) are defined generally by
- * C_k(z) = [1/k!] - [z / (k+2)!] + [z^2 / (k+4)!] + ...
  *
  */
 
 #include <math.h>
 #include "Vector.h"
+#include "Global.h"
+#include "Lambert.h"
 #include <iostream>
 using namespace std;
 
-/*
- * Inputs
- *          mu (double, gravitational parameter)
- *          R1 (Vector, start position)
- *          R2 (Vector, final position)
- *          t  (double, time of flight)
- */
+Lambert::Lambert(Vector r1in, Vector r2in, double tin)
+{
+    double tof = tin;     // time of flight
+    Vector r1 = r1in;     // initial vector
+    Vector r2 = r2in;     // final vector
+
+    double rr1 = norm(r1);
+    double rr2 = norm(r2);
+    Vector c12 = cross(r1,r2);
+    double theta = acos(dot(r1, r2)/rr1/rr2);
+    if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
+    double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
+}
+
+Lambert::~Lambert (void)
+{
+    // BE SURE TO FREE DYNAMIC STUFF
+}
 
 void
-lambert(double mu, Vector r1, Vector r2, double t)
+Lambert::psolve (void)
 {
-    double rr1 = r1.norm();
-    double rr2 = r2.norm();
+    //
+}
 
-    cout << "mu is " << mu << ".\n";
-    cout << "r1 is " << r1 << ".\n";
-    cout << "r2 is " << r2 << ".\n";
-    cout << "|r1| is " << rr1 << ".\n";
-    cout << "|r2| is " << rr2 << ".\n";
-    cout << "r1 cross r2 is " << cross(r1, r2) << ".\n";
-    cout << "r2 cross r1 is " << cross(r2, r1) << ".\n";
-    cout << "r1 dot r2 is " << dot(r1, r2) << ".\n";
-    cout << "r2 dot r1 is " << dot(r1, r2) << ".\n";
-
+void
+Lambert::rsolve (void)
+{
+    //
 }
 
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
-    double gravparam = 398600.4418;
     Vector p1(1.0, 2.0, 3.0);
     Vector p2(-5.5, -2.1, 0.0);
     double time = 10.0;
 
-    lambert(gravparam, p1, p2, time);
+    // lambert(p1, p2, time);
 
     return 0;
 }

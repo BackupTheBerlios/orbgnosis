@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2006/03/19 23:58:43 trs137 Exp $
+# $Id: Makefile,v 1.2 2006/03/20 03:52:22 trs137 Exp $
 #
 CC= /usr/local/bin/g++40
 LD= /usr/local/bin/g++40
@@ -13,7 +13,7 @@ TARGET = orbgnosis
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) -o $(TARGET) -lm
 
-%.o: %.cpp
+%.o: %.cpp Global.h
 	$(CC) $(CFLAGS) -c $<
 
 clean:
