@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.3 2006/03/20 18:43:33 trs137 Exp $
+ * $Id: Lambert.h,v 1.4 2006/03/20 20:01:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -43,8 +43,12 @@ class Lambert
                 Lambert (const Lambert&); // copy ctor
 
                 /* Universal Variable method */
-                void psolve(void);                  // solve prograde
-                void rsolve(void);                  // solve retrotrade
+                void prograde(void);     // set theta for prograde
+                void retrograde(void);   // set theta for etrotrade
+
+                void roughz(void);    // generate initial estimate of z
+                void finez(void);     // find z via Newton-Raphson
+
                 double y (double zin);
                 double F(double zin, double tin);
                 double dFdz(double zin);
@@ -61,6 +65,11 @@ class Lambert
         double theta;
         double A;
         double z;
+        double f;
+        double g;
+        double gdot;
+        Vector v1;
+        Vector v2;
 };
 
 #endif /* _LAMBERT_H_ */

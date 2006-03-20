@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.8 2006/03/20 03:52:22 trs137 Exp $
+ * $Id: Vector.h,v 1.9 2006/03/20 20:01:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -59,6 +59,9 @@ class Vector
                     double getX (void);
                     double getY (void);
                     double getZ (void);
+                    void setX(double);
+                    void setY(double);
+                    void setZ(double);
 
     private:
         double x, y, z;

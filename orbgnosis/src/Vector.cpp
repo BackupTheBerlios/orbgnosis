@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.8 2006/03/20 03:52:22 trs137 Exp $
+ * $Id: Vector.cpp,v 1.9 2006/03/20 20:01:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -135,6 +135,23 @@ double
 Vector::getZ (void)
 {
     return z;
+}
+
+void
+Vector::setX (double xin)
+{
+    x = xin;
+}
+
+void
+Vector::setY (double yin)
+{
+    y = yin;
+}
+void
+Vector::setZ (double zin)
+{
+    z = zin;
 }
 
 inline Vector

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.10 2006/03/20 18:43:33 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.11 2006/03/20 20:01:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -40,12 +40,23 @@ using namespace std;
 Lambert::Lambert(const Vector r1in, const Vector r2in, const double tin) :
     tof(tin), r1(r1in), r2(r2in) // Member initialization list.
 {
-    double rr1 = norm(r1);
-    double rr2 = norm(r2);
-    Vector c12 = cross(r1,r2);
-    double theta = acos(dot(r1, r2)/rr1/rr2);
-    if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
-    double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
+    // Magnitudes of vectors
+    rr1 = norm(r1);
+    rr2 = norm(r2);
+
+    c12 = cross(r1,r2);
+
+    // Swept angle
+    theta = acos(dot(r1, r2)/rr1/rr2);
+
+    // Initialize the remaining variables to zero for now.
+    A = z = f = g = gdot = 0.0;
+    v1.setX(0.0);
+    v1.setY(0.0);
+    v1.setZ(0.0);
+    v2.setX(0.0);
+    v2.setY(0.0);
+    v2.setZ(0.0);
 }
 
 Lambert::~Lambert (void)
@@ -54,15 +65,17 @@ Lambert::~Lambert (void)
 }
 
 void
-Lambert::psolve (void)
+Lambert::prograde (void)  // Prograde solution
 {
-    //
+    if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
+    double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
 }
 
 void
-Lambert::rsolve (void)
+Lambert::retrograde (void)  // Retrograde solution
 {
-    //
+    if ( 0 <= c12.getZ() ) theta = 2 * PI - theta;
+    double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
 }
 
 double
