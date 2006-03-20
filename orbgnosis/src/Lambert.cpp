@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.6 2006/03/20 04:10:17 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.7 2006/03/20 04:24:10 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -32,6 +32,7 @@
 #include <math.h>
 #include "Vector.h"
 #include "Global.h"
+#include "Stumpff.h"
 #include "Lambert.h"
 #include <iostream>
 using namespace std;
@@ -70,7 +71,7 @@ Lambert::rsolve (void)
 double
 Lambert::y (double zin)
 {
-    return 0.0;
+    return rr1 + rr2 + A * ( zin * stumpff_C3(zin) - 1)/sqrt(stumpff_C2(zin));
 }
 
 double
