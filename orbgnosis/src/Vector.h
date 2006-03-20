@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.5 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Vector.h,v 1.6 2006/03/20 01:55:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -40,27 +40,31 @@ class Vector
                             double yin,
                             double zin);
 
+        virtual     ~Vector (void);
+
                     Vector (const Vector&); // copy constructor
 
-                    void setX (double);
-                    void setY (double);
-                    void setZ (double);
+                    Vector& operator =  (Vector);
+                    Vector& operator += (Vector);
+                    Vector& operator -= (Vector);
 
-                    void add (Vector);
+                    double norm (void);
+                    void print (void);  // Print vector to stdout.
 
-                    void cross (Vector);
-                    double dot (Vector);
+        friend      Vector cross (const Vector&, const Vector&);
+        friend      double dot   (const Vector&, const Vector&);
 
                     double getX (void);
                     double getY (void);
                     double getZ (void);
 
-                    double norm (void); // pythagorean theorem in 3D
-
-        virtual     ~Vector (void);     // virtual desctructor
-
     private:
         double x, y, z;
 };
+
+Vector operator + (Vector);
+Vector operator - (Vector);
+Vector operator + (Vector, Vector);
+Vector operator - (Vector, Vector);
 
 #endif /* _VECTOR_H_ */

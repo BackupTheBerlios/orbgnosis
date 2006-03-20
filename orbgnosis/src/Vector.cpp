@@ -23,17 +23,19 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.5 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Vector.cpp,v 1.6 2006/03/20 01:55:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Vector.h"
 #include <math.h>
+#include <iostream>
+using namespace std;
 
 Vector::Vector (void)
 {
-    x = y = z = 0;
+    x = y = z = 0.0;
 }
 
 Vector::Vector (double xin, double yin, double zin)
@@ -55,46 +57,46 @@ Vector::Vector (const Vector& copy)
     z = copy.z;
 }
 
-void
-Vector::setX (double xin)
+Vector&
+Vector::operator = (Vector q)
 {
-    x = xin;
+    x = q.x;
+    y = q.y;
+    z = q.z;
+    return *this;
 }
 
-void
-Vector::setY (double yin)
+Vector&
+Vector::operator += (Vector q)
 {
-    y = yin;
-}
-void
-Vector::setZ (double zin)
-{
-    z = zin;
+    x += q.x;
+    y += q.y;
+    z += q.z;
+    return *this;
 }
 
-void
-Vector::add (Vector vin)
+Vector&
+Vector::operator -= (Vector q)
 {
-    x = x + vin.x;
-    y = y + vin.y;
-    z = z + vin.z;
+    x -= q.x;
+    y -= q.y;
+    z -= q.z;
+    return *this;
 }
 
-void
-Vector::cross (Vector vin)
+Vector
+cross (const Vector &a, const Vector &b)
 {
-    double nx = y * vin.z - vin.y * z;
-    double ny = z * vin.x - vin.z * x;
-    double nz = x * vin.y - vin.x * y;
-    x = nx;
-    y = ny;
-    z = nz;
+    const double nx = a.y * b.z - b.y * a.z;
+    const double ny = a.z * b.x - b.z * a.x;
+    const double nz = a.x * b.y - b.x * a.y;
+    return Vector(nx, ny, nz);
 }
 
 double
-Vector::dot (Vector vin)
+dot (const Vector &a, const Vector &b)
 {
-    return (x * vin.x) + (y * vin.y) + (z * vin.z);
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
 double
@@ -119,4 +121,34 @@ double
 Vector::norm (void)
 {
     return ( sqrt (x*x + y*y + z*z) );
+}
+
+void
+Vector::print (void)
+{
+    cout << "( " << x << ", " << y << ", " << z << " )";
+}
+
+inline Vector
+operator + (Vector q)
+{
+    return q;
+}
+
+inline Vector
+operator - (Vector q)
+{
+    return -q;
+}
+
+inline Vector
+operator + (Vector a, Vector b)
+{
+    return a += b;
+}
+
+inline Vector
+operator - (Vector a, Vector b)
+{
+    return a -= b;
 }
