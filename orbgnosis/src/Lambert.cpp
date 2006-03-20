@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.8 2006/03/20 04:49:12 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.9 2006/03/20 17:32:53 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -75,14 +75,16 @@ Lambert::y (double zin)
 }
 
 double
-Lambert::F (double zin, double tin)
+Lambert::F (double zin, double tin)   // For Newton-Raphson iteration
 {
     double my_y = y(zin);
-    return pow( my_y/stumpff_C2(zin), 1.5) * stumpff_C3(zin) + A * sqrt(my_y) - ROOTMU * tin;
+    return pow( my_y/stumpff_C2(zin), 1.5) * stumpff_C3(zin) 
+           + A * sqrt(my_y) 
+           - ROOTMU * tin;
 }
 
 double
-Lambert::dFdz (double zin)
+Lambert::dFdz (double zin)           // For Newton-Raphson iteration
 {
     if ( 0 == zin)
     {
