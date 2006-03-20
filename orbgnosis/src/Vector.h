@@ -23,13 +23,15 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.6 2006/03/20 01:55:22 trs137 Exp $
+ * $Id: Vector.h,v 1.7 2006/03/20 02:21:56 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
+#include <iostream>
+using namespace std;
 
 class Vector
 {
@@ -49,10 +51,11 @@ class Vector
                     Vector& operator -= (Vector);
 
                     double norm (void);
-                    void print (void);  // Print vector to stdout.
 
         friend      Vector cross (const Vector&, const Vector&);
         friend      double dot   (const Vector&, const Vector&);
+        friend      ostream& operator << (ostream&, Vector);
+        friend      istream& operator >> (istream&, Vector);
 
                     double getX (void);
                     double getY (void);

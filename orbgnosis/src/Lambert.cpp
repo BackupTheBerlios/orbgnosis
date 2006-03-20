@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.3 2006/03/20 01:55:21 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.4 2006/03/20 02:21:56 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -55,28 +55,15 @@ lambert(double mu, Vector r1, Vector r2, double t)
     double rr2 = r2.norm();
 
     cout << "mu is " << mu << ".\n";
-
-    cout << "r1 is ";
-    r1.print();
-    cout << ".\n";
-    
-    cout << "r2 is ";
-    r2.print();
-    cout << ".\n";
-
+    cout << "r1 is " << r1 << ".\n";
+    cout << "r2 is " << r2 << ".\n";
     cout << "|r1| is " << rr1 << ".\n";
     cout << "|r2| is " << rr2 << ".\n";
+    cout << "r1 cross r2 is " << cross(r1, r2) << ".\n";
+    cout << "r2 cross r1 is " << cross(r2, r1) << ".\n";
+    cout << "r1 dot r2 is " << dot(r1, r2) << ".\n";
+    cout << "r2 dot r1 is " << dot(r1, r2) << ".\n";
 
-    Vector c12;
-    Vector c21;
-
-    cout << "c12 is ";
-    c12.print();
-    cout << ".\n";
-
-    cout << "c21 is ";
-    c21.print();
-    cout << ".\n";
 }
 
 int
