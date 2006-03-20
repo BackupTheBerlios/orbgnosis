@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Global.h,v 1.2 2006/03/20 03:52:22 trs137 Exp $
+ * $Id: Global.h,v 1.3 2006/03/20 04:49:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -36,5 +36,6 @@
 #define E  2.71828182845905
 #define PI 3.14159265358979
 #define MU 398600.4418
+#define ROOTMU 631.3481
 
 #endif /* _GLOBAL_H_ */
