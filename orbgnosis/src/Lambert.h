@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.2 2006/03/20 04:10:17 trs137 Exp $
+ * $Id: Lambert.h,v 1.3 2006/03/20 18:43:33 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -34,25 +34,26 @@
 class Lambert 
 {
     public:
-                Lambert (Vector r1in, // ctor must be called this way!
-                         Vector r2in,
-                         double tin);
+                Lambert (const Vector r1in,
+                         const Vector r2in,
+                         const double tin);
 
                 virtual ~Lambert (void);
 
                 Lambert (const Lambert&); // copy ctor
 
-                void psolve(void);      // solve prograde
-                void rsolve(void);      // solve retrotrade
-
+                /* Universal Variable method */
+                void psolve(void);                  // solve prograde
+                void rsolve(void);                  // solve retrotrade
                 double y (double zin);
                 double F(double zin, double tin);
                 double dFdz(double zin);
+                /*****************************/
 
     private:
-        double tof;
-        Vector r1;
-        Vector r2;
+        const double tof;
+        const Vector r1;
+        const Vector r2;
 
         double rr1;
         double rr2;
