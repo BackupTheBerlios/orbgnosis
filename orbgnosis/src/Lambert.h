@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.1 2006/03/20 03:53:40 trs137 Exp $
+ * $Id: Lambert.h,v 1.2 2006/03/20 04:10:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -45,6 +45,10 @@ class Lambert
                 void psolve(void);      // solve prograde
                 void rsolve(void);      // solve retrotrade
 
+                double y (double zin);
+                double F(double zin, double tin);
+                double dFdz(double zin);
+
     private:
         double tof;
         Vector r1;
@@ -55,7 +59,7 @@ class Lambert
         Vector c12;
         double theta;
         double A;
+        double z;
 };
-
 
 #endif /* _LAMBERT_H_ */
