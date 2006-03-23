@@ -1,8 +1,8 @@
 #
-# $Id: Makefile,v 1.3 2006/03/20 04:24:10 trs137 Exp $
+# $Id: Makefile,v 1.4 2006/03/23 23:36:30 trs137 Exp $
 #
-CC= /usr/local/bin/g++40
-LD= /usr/local/bin/g++40
+CC= /usr/local/bin/g++41
+LD= /usr/local/bin/g++41
 RM= /bin/rm -f
 CFLAGS= -g -Wall -pedantic
 LDFLAGS= -Wall
