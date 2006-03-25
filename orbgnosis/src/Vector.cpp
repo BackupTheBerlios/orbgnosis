@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.9 2006/03/20 20:01:40 trs137 Exp $
+ * $Id: Vector.cpp,v 1.10 2006/03/25 21:52:34 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -36,6 +36,7 @@ using namespace std;
 Vector::Vector (void)
 {
     x = y = z = 0.0;
+    cout << "Vector ctor.\n";
 }
 
 Vector::Vector (double xin, double yin, double zin)
@@ -43,11 +44,13 @@ Vector::Vector (double xin, double yin, double zin)
     x = xin;
     y = yin;
     z = zin;
+    cout << "Vector ctor.\n";
 }
 
 Vector::~Vector (void)
 {
     //
+    cout << "Vector dtor.\n";
 }
 
 Vector::Vector (const Vector& copy)

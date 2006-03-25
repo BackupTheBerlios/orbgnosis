@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.4 2006/03/20 20:01:40 trs137 Exp $
+ * $Id: Lambert.h,v 1.5 2006/03/25 21:52:34 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -43,11 +43,9 @@ class Lambert
                 Lambert (const Lambert&); // copy ctor
 
                 /* Universal Variable method */
-                void prograde(void);     // set theta for prograde
-                void retrograde(void);   // set theta for etrotrade
+                void universal(void);
+                //void battin(void);
 
-                void roughz(void);    // generate initial estimate of z
-                void finez(void);     // find z via Newton-Raphson
 
                 double y (double zin);
                 double F(double zin, double tin);
