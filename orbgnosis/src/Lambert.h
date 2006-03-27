@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.5 2006/03/25 21:52:34 trs137 Exp $
+ * $Id: Lambert.h,v 1.6 2006/03/27 18:23:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -44,12 +44,13 @@ class Lambert
 
                 /* Universal Variable method */
                 void universal(void);
-                //void battin(void);
-
-
                 double y (double zin);
                 double F(double zin, double tin);
                 double dFdz(double zin);
+                /*****************************/
+
+                /* Battin's method */
+                // TODO
                 /*****************************/
 
     private:

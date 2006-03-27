@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.12 2006/03/25 21:52:34 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.13 2006/03/27 18:23:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -80,6 +80,7 @@ Lambert::universal (void)  // Prograde universal solution
     v2.setY(0.0);
     v2.setZ(0.0);
 
+    // PROGRADE
     if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
     double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
 }
