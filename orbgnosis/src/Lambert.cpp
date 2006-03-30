@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.15 2006/03/30 05:36:19 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.16 2006/03/30 05:55:11 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -119,13 +119,8 @@ Lambert::universal (void)  // Prograde universal solution
     g    = A * sqrt( y(z) / MU );  // Lagrange coeff.
     gdot = 1 - y(z) / rr2;
 
-    Vector temp = r2;
-    // temp -= f*r1;
-    v1 = 1 / g * temp;
-
-    temp = gdot * r2;
-    // temp -= r1;
-    v2 = 1 / g * temp;
+    v1 = 1 / g * (r1 - f*r2);
+    v2 = 1 / g * (gdot * r2 - r1);
 
     cout << "Solution: \n\n";
 
@@ -136,15 +131,19 @@ Lambert::universal (void)  // Prograde universal solution
 double
 Lambert::y (double zin)
 {
-    return rr1 + rr2 + A * ( zin * stumpff_C3(zin) - 1)/sqrt(stumpff_C2(zin));
+    double S = stump_S(zin);
+    double C = stump_C(zin);
+    return rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
 }
 
 double
 Lambert::F (double zin, double tin)   // For Newton-Raphson iteration
 {
-    double my_y = y(zin);
-    return pow( my_y/stumpff_C2(zin), 1.5) * stumpff_C3(zin) 
-           + A * sqrt(my_y) 
+    double yy = y(zin);
+    double S = stump_S(zin);
+    double C = stump_C(zin);
+    return pow((yy/C), 1.5) * S 
+           + A * sqrt(yy) 
            - ROOTMU * tin;
 }
 
@@ -153,19 +152,18 @@ Lambert::dFdz (double zin)           // For Newton-Raphson iteration
 {
     if ( 0 == zin)
     {
-        double my_y = y(0.0);
-        return sqrt(2) / 40* pow(my_y, 1.5) 
-               + A / 8 * (sqrt(my_y) 
-               + A * sqrt(1/2/my_y));
+        double yy = y(0.0);
+        return sqrt(2) / 40 * pow(yy, 1.5) 
+               + A / 8 * (sqrt(yy) 
+               + A * sqrt(1/2/yy));
     }else{
-        double my_y = y(zin);
-        double C = stumpff_C2(zin);
-        double S = stumpff_C3(zin);
-
-        return pow(y(z)/C,1.5) * (1/2/zin*(C - 3*S/2/C )
-               + 3*S*S/4/C)
-               + A/8*(3*S/C*sqrt(my_y)
-               + A*sqrt(C/my_y));
+        double yy = y(zin);
+        double C = stump_C(zin);
+        double S = stump_S(zin);
+        return pow((yy/C), 1.5) * (1/2/zin * (C - 3*S/2/C )
+               + 3*(S*S)/4/C)
+               + A/8*(3*S/C*sqrt(yy)
+               + A*sqrt(C/yy));
     }
 }
 
@@ -182,12 +180,8 @@ main(void) {
     cout << "r2(km) = " << p2 << "\n";
     cout << "Elapsed time (s) " << time << "\n\n";
 
-    cout << "r2 - r1 = " << p2-p1 << "\n";
-    cout << "r1 - r2 = " << p1-p2 << "\n";
-    cout << "r1 + r2 = " << p1+p2 << "\n";
-
     Lambert test(p1, p2, time);
-    // test.universal();
+    test.universal();
 
     return 0;
 }
