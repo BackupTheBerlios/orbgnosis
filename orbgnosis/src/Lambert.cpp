@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.13 2006/03/27 18:23:17 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.14 2006/03/30 03:45:46 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -80,9 +80,20 @@ Lambert::universal (void)  // Prograde universal solution
     v2.setY(0.0);
     v2.setZ(0.0);
 
-    // PROGRADE
+    // theta for prograde solution.
     if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
+
+    // theta for retrograde solutions.
+    // if ( 0 <= c12.getZ() ) theta = 2 * PI - theta;
+
     double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
+
+    // Find where F(z, tof) changes sign and use that value
+    // for an initial guess.
+
+    z = -100.0;
+    while (0 > F(z, tof)) z = z + 0.1;
+    cout << "Initial z guess is " << z << "\n";
 }
 
 double
@@ -120,7 +131,6 @@ Lambert::dFdz (double zin)           // For Newton-Raphson iteration
                + A*sqrt(C/my_y));
     }
 }
-
 
 int
 main(void) {
