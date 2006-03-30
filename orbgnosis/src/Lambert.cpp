@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.16 2006/03/30 05:55:11 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.17 2006/03/30 17:39:15 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -92,14 +92,15 @@ Lambert::universal (void)  // Prograde universal solution
     // theta for retrograde solutions.
     // if ( 0 <= c12.getZ() ) theta = 2 * PI - theta;
 
-    double A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
+    A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
 
     // Find where F(z, tof) changes sign and use that value
     // for an initial guess.
 
     z = -100.0;
     while (0 > F(z, tof)) z = z + 0.1;
-    // cout << "Initial z guess is " << z << "\n";
+
+     cout << "Initial z guess is " << z << "\n";
 
     // Newton-Raphson iteration
     i = 0;
@@ -133,7 +134,20 @@ Lambert::y (double zin)
 {
     double S = stump_S(zin);
     double C = stump_C(zin);
-    return rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
+    double poop = rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
+
+    cout << "-- inside function y \n";
+    cout << "-- z           = " << zin << "\n";
+    cout << "-- S(z)        = " << S << "\n";
+    cout << "-- C(z)        = " << C << "\n";
+    cout << "-- A           = " << A << "\n";
+    cout << "-- rr1         = " << rr1 << "\n"; 
+    cout << "-- rr2         = " << rr2 << "\n";
+    cout << "-- y(z)        = " << poop << "\n\n";
+
+
+    return poop;
+    // return rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
 }
 
 double
@@ -142,9 +156,23 @@ Lambert::F (double zin, double tin)   // For Newton-Raphson iteration
     double yy = y(zin);
     double S = stump_S(zin);
     double C = stump_C(zin);
-    return pow((yy/C), 1.5) * S 
-           + A * sqrt(yy) 
-           - ROOTMU * tin;
+    double poop = pow((yy/C), 1.5) * S
+                  + A * sqrt(yy)
+                  - ROOTMU * tin;
+
+/*
+    cout << "-- z           = " << zin << "\n";
+    cout << "-- S(z)        = " << S << "\n";
+    cout << "-- C(z)        = " << C << "\n";
+    cout << "-- t           = " << tin << "\n";
+    cout << "-- F(z,t)      = " << poop << "\n"; 
+*/
+
+    return poop;
+
+    // return pow((yy/C), 1.5) * S 
+    //        + A * sqrt(yy) 
+    //        - ROOTMU * tin;
 }
 
 double
