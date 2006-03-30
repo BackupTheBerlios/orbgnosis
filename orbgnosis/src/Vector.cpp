@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.11 2006/03/30 05:36:19 trs137 Exp $
+ * $Id: Vector.cpp,v 1.12 2006/03/30 20:28:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -73,7 +73,7 @@ Vector::operator = (Vector q)
  */
 
 Vector
-operator * (Vector q, double s)
+operator * (const Vector& q, const double& s)
 {
     return Vector (q.x * s,
                    q.y * s,
@@ -81,7 +81,7 @@ operator * (Vector q, double s)
 }
 
 Vector
-operator * (double s, Vector q)
+operator * (const double& s, const Vector& q)
 {
     return Vector (q.x * s,
                    q.y * s,
@@ -89,7 +89,7 @@ operator * (double s, Vector q)
 }
 
 Vector
-operator / (Vector q, double s)
+operator / (const Vector& q, const double& s)
 {
     return Vector (q.x / s,
                    q.y / s,
@@ -97,7 +97,7 @@ operator / (Vector q, double s)
 }
 
 Vector
-operator / (double s, Vector q)
+operator / (const double& s, const Vector& q)
 {
     return Vector (q.x / s,
                    q.y / s,
@@ -109,7 +109,7 @@ operator / (double s, Vector q)
  */
 
 Vector
-operator + (Vector a, Vector b)
+operator + (const Vector& a, const Vector& b)
 {
     return Vector (a.x + b.x,
                    a.y + b.y,
@@ -117,7 +117,7 @@ operator + (Vector a, Vector b)
 }
 
 Vector
-operator - (Vector a, Vector b)
+operator - (const Vector& a, const Vector& b)
 {
     return Vector (a.x - b.x,
                    a.y - b.y,
@@ -125,7 +125,7 @@ operator - (Vector a, Vector b)
 }
 
 Vector
-cross (const Vector &a, const Vector &b)
+cross (const Vector& a, const Vector& b)
 {
     const double nx = a.y * b.z - b.y * a.z;
     const double ny = a.z * b.x - b.z * a.x;
@@ -134,13 +134,13 @@ cross (const Vector &a, const Vector &b)
 }
 
 double
-dot (const Vector &a, const Vector &b)
+dot (const Vector& a, const Vector& b)
 {
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
 double
-norm (const Vector&q)
+norm (const Vector& q)
 {
     return sqrt (q.x*q.x + q.y*q.y + q.z*q.z);
 }

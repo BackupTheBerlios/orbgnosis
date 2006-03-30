@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.10 2006/03/30 05:36:19 trs137 Exp $
+ * $Id: Vector.h,v 1.11 2006/03/30 20:28:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -50,14 +50,14 @@ class Vector
 
         // multiplcation and division with scalar doubles
         // order can be either way.
-        friend      Vector  operator * (Vector, double);
-        friend      Vector  operator * (double, Vector);
-        friend      Vector  operator / (Vector, double);
-        friend      Vector  operator / (double, Vector);
+        friend      Vector  operator * (const Vector&, const double&);
+        friend      Vector  operator * (const double&, const Vector&);
+        friend      Vector  operator / (const Vector&, const double&);
+        friend      Vector  operator / (const double&, const Vector&);
 
         // Vector æddition and subtraction
-        friend      Vector  operator + (Vector, Vector);
-        friend      Vector  operator - (Vector, Vector);
+        friend      Vector  operator + (const Vector&, const Vector&);
+        friend      Vector  operator - (const Vector&, const Vector&);
 
         // cross- and dot-products 
         friend      Vector cross (const Vector&, const Vector&);
