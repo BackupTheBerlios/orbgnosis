@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.6 2006/03/27 18:23:17 trs137 Exp $
+ * $Id: Lambert.h,v 1.7 2006/03/30 05:36:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -58,17 +58,22 @@ class Lambert
         const Vector r1;
         const Vector r2;
 
+        double tol;             // error tolerance
+        int maxloops;           // iteration limit
+        int i;                  // loop index
+
         double rr1;
         double rr2;
         Vector c12;
-        double theta;
+        double theta;           // angle between r1 and r2;
         double A;
         double z;
-        double f;
-        double g;
-        double gdot;
-        Vector v1;
-        Vector v2;
+        double f;               // Lagrange coefficient
+        double g;               // Lagrange coefficient
+        double gdot;            // dg/dt
+        double ratio;           // F / dFdz
+        Vector v1;              // initial velocity of xfer arc
+        Vector v2;              // final velocity of xfer arc
 };
 
 #endif /* _LAMBERT_H_ */

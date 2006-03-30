@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.10 2006/03/25 21:52:34 trs137 Exp $
+ * $Id: Vector.cpp,v 1.11 2006/03/30 05:36:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -35,8 +35,7 @@ using namespace std;
 
 Vector::Vector (void)
 {
-    x = y = z = 0.0;
-    cout << "Vector ctor.\n";
+    x = y = z = 0.0;    // Vectors with no args default to zero.
 }
 
 Vector::Vector (double xin, double yin, double zin)
@@ -44,13 +43,11 @@ Vector::Vector (double xin, double yin, double zin)
     x = xin;
     y = yin;
     z = zin;
-    cout << "Vector ctor.\n";
 }
 
 Vector::~Vector (void)
 {
-    //
-    cout << "Vector dtor.\n";
+    //cout << "Vector dtor.\n";
 }
 
 Vector::Vector (const Vector& copy)
@@ -69,22 +66,62 @@ Vector::operator = (Vector q)
     return *this;
 }
 
-Vector&
-Vector::operator += (Vector q)
+/*
+ * Multiplication and division are overloaded to work
+ * regardless of the order of the arguments:
+ * (Vector, double) or (double, Vector).
+ */
+
+Vector
+operator * (Vector q, double s)
 {
-    x += q.x;
-    y += q.y;
-    z += q.z;
-    return *this;
+    return Vector (q.x * s,
+                   q.y * s,
+                   q.z * s);
 }
 
-Vector&
-Vector::operator -= (Vector q)
+Vector
+operator * (double s, Vector q)
 {
-    x -= q.x;
-    y -= q.y;
-    z -= q.z;
-    return *this;
+    return Vector (q.x * s,
+                   q.y * s,
+                   q.z * s);
+}
+
+Vector
+operator / (Vector q, double s)
+{
+    return Vector (q.x / s,
+                   q.y / s,
+                   q.z / s);
+}
+
+Vector
+operator / (double s, Vector q)
+{
+    return Vector (q.x / s,
+                   q.y / s,
+                   q.z / s);
+}
+
+/*
+ * Vector addition and subtraction requires two vectors.
+ */
+
+Vector
+operator + (Vector a, Vector b)
+{
+    return Vector (a.x + b.x,
+                   a.y + b.y,
+                   a.z + b.z);
+}
+
+Vector
+operator - (Vector a, Vector b)
+{
+    return Vector (a.x - b.x,
+                   a.y - b.y,
+                   a.z - b.z);
 }
 
 Vector
@@ -155,28 +192,4 @@ void
 Vector::setZ (double zin)
 {
     z = zin;
-}
-
-inline Vector
-operator + (Vector q)
-{
-    return q;
-}
-
-inline Vector
-operator - (Vector q)
-{
-    return -q;
-}
-
-inline Vector
-operator + (Vector a, Vector b)
-{
-    return a += b;
-}
-
-inline Vector
-operator - (Vector a, Vector b)
-{
-    return a -= b;
 }

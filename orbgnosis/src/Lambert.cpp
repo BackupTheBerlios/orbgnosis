@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.14 2006/03/30 03:45:46 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.15 2006/03/30 05:36:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -62,6 +62,10 @@ void
 Lambert::universal (void)  // Prograde universal solution
 {
     cout << "Beginning universal variable solution.\n";
+
+    tol = 0.00000001; // error tolerance
+    maxloops = 5000;  // iteration limit
+
     // Magnitudes of vectors
     rr1 = norm(r1);
     rr2 = norm(r2);
@@ -70,6 +74,8 @@ Lambert::universal (void)  // Prograde universal solution
 
     // Swept angle
     theta = acos(dot(r1, r2)/rr1/rr2);
+
+    ratio = 1.0;
 
     // Initialize the remaining variables to zero for now.
     A = z = f = g = gdot = 0.0;
@@ -93,7 +99,38 @@ Lambert::universal (void)  // Prograde universal solution
 
     z = -100.0;
     while (0 > F(z, tof)) z = z + 0.1;
-    cout << "Initial z guess is " << z << "\n";
+    // cout << "Initial z guess is " << z << "\n";
+
+    // Newton-Raphson iteration
+    i = 0;
+    while ( (fabs(ratio) > tol) && (i < maxloops))
+    {
+        i = i + 1;
+        ratio = F(z, tof) / dFdz(z);
+        z = z - ratio;
+    }
+
+    if (i >= maxloops)
+        cout << "** WARNING ** max number of iterations exceeded.\n";
+
+    // cout << "After " << i << " iterations z = " << z << "\n";
+
+    f    = 1 - y(z) / rr1;         // Lagrange coeff.
+    g    = A * sqrt( y(z) / MU );  // Lagrange coeff.
+    gdot = 1 - y(z) / rr2;
+
+    Vector temp = r2;
+    // temp -= f*r1;
+    v1 = 1 / g * temp;
+
+    temp = gdot * r2;
+    // temp -= r1;
+    v2 = 1 / g * temp;
+
+    cout << "Solution: \n\n";
+
+    cout << "v1 (km/s) = " << v1 << "\n";
+    cout << "v2 (km/s) = " << v2 << "\n";
 }
 
 double
@@ -135,12 +172,22 @@ Lambert::dFdz (double zin)           // For Newton-Raphson iteration
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
-    Vector p1(1.0, 2.0, 3.0);
-    Vector p2(-5.5, -2.1, 0.0);
-    double time = 10.0;
+    Vector p1(5000.0, 10000.0, 2100.0);
+    Vector p2(-14600.0, 2500.0, 7000.0);
+    double time = 3600.0;
+
+    cout << "Gravitational parameter (km^3/s^2) = " << MU << "\n\n";
+
+    cout << "r1(km) = " << p1 << "\n";
+    cout << "r2(km) = " << p2 << "\n";
+    cout << "Elapsed time (s) " << time << "\n\n";
+
+    cout << "r2 - r1 = " << p2-p1 << "\n";
+    cout << "r1 - r2 = " << p1-p2 << "\n";
+    cout << "r1 + r2 = " << p1+p2 << "\n";
 
     Lambert test(p1, p2, time);
-    test.universal();
+    // test.universal();
 
     return 0;
 }

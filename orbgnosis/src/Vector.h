@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.9 2006/03/20 20:01:40 trs137 Exp $
+ * $Id: Vector.h,v 1.10 2006/03/30 05:36:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -36,7 +36,7 @@ using namespace std;
 class Vector
 {
     public:
-                    Vector (void);          // no args - 0,0,0
+                    Vector (void);          // defaults to (0,0,0).
 
                     Vector (double xin,
                             double yin,
@@ -46,16 +46,29 @@ class Vector
 
                     Vector (const Vector&); // copy constructor
 
-                    Vector& operator =  (Vector);
-                    Vector& operator += (Vector);
-                    Vector& operator -= (Vector);
+                    Vector& operator =  (Vector); // JBQ is smart
 
+        // multiplcation and division with scalar doubles
+        // order can be either way.
+        friend      Vector  operator * (Vector, double);
+        friend      Vector  operator * (double, Vector);
+        friend      Vector  operator / (Vector, double);
+        friend      Vector  operator / (double, Vector);
+
+        // Vector æddition and subtraction
+        friend      Vector  operator + (Vector, Vector);
+        friend      Vector  operator - (Vector, Vector);
+
+        // cross- and dot-products 
         friend      Vector cross (const Vector&, const Vector&);
         friend      double dot   (const Vector&, const Vector&);
         friend      double norm  (const Vector&);
+
+        // input and output with >> and <<
         friend      ostream& operator << (ostream&, Vector);
         friend      istream& operator >> (istream&, Vector);
 
+        // standard get-n-set methods *snore*...
                     double getX (void);
                     double getY (void);
                     double getZ (void);
@@ -66,10 +79,5 @@ class Vector
     private:
         double x, y, z;
 };
-
-Vector operator + (Vector);
-Vector operator - (Vector);
-Vector operator + (Vector, Vector);
-Vector operator - (Vector, Vector);
 
 #endif /* _VECTOR_H_ */
