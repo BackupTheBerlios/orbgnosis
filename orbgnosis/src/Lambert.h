@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.7 2006/03/30 05:36:19 trs137 Exp $
+ * $Id: Lambert.h,v 1.8 2006/03/31 01:33:03 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -44,9 +44,6 @@ class Lambert
 
                 /* Universal Variable method */
                 void universal(void);
-                double y (double zin);
-                double F(double zin, double tin);
-                double dFdz(double zin);
                 /*****************************/
 
                 /* Battin's method */
@@ -54,26 +51,18 @@ class Lambert
                 /*****************************/
 
     private:
-        const double tof;
-        const Vector r1;
-        const Vector r2;
+        const double t;
+        const Vector Ro;
+        const Vector R;
+        
+        Vector Vo;             // initial velocity of xfer arc
+        Vector V;              // final velocity of xfer arc
 
-        double tol;             // error tolerance
-        int maxloops;           // iteration limit
-        int i;                  // loop index
+        int NumIter, Loops, YNegKtr;
+        double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
+               XOldCubed, FDot, PsiOld, PsiNew, C2New, C3New, dtNew;
 
-        double rr1;
-        double rr2;
-        Vector c12;
-        double theta;           // angle between r1 and r2;
-        double A;
-        double z;
-        double f;               // Lagrange coefficient
-        double g;               // Lagrange coefficient
-        double gdot;            // dg/dt
-        double ratio;           // F / dFdz
-        Vector v1;              // initial velocity of xfer arc
-        Vector v2;              // final velocity of xfer arc
+        double Ro4, R4;
 };
 
 #endif /* _LAMBERT_H_ */

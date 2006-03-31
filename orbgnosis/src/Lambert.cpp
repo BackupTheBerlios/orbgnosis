@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.17 2006/03/30 17:39:15 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.18 2006/03/31 01:33:03 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -39,7 +39,7 @@ using namespace std;
 
 /* Generic Lambert constructor to be used for all solution methods */
 Lambert::Lambert(const Vector r1in, const Vector r2in, const double tin) :
-    tof(tin), r1(r1in), r2(r2in) // Constants. Member initialization list.
+    t(tin), Ro(r1in), R(r2in) // Constants. Member initialization list.
 {
     cout << "Lambert constructor called \n";
 }
@@ -54,162 +54,188 @@ Lambert::~Lambert (void)
 /*
  * UNIVERSAL VARIABLES METHOD
  *
- * Member functions are:
- *          universal, y, F, dFdz
+ * Adapted from David Vallado's implementations
+ * "Fundamentals of Astrodynamics and Applications"
  */
-
 void
-Lambert::universal (void)  // Prograde universal solution
-{
-    cout << "Beginning universal variable solution.\n";
+Lambert::universal (void)
+{ 
+    // Initialize Values
+    NumIter = 40;
+    PsiNew = 0.0;
+    Vo.toZero();
+    V.toZero();
 
-    tol = 0.00000001; // error tolerance
-    maxloops = 5000;  // iteration limit
+    // Magnitudes of Ro and R
+    Ro4 = norm(Ro);
+    R4  = norm(R);
 
-    // Magnitudes of vectors
-    rr1 = norm(r1);
-    rr2 = norm(r2);
+    // "Nu" is true anomaly in Vallado's notation.
+    CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
 
-    c12 = cross(r1,r2);
+    // We don't care about long way xfers, so...
+    // be careful about t for canonical units.
+    // VarA = t * sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+    VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
 
-    // Swept angle
-    theta = acos(dot(r1, r2)/rr1/rr2);
 
-    ratio = 1.0;
+    // Form initial guesses.
+    PsiOld = 0.0;
+    PsiNew = 0.0;
+    XOld   = 0.0;
+    C2New  = 0.5;
+    C3New  = 1.0/6.0;
 
-    // Initialize the remaining variables to zero for now.
-    A = z = f = g = gdot = 0.0;
-    v1.setX(0.0);
-    v1.setY(0.0);
-    v1.setZ(0.0);
-    v2.setX(0.0);
-    v2.setY(0.0);
-    v2.setZ(0.0);
+    // Set up initial bounds for the bisection.
+    // We don't care about multiple revolutions, so...
+    Upper = 4.0 * PI * PI;
+    Lower = -8.0 * PI;
 
-    // theta for prograde solution.
-    if ( 0 >= c12.getZ() ) theta = 2 * PI - theta;
-
-    // theta for retrograde solutions.
-    // if ( 0 <= c12.getZ() ) theta = 2 * PI - theta;
-
-    A = sin(theta) * sqrt(rr1*rr2 / (1-cos(theta)));
-
-    // Find where F(z, tof) changes sign and use that value
-    // for an initial guess.
-
-    z = -100.0;
-    while (0 > F(z, tof)) z = z + 0.1;
-
-     cout << "Initial z guess is " << z << "\n";
-
-    // Newton-Raphson iteration
-    i = 0;
-    while ( (fabs(ratio) > tol) && (i < maxloops))
+    // Determine if the orbit is possible at all
+    if (fabs(VarA) > SMALL)
     {
-        i = i + 1;
-        ratio = F(z, tof) / dFdz(z);
-        z = z - ratio;
-    }
+        Loops = 0;
+        YNegKtr = 1;  // y neg counter
+        dtNew = -10.0;
+        while ((fabs(dtNew - t) > SMALL) && (NumIter > Loops))
+        {
+            if (fabs(C2New) > SMALL )
+            {
+                Y = Ro4 + R4 -
+                    (VarA * (1.0 - PsiOld * C3New) / sqrt(C2New));
+            }else{
+                Y = Ro4 + R4;
+            }
+            // Check for negative values of Y.
+            if ( (0 < VarA) && (0 > Y))
+            {
+                YNegKtr = 1;
+                while ((0 > Y)&&(10 > YNegKtr))
+                {
+                    PsiNew = 0.8 * (1/C3New) * (1.0
+                             - (Ro4 + R4) * sqrt(C2New)/VarA);
+                    // Find C2 and C3 functions.
+                    C2New = stumpff_C2(PsiNew);
+                    C3New = stumpff_C3(PsiNew);
+                    PsiOld = PsiNew;
+                    Lower = PsiOld;
+                    if (fabs(C2New) > SMALL)
+                    {
+                        Y = Ro4 + R4 - (VarA * (1.0 -
+                             PsiOld*C3New)/sqrt(C2New) );
+                    }else{
+                        Y = Ro4 + R4;
+                    }
+                    YNegKtr = YNegKtr + 1;
+                } // end while loop.
+            } // end if Y neg.
 
-    if (i >= maxloops)
-        cout << "** WARNING ** max number of iterations exceeded.\n";
+            if (10 > YNegKtr)
+            {
+                if (fabs(C2New) > SMALL)
+                {
+                    XOld = sqrt(Y/C2New);
+                }else{
+                    XOld = 0.0;
+                }
+                XOldCubed = XOld * XOld * XOld;
+                dtNew = XOldCubed * C3New + VarA*sqrt(Y);
 
-    // cout << "After " << i << " iterations z = " << z << "\n";
+                // Readjust upper and lower bounds.
+                if (dtNew < t)
+                {
+                    Lower = PsiOld;
+                }else{
+                    Upper = PsiOld;
+                }
+                PsiNew = (Upper+Lower) * 0.5;
 
-    f    = 1 - y(z) / rr1;         // Lagrange coeff.
-    g    = A * sqrt( y(z) / MU );  // Lagrange coeff.
-    gdot = 1 - y(z) / rr2;
+                // Find C2 and C3 functions.
+                C2New = stumpff_C2(PsiNew);
+                C3New = stumpff_C3(PsiNew);
+                PsiOld = PsiNew;
+                Loops = Loops + 1;
 
-    v1 = 1 / g * (r1 - f*r2);
-    v2 = 1 / g * (gdot * r2 - r1);
-
-    cout << "Solution: \n\n";
-
-    cout << "v1 (km/s) = " << v1 << "\n";
-    cout << "v2 (km/s) = " << v2 << "\n";
-}
-
-double
-Lambert::y (double zin)
-{
-    double S = stump_S(zin);
-    double C = stump_C(zin);
-    double poop = rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
-
-    cout << "-- inside function y \n";
-    cout << "-- z           = " << zin << "\n";
-    cout << "-- S(z)        = " << S << "\n";
-    cout << "-- C(z)        = " << C << "\n";
-    cout << "-- A           = " << A << "\n";
-    cout << "-- rr1         = " << rr1 << "\n"; 
-    cout << "-- rr2         = " << rr2 << "\n";
-    cout << "-- y(z)        = " << poop << "\n\n";
-
-
-    return poop;
-    // return rr1 + rr2 + A * ( zin * S - 1)/sqrt(C);
-}
-
-double
-Lambert::F (double zin, double tin)   // For Newton-Raphson iteration
-{
-    double yy = y(zin);
-    double S = stump_S(zin);
-    double C = stump_C(zin);
-    double poop = pow((yy/C), 1.5) * S
-                  + A * sqrt(yy)
-                  - ROOTMU * tin;
-
+                //*******************
+                // DEBUGGING OUTPUT
 /*
-    cout << "-- z           = " << zin << "\n";
-    cout << "-- S(z)        = " << S << "\n";
-    cout << "-- C(z)        = " << C << "\n";
-    cout << "-- t           = " << tin << "\n";
-    cout << "-- F(z,t)      = " << poop << "\n"; 
+                cout << "\nIteration   : " << Loops << "\n";
+                cout << "Y(ER)       : " << Y << "\n";
+                cout << "Xo(sqrt(ER)): " << XOld << "\n";
+                cout << "dtNew(TU)   : " << dtNew << "\n";
+                cout << "PsiOld      : " << PsiOld << "\n";
+                cout << "PsiNew      : " << PsiNew << "\n";
 */
+                //****************************
 
-    return poop;
 
-    // return pow((yy/C), 1.5) * S 
-    //        + A * sqrt(yy) 
-    //        - ROOTMU * tin;
-}
+                // Make sure the first guess isn't too close.
+                if (( fabs(dtNew - t) < SMALL) && (1 == Loops))
+                {
+                    dtNew = t - 1.0;
+                }
+            } // end if (10 > YNegKtr)
+        } // end while loop
 
-double
-Lambert::dFdz (double zin)           // For Newton-Raphson iteration
-{
-    if ( 0 == zin)
-    {
-        double yy = y(0.0);
-        return sqrt(2) / 40 * pow(yy, 1.5) 
-               + A / 8 * (sqrt(yy) 
-               + A * sqrt(1/2/yy));
+        if ( (Loops > NumIter) || (YNegKtr > 10) )
+        {
+            cout << "Error: Lambert Universal failed to converge. \n";
+            if (YNegKtr > 10) cout << "Y is negative\n";
+            cout << "NumIter = " << NumIter << "\n";
+        }else{
+
+            // Use F and G series to find velocity vectors.
+            F    = 1.0 - Y/Ro4;
+            GDot = 1.0 - Y/R4;
+            G    = 1.0 / (VarA * sqrt(Y)); // 1 over G
+
+            Vo = (R - F*Ro) * G;
+            V  = (GDot * R - Ro) * G;
+        } // end if answer has converged
     }else{
-        double yy = y(zin);
-        double C = stump_C(zin);
-        double S = stump_S(zin);
-        return pow((yy/C), 1.5) * (1/2/zin * (C - 3*S/2/C )
-               + 3*(S*S)/4/C)
-               + A/8*(3*S/C*sqrt(yy)
-               + A*sqrt(C/yy));
-    }
+        cout << "Vectors are 180 degrees apart.\n";
+    } // end if VarA > SMALL
+
+    cout << "\nSolution:\n";
+    cout << "v1(ER/TU) = " << Vo << "\n";
+    cout << "v2(ER/TU) = " << V << "\n";
+
+    Vo = Vo * ER / TU_SEC;
+    V = V * ER / TU_SEC;
+
+    cout << "v1(km/s) = " << Vo << "\n";
+    cout << "v2(km/s) = " << V << "\n";
+
 }
+
+    
 
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
-    Vector p1(5000.0, 10000.0, 2100.0);
-    Vector p2(-14600.0, 2500.0, 7000.0);
-    double time = 3600.0;
+    Vector a(15945.34, 0.0, 0.0);
+    Vector b(12214.83899, 10239.46731, 0.0);
+    double time = 76.0; // minutes
 
-    cout << "Gravitational parameter (km^3/s^2) = " << MU << "\n\n";
+    cout << "double     : " << sizeof(double) << "\n";
+    cout << "long double: " << sizeof(long double) << "\n";
 
-    cout << "r1(km) = " << p1 << "\n";
-    cout << "r2(km) = " << p2 << "\n";
+
+
+    cout << "r1(km) = " << a << "\n";
+    cout << "r2(km) = " << b << "\n";
     cout << "Elapsed time (s) " << time << "\n\n";
 
-    Lambert test(p1, p2, time);
-    test.universal();
+    // convert to canonical units
+    a = a / ER;
+    b = b / ER;
+    time = time / TU_MIN;
 
+    cout << "r1(ER) = " << a << "\n";
+    cout << "r2(ER) = " << b << "\n";
+    cout << "Elapsed time (TU) " << time << "\n\n";
+
+    Lambert test(a, b, time);
+    test.universal();
     return 0;
 }

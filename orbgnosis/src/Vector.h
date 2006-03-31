@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.11 2006/03/30 20:28:54 trs137 Exp $
+ * $Id: Vector.h,v 1.12 2006/03/31 01:33:03 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -72,6 +72,7 @@ class Vector
                     double getX (void);
                     double getY (void);
                     double getZ (void);
+                    void toZero (void); // set all elements to zero.
                     void setX(double);
                     void setY(double);
                     void setZ(double);

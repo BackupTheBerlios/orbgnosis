@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.12 2006/03/30 20:28:54 trs137 Exp $
+ * $Id: Vector.cpp,v 1.13 2006/03/31 01:33:03 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -175,6 +175,12 @@ double
 Vector::getZ (void)
 {
     return z;
+}
+
+void
+Vector::toZero (void)
+{
+    x = y = z = 0.0;
 }
 
 void

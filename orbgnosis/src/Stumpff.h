@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.h,v 1.2 2006/03/30 05:55:11 trs137 Exp $
+ * $Id: Stumpff.h,v 1.3 2006/03/31 01:33:03 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -40,20 +40,53 @@
 #include <math.h>
 #include <iostream>
 
-/*inline*/ double
-stump_C(double z)
+inline double
+stumpff_C0(double z)
 {
-    if (0.0 == z) return 0.5;        // C2(0) = 1/2;
+    if (0.0 == z) return 1.0;        // C0(0) = 1;
 
+    double sqz = 1.0;
     if (z > 0){
-        return ( (1 - cos(sqrt(z))) / z );
+        sqz = sqrt(z);
+        return ( cos(sqz) );
     }else{ // z < 0
-        return ( (cosh(sqrt(-z)) - 1) / (-z) );
+        sqz = sqrt(-z);
+        return ( cosh(sqz) );
     }
 }
 
-/*inline*/ double
-stump_S(double z)
+inline double
+stumpff_C1(double z)
+{
+    if (0.0 == z) return 1.0;        // C1(0) = 1;
+
+    double sqz = 1.0;
+    if (z > 0){
+        sqz = sqrt(z);
+        return ( sin(sqz) / sqz );
+    }else{ // z < 0
+        sqz = sqrt(-z);
+        return ( sinh(sqz) / sqz );
+    }
+}
+
+inline double
+stumpff_C2(double z)
+{
+    if (0.0 == z) return 0.5;        // C2(0) = 1/2;
+
+    double sqz = 1.0;
+    if (z > 0){
+        sqz = sqrt(z);
+        return ( (1 - cos(sqz)) / z );
+    }else{ // z < 0
+        sqz = sqrt(-z);
+        return ( (cosh(sqz) - 1) / (-z) );
+    }
+}
+
+inline double
+stumpff_C3(double z)
 {
     if (0.0 == z) return (1.0/6.0);      // C3(0) = 1/6;
 
