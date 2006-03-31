@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.19 2006/03/31 01:44:50 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.20 2006/03/31 06:38:47 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -38,17 +38,42 @@
 #include <iostream>
 using namespace std;
 
-/* Generic Lambert constructor to be used for all solution methods */
-Lambert::Lambert(const Vector r1in, const Vector r2in, const double tin) :
-    t(tin), Ro(r1in), R(r2in) // Constants. Member initialization list.
+Lambert::Lambert(void)
 {
-    cout << "Lambert constructor called \n";
+    t = 0.0;
+    Ro.toZero();
+    R.toZero();
+}
+
+Lambert::Lambert(Vector r1in, Vector r2in, double tin) :
+    t(tin), Ro(r1in), R(r2in) 
+{
+    // cout << "Lambert constructor called \n";
 }
 
 Lambert::~Lambert (void)
 {
     // BE SURE TO FREE DYNAMIC STUFF
-    cout << "Lambert destructor called \n";
+    // cout << "Lambert destructor called \n";
+}
+
+void
+Lambert::setRo (Vector vin)
+{
+    Ro = vin;
+    // cout << Ro << "\n";
+}
+
+void
+Lambert::setR (Vector vin)
+{
+    R = vin;
+}
+
+void
+Lambert::sett (double tin)
+{
+    t = tin;
 }
 
 
@@ -160,6 +185,7 @@ Lambert::universal (void)
                 //*******************
                 // DEBUGGING OUTPUT
 /*
+
                 cout << "\nIteration   : " << Loops << "\n";
                 cout << "Y(ER)       : " << Y << "\n";
                 cout << "Xo(sqrt(ER)): " << XOld << "\n";
@@ -167,6 +193,7 @@ Lambert::universal (void)
                 cout << "PsiOld      : " << PsiOld << "\n";
                 cout << "PsiNew      : " << PsiNew << "\n";
 */
+
                 //****************************
 
 
@@ -197,15 +224,15 @@ Lambert::universal (void)
         cout << "Vectors are 180 degrees apart.\n";
     } // end if VarA > SMALL
 
-    cout << "\nSolution:\n";
-    cout << "v1(ER/TU) = " << Vo << "\n";
-    cout << "v2(ER/TU) = " << V << "\n";
+//    cout << "\nSolution:\n";
+//     cout << "v1(ER/TU) = " << Vo << "\n";
+//     cout << "v2(ER/TU) = " << V << "\n";
 
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
-
-    cout << "v1(km/s) = " << Vo << "\n";
-    cout << "v2(km/s) = " << V << "\n";
+    cout << "v1(km/s)   = " << Vo << "\n";
+    cout << "v2(km/s)   = " << V << "\n";
+    cout << "Iterations = " << Loops << "\n\n";
 
 }
 
@@ -214,29 +241,84 @@ Lambert::universal (void)
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
-    Vector a(15945.34, 0.0, 0.0);
-    Vector b(12214.83899, 10239.46731, 0.0);
-    double time = 76.0; // minutes
+    // Vector a(15945.34, 0.0, 0.0);
+    // Vector b(12214.83899, 10239.46731, 0.0);
+    // double time = 76.0 * 60.0; // minutes
 
-    cout << "double     : " << sizeof(double) << "\n";
-    cout << "long double: " << sizeof(long double) << "\n";
+    // Vector a(5000.0, 10000.0, 2100.0);
+    // Vector b(-14600.0, 2500.0, 7000.0); 
+    // double time = 3600.0; // seconds
 
+    // cout << "double     : " << sizeof(double) << "\n";
+    // cout << "long double: " << sizeof(long double) << "\n";
 
-
-    cout << "r1(km) = " << a << "\n";
-    cout << "r2(km) = " << b << "\n";
-    cout << "Elapsed time (s) " << time << "\n\n";
+    // cout << "r1(km) = " << a << "\n";
+    // cout << "r2(km) = " << b << "\n";
+    // cout << "Elapsed time (s) " << time << "\n\n";
 
     // convert to canonical units
-    a = a / ER;
-    b = b / ER;
-    time = time / TU_MIN;
+    // a = a / ER;
+    // b = b / ER;
+    // time = time / TU_SEC;
 
-    cout << "r1(ER) = " << a << "\n";
-    cout << "r2(ER) = " << b << "\n";
-    cout << "Elapsed time (TU) " << time << "\n\n";
+    // cout << "r1(ER) = " << a << "\n";
+    // cout << "r2(ER) = " << b << "\n";
+    // cout << "Elapsed time (TU) " << time << "\n\n";
 
-    Lambert test(a, b, time);
-    test.universal();
+    // Lambert test(a, b, time);
+
+    const int problems = 1000000;
+
+    const int prange = 12000;
+    const int trange = 8000;   
+    double    x     = 0.0;     // random double between 0 and 1
+    double a, b, c, t;
+    Vector v;
+
+    Lambert* testcase = new Lambert[problems];
+
+    srand(time(NULL));
+
+    cout << "Generating " << problems << " random Lambert's problems...\n\n";
+
+    for (int i = 0; i < problems; i++)
+    {
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        a = (2*x*prange - prange) / ER;
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        b = (2*x*prange - prange) / ER;
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        c = (2*x*prange - prange) / ER;
+
+        v.set3(a, b, c);
+        testcase[i].setRo(v);
+
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        a = (2*x*prange - prange) / ER;
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        b = (2*x*prange - prange) / ER;
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        c = (2*x*prange - prange) / ER;
+
+        v.set3(a, b, c);
+        testcase[i].setR(v);
+
+        x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
+        t = (500 + x*trange) / TU_SEC;
+
+        testcase[i].sett(t);
+    }
+
+    cout << "The Problems are ready. Here we go....\n";
+
+    for (int i = 0; i < problems; i++)
+    {
+        cout << "Problem " << i << ":\n";
+        testcase[i].universal();
+    }
+
+    delete[] testcase;
+    testcase = NULL;
+        
     return 0;
 }

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.13 2006/03/31 01:33:03 trs137 Exp $
+ * $Id: Vector.cpp,v 1.14 2006/03/31 06:38:47 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -181,6 +181,14 @@ void
 Vector::toZero (void)
 {
     x = y = z = 0.0;
+}
+
+void
+Vector::set3 (double a, double b, double c)
+{
+    x = a;
+    y = b;
+    z = c;
 }
 
 void

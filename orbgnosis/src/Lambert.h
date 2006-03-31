@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.9 2006/03/31 01:44:51 trs137 Exp $
+ * $Id: Lambert.h,v 1.10 2006/03/31 06:38:47 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -35,9 +35,12 @@
 class Lambert 
 {
     public:
-                Lambert (const Vector r1in,
-                         const Vector r2in,
-                         const double tin);
+
+                Lambert (void);         // just zeros
+
+                Lambert (Vector r1in,
+                         Vector r2in,
+                         double tin);
 
                 virtual ~Lambert (void);
 
@@ -51,10 +54,14 @@ class Lambert
                 // TODO
                 /*****************************/
 
+                void setRo (Vector);
+                void setR  (Vector);
+                void sett  (double);
+
     private:
-        const double t;
-        const Vector Ro;
-        const Vector R;
+        double t;
+        Vector Ro;
+        Vector R;
         
         Vector Vo;             // initial velocity of xfer arc
         Vector V;              // final velocity of xfer arc
