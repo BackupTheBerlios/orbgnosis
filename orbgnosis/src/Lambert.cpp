@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.21 2006/03/31 16:52:04 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.22 2006/03/31 19:19:26 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -37,6 +37,11 @@
 #include "Lambert.h"
 #include <iostream>
 using namespace std;
+
+int min_iter = 1000;
+int max_iter = 0;
+int sum_iter = 0;
+int limit = 0;
 
 Lambert::Lambert(void)
 {
@@ -61,7 +66,6 @@ void
 Lambert::setRo (Vector vin)
 {
     Ro = vin;
-    // cout << Ro << "\n";
 }
 
 void
@@ -100,8 +104,6 @@ Lambert::universal (void)
     CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
 
     // We don't care about long way xfers, so...
-    // be careful about t for canonical units.
-    // VarA = t * sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
     VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
 
 
@@ -224,17 +226,20 @@ Lambert::universal (void)
         cout << "Vectors are 180 degrees apart.\n";
     } // end if VarA > SMALL
 
-//    cout << "\nSolution:\n";
-//     cout << "v1(ER/TU) = " << Vo << "\n";
-//     cout << "v2(ER/TU) = " << V << "\n";
-
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
+
+/*
     cout << "v1(km/s)   = " << Vo << ", [" << norm(Vo) << "]\n";
     cout << "v2(km/s)   = " << V << ", [" << norm(V) << "]\n";
     cout << "t(s)       = " << t*TU_SEC << "\n";
     cout << "Iterations = " << Loops << "\n\n";
+*/
 
+    sum_iter = sum_iter + Loops;
+    if (max_iter < Loops) max_iter = Loops;
+    if (min_iter > Loops) min_iter = Loops;
+    if (Loops == NumIter) limit = limit +1;
 }
 
     
@@ -242,36 +247,10 @@ Lambert::universal (void)
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
-    // Vector a(15945.34, 0.0, 0.0);
-    // Vector b(12214.83899, 10239.46731, 0.0);
-    // double time = 76.0 * 60.0; // minutes
-
-    // Vector a(5000.0, 10000.0, 2100.0);
-    // Vector b(-14600.0, 2500.0, 7000.0); 
-    // double time = 3600.0; // seconds
-
-    // cout << "double     : " << sizeof(double) << "\n";
-    // cout << "long double: " << sizeof(long double) << "\n";
-
-    // cout << "r1(km) = " << a << "\n";
-    // cout << "r2(km) = " << b << "\n";
-    // cout << "Elapsed time (s) " << time << "\n\n";
-
-    // convert to canonical units
-    // a = a / ER;
-    // b = b / ER;
-    // time = time / TU_SEC;
-
-    // cout << "r1(ER) = " << a << "\n";
-    // cout << "r2(ER) = " << b << "\n";
-    // cout << "Elapsed time (TU) " << time << "\n\n";
-
-    // Lambert test(a, b, time);
-
-    const int problems = 10;
-
-    const int prange = 12000;
-    const int trange = 8000;   
+    
+    const int problems = 1000;
+    const int prange = 12000;  // -prange to +prange (km)
+    const int trange = 5000;   // 0 to +trange (s)
     double    x     = 0.0;     // random double between 0 and 1
     double a, b, c, t;
     Vector v;
@@ -311,16 +290,23 @@ main(void) {
         testcase[i].sett(t);
     }
     cout << "\n\nThe problems are ready. Here we go!\n\n";
-    cout << "SMALL = " << SMALL << "\n";
 
     for (int i = 0; i < problems; i++)
     {
-        cout << "Problem " << i << ":\n";
+        // cout << "Problem " << i << ":\n";
         testcase[i].universal();
     }
 
     delete[] testcase;
     testcase = NULL;
-        
+
+    cout << "\n*****************************************************\n";
+    cout << "Tolerance:             " << SMALL << "\n";
+    cout << "# Problems:            " << problems << "\n";
+    cout << "Max # Iterations:      " << max_iter << "\n";
+    cout << "Min # Iterations:      " << min_iter << "\n";
+    cout << "Average # Iterations   " << sum_iter/problems << "\n";
+    cout << "Iteration Limit count  " << limit << "\n"; 
+    cout << "\n*****************************************************\n";
     return 0;
 }
