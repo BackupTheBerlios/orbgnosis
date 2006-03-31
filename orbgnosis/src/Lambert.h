@@ -23,9 +23,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.8 2006/03/31 01:33:03 trs137 Exp $
+ * $Id: Lambert.h,v 1.9 2006/03/31 01:44:51 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
+ *                  David Vallado <valladodl@worldnet.att.net>
  */
 
 #ifndef _LAMBERT_H_
