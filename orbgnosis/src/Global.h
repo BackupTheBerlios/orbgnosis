@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Global.h,v 1.4 2006/03/31 01:33:03 trs137 Exp $
+ * $Id: Global.h,v 1.5 2006/03/31 16:52:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -35,11 +35,11 @@
 #define EPS 1.0e-14
 #define E  2.71828182845905
 #define PI 3.14159265358979
-#define SMALL 0.00000001
+#define SMALL 1.0e-8
 #define ER 6378.137           // Earth radius in km
-#define MU 398600.4418        // km^3 / s^2
+#define MU 398600.4418        // Earth Mu (km^3 / s^2)
 #define ROOTMU 631.3481
 #define TU_SEC 806.81112382429    // canonical time units (s)
-#define TU_MIN 13.44685206374        // canonical time units (m)
+#define TU_MIN 13.44685206374     // canonical time units (m)
 
 #endif /* _GLOBAL_H_ */

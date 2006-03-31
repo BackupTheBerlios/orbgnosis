@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.20 2006/03/31 06:38:47 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.21 2006/03/31 16:52:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -230,8 +230,9 @@ Lambert::universal (void)
 
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
-    cout << "v1(km/s)   = " << Vo << "\n";
-    cout << "v2(km/s)   = " << V << "\n";
+    cout << "v1(km/s)   = " << Vo << ", [" << norm(Vo) << "]\n";
+    cout << "v2(km/s)   = " << V << ", [" << norm(V) << "]\n";
+    cout << "t(s)       = " << t*TU_SEC << "\n";
     cout << "Iterations = " << Loops << "\n\n";
 
 }
@@ -267,7 +268,7 @@ main(void) {
 
     // Lambert test(a, b, time);
 
-    const int problems = 1000000;
+    const int problems = 10;
 
     const int prange = 12000;
     const int trange = 8000;   
@@ -279,10 +280,11 @@ main(void) {
 
     srand(time(NULL));
 
-    cout << "Generating " << problems << " random Lambert's problems...\n\n";
+    cout << "Generating " << problems << " random Lambert's problems";
 
     for (int i = 0; i < problems; i++)
     {
+        cout << ".";
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
         a = (2*x*prange - prange) / ER;
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
@@ -304,12 +306,12 @@ main(void) {
         testcase[i].setR(v);
 
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-        t = (500 + x*trange) / TU_SEC;
+        t = x*trange / TU_SEC;
 
         testcase[i].sett(t);
     }
-
-    cout << "The Problems are ready. Here we go....\n";
+    cout << "\n\nThe problems are ready. Here we go!\n\n";
+    cout << "SMALL = " << SMALL << "\n";
 
     for (int i = 0; i < problems; i++)
     {
