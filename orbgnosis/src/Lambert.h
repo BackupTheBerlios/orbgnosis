@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.10 2006/03/31 06:38:47 trs137 Exp $
+ * $Id: Lambert.h,v 1.11 2006/04/01 02:55:38 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -59,18 +59,17 @@ class Lambert
                 void sett  (double);
 
     private:
+
+        // Inputs:
         double t;
         Vector Ro;
         Vector R;
-        
+
+        // Results:        
         Vector Vo;             // initial velocity of xfer arc
         Vector V;              // final velocity of xfer arc
 
-        int NumIter, Loops, YNegKtr;
-        double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
-               XOldCubed, FDot, PsiOld, PsiNew, C2New, C3New, dtNew;
-
-        double Ro4, R4;
+        // TODO: orbital elements for xfer arc
 };
 
 #endif /* _LAMBERT_H_ */
