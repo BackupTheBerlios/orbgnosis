@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.23 2006/04/01 02:55:37 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.24 2006/04/01 05:30:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -58,7 +58,6 @@ Lambert::Lambert(Vector r1in, Vector r2in, double tin) :
 
 Lambert::~Lambert (void)
 {
-    // BE SURE TO FREE DYNAMIC STUFF
     // cout << "Lambert destructor called \n";
 }
 
@@ -78,6 +77,24 @@ void
 Lambert::sett (double tin)
 {
     t = tin;
+}
+
+Vector
+Lambert::getVo (void)
+{
+    return Vo;
+}
+
+Vector
+Lambert::getV (void)
+{
+    return V;
+}
+
+double
+Lambert::gett (void)
+{
+    return t;
 }
 
 
@@ -225,8 +242,11 @@ Lambert::universal (void)
         cout << "Vectors are 180 degrees apart.\n";
     } // end if VarA > SMALL
 
+/* Convert from canonical units back to S.I.
+
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
+*/
 
     // Do something with the results.
 /*
@@ -243,23 +263,58 @@ Lambert::universal (void)
     if (Loops == NumIter) limit = limit +1;
 }
 
+void
+Lambert::battin (void)
+{
+    // TODO
+}
+
+void
+Lambert::elements (void)
+{
+    double energy, VVo;
+    VVo = norm(Vo);
+
+    // Specific mechanical energy.  (Canonical MU = 1.0)
+    energy = VVo * VVo / 2.0 - 1.0 / norm(Ro);
+
+    // semimajor axis
+    a = - 1.0 / (2 * energy);
+
+    // Specific angular momentum
+    h = norm(cross(Ro, Vo));
+
+    // Eccentricity  (Canonical MU = 1.0)
+    e = sqrt( 1 + (2*energy*h*h));
+
+      cout << "Energy              = " << energy << "\n";
+//    cout << "Semimajor axis (ER) = " << a << "\n";
+//    cout << "h                   = " << h << "\n";
+//    cout << "e                   = " << e << "\n";
+//    cout << "Perigee (ER)        = " << fabs(a*(1.0+e)) << "\n\n";
+
+    
+}
+
+
+
 int
 main(void) {
     cout << "Testing the Lambert solver.\n";
     
-    const int problems = 1000;
+    const int problems = 100;
     const int prange = 12000;  // -prange to +prange (km)
     const int trange = 5000;   // 0 to +trange (s)
     double    x     = 0.0;     // random double between 0 and 1
     double a, b, c, t;
-    Vector v;
+    Vector q1, q2;
 
     Lambert* testcase = new Lambert[problems];
 
     srand(time(NULL));
 
-    cout << "Generating " << problems << " random Lambert's problems";
-
+    cout << "Generating " << problems << " Lambert's problems";
+/*
     for (int i = 0; i < problems; i++)
     {
         cout << ".";
@@ -270,8 +325,8 @@ main(void) {
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
         c = (2*x*prange - prange) / ER;
 
-        v.set3(a, b, c);
-        testcase[i].setRo(v);
+        q.set3(a, b, c);
+        testcase[i].setRo(q);
 
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
         a = (2*x*prange - prange) / ER;
@@ -280,20 +335,49 @@ main(void) {
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
         c = (2*x*prange - prange) / ER;
 
-        v.set3(a, b, c);
-        testcase[i].setR(v);
+        q.set3(a, b, c);
+        testcase[i].setR(q);
 
         x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
         t = x*trange / TU_SEC;
 
+        // We're filling thse with CANONICAL UNITS, not S.I.
+
         testcase[i].sett(t);
     }
+*/
+
+    q1.set3(5000.0, 10000.0, 2100.0);
+    q1 = q1 / ER;
+
+    q2.set3(-14600.0, 2500.0, 7000.0);
+    q2 = q2 / ER;
+
+    double t_max, t_min, t_inc;
+    t_min = 60.0 / TU_SEC;  // 1 minute in canonical TU
+    // t_max = 1 orbital period for a cirular orbit of radius q1.
+    double radius = norm(q1);
+    t_max = 2.0 * PI * sqrt(radius*radius*radius);
+
+    // we want (problems) incrments from t_min to t_max.
+    t_inc = (t_max-t_min) / (problems-1);
+
+    for (int i = 0; i < problems; i++)
+    {
+        cout << ".";
+        testcase[i].setRo(q1);
+        testcase[i].setR(q2);
+        testcase[i].sett(t_min+(i*t_inc));
+    }
+
+
     cout << "\n\nThe problems are ready. Here we go!\n\n";
 
     for (int i = 0; i < problems; i++)
     {
         // cout << "Problem " << i << ":\n";
         testcase[i].universal();
+        testcase[i].elements();
     }
 
     delete[] testcase;

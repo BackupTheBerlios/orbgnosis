@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.11 2006/04/01 02:55:38 trs137 Exp $
+ * $Id: Lambert.h,v 1.12 2006/04/01 05:30:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -46,17 +46,22 @@ class Lambert
 
                 Lambert (const Lambert&); // copy ctor
 
-                /* Universal Variable method */
+                // Universal Variable method
                 void universal(void);
-                /*****************************/
 
-                /* Battin's method */
-                // TODO
-                /*****************************/
+                // Battin's method
+                void battin(void);
+
+                // Calculate elements from (Vo, V)
+                void elements(void);
 
                 void setRo (Vector);
                 void setR  (Vector);
                 void sett  (double);
+
+                Vector getVo (void);
+                Vector getV  (void);
+                double gett  (void);
 
     private:
 
@@ -70,6 +75,7 @@ class Lambert
         Vector V;              // final velocity of xfer arc
 
         // TODO: orbital elements for xfer arc
+        double h, e, a;
 };
 
 #endif /* _LAMBERT_H_ */
