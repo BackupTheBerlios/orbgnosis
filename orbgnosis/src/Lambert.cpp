@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.25 2006/04/03 02:03:28 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.26 2006/04/04 23:04:32 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -38,22 +38,19 @@
 #include <iostream>
 using namespace std;
 
-int min_iter = 1000;
-int max_iter = 0;
-int sum_iter = 0;
-int limit = 0;
-
 Lambert::Lambert(void)
 {
     t = 0.0;
     Ro.toZero();
     R.toZero();
+    failure = false;
 }
 
 Lambert::Lambert(Vector r1in, Vector r2in, double tin) :
     t(tin), Ro(r1in), R(r2in) 
 {
     // cout << "Lambert constructor called \n";
+    failure = false;
 }
 
 Lambert::~Lambert (void)
@@ -97,7 +94,6 @@ Lambert::gett (void)
     return t;
 }
 
-
 /*
  * UNIVERSAL VARIABLES METHOD
  *
@@ -105,15 +101,19 @@ Lambert::gett (void)
  * "Fundamentals of Astrodynamics and Applications"
  */
 void
-Lambert::universal (void)
+Lambert::universal (const bool L, const bool MR)
 { 
     // Local variables
-    const int NumIter = 40;
+    const bool longway = L;
+    const bool multirev = MR;
+    const int NumIter = 60;
     int Loops, YNegKtr;
     double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
            XOldCubed, PsiOld, PsiNew, C2New, C3New, dtNew;
     double Ro4, R4;
- 
+
+    failure = false;
+
     PsiNew = 0.0;
     Vo.toZero();
     V.toZero();
@@ -125,8 +125,12 @@ Lambert::universal (void)
     // "Nu" is true anomaly.
     CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
 
-    // We don't care about long way xfers, so...
-    VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+    if (true == longway)
+    {
+        VarA = -sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+    }else{
+        VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+    }
 
     // Form initial guesses.
     PsiOld = 0.0;
@@ -137,8 +141,22 @@ Lambert::universal (void)
 
     // Set up initial bounds for the bisection.
     // We don't care about multiple revolutions, so...
-    Upper = 4.0 * PI * PI;
-    Lower = -8.0 * PI;
+
+    if (true == multirev)
+    {
+        // For multiple revs only...
+        //Upper = -0.001 + 16.0 * PI * PI;
+        //Lower = 0.001 + 4.0 * PI * PI;
+
+        // Testing N=2 multi-multi rev!!!
+        Upper = -0.001 + 36.0 * PI * PI;
+        Lower = 0.001 + 4.0 * PI * PI;
+    }else{
+        // common single revolution case
+        Upper = 4.0 * PI * PI;
+        Lower = -8.0 * PI;
+    }
+
 
     // Determine if the orbit is possible at all
     if (fabs(VarA) > SMALL)
@@ -223,11 +241,14 @@ Lambert::universal (void)
             } // end if (10 > YNegKtr)
         } // end while loop
 
-        if ( (Loops > NumIter) || (YNegKtr > 10) )
+        if ( (Loops >= NumIter) || (YNegKtr > 10) )
         {
-            cout << "Error: Lambert Universal failed to converge. \n";
-            if (YNegKtr > 10) cout << "Y is negative\n";
-            cout << "NumIter = " << NumIter << "\n";
+            // cout << "Error: Lambert Universal failed to converge. \n";
+            //if (YNegKtr > 10) cout << "Y is negative\n";
+            //cout << "NumIter = " << NumIter << "\n";
+            Vo.set3(INF, INF, INF);
+            V.set3(INF, INF, INF);
+            failure = true;
         }else{
 
             // Use F and G series to find velocity vectors.
@@ -239,7 +260,10 @@ Lambert::universal (void)
             V  = (GDot * R - Ro) * G;
         } // end if answer has converged
     }else{
-        cout << "Vectors are 180 degrees apart.\n";
+        // cout << "Vectors are 180 degrees apart.\n";
+        Vo.set3(INF, INF, INF);
+        V.set3(INF, INF, INF);
+        failure = true;
     } // end if VarA > SMALL
 
 /* Convert from canonical units back to S.I.
@@ -247,12 +271,6 @@ Lambert::universal (void)
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
 */
-
-    // Count # iterations used for statistics.
-    sum_iter = sum_iter + Loops;
-    if (max_iter < Loops) max_iter = Loops;
-    if (min_iter > Loops) min_iter = Loops;
-    if (Loops == NumIter) limit = limit +1;
 }
 
 /*
@@ -306,9 +324,14 @@ cout << t*TU_SEC << ", ";
 
 int
 main(void) {
-    cout << "Testing the Lambert solver.\n";
+    cout << "TITLE=\"Title goes here...\"\n";
+    cout << "VARIABLES=\"delta-f(radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
     
-    const int problems = 100;
+    const int problems = 200;
+
+    cout << "ZONE T=\"THING,BG\", I=" << problems
+         << ", J=" << problems << ", F=POINT\n";
+
     double t;
     Vector q1, q2;
 
@@ -316,7 +339,6 @@ main(void) {
 
     srand(time(NULL));
 
-    cout << "Generating " << problems << " Lambert's problems\n";
     
 /*  TEST 1: Make random problems
 
@@ -404,21 +426,21 @@ main(void) {
 //  for delta V should be sort of like a porkchop plot.
 
     q1.set3(1.1, 0.0, 0.0);  // units of ER
-    t = 1461.0 / TU_SEC;
 
     double f, f_max, f_min, f_inc;
-    f_min = SMALL;
-    f_max = PI - SMALL;
+    f_min = 2.0 * SMALL;
+    f_max = 5.0 * PI / 2.0;
     f_inc = (f_max-f_min) / (problems-1);
 
     Vector vc1 (0, sqrt (1/1.1), 0);
     Vector vc2;
 
-    double deltav, t_max, t_min, t_inc;
+    double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
+    bool L, MR;
 
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical
-    // t_max = 1/2 orbital period for a circ radius of 1.6 ER
-    t_max = PI * sqrt(1.6*1.6*1.6);
+    // t_max = 1/2 orbital period for a circ radius of 1.2 ER
+    t_max = 9.0 * PI * sqrt(1.2*1.2*1.2);
     t_inc = (t_max-t_min) / (problems-1);
 
     // This will run (problems * problems) times!!!!!
@@ -431,12 +453,12 @@ main(void) {
         {
             f = f_min + j*f_inc;
 
-            q2.setX( 1.6*cos(f) );
-            q2.setY( 1.6*sin(f) );
+            q2.setX( 1.2*cos(f) );
+            q2.setY( 1.2*sin(f) );
             q2.setZ(0.0);
 
-            vc2.setX (-sin(f) * sqrt(1/1.6) );
-            vc2.setY (cos(f) * sqrt(1/1.6) );
+            vc2.setX (-sin(f) * sqrt(1/1.2) );
+            vc2.setY (cos(f) * sqrt(1/1.2) );
             vc2.setZ (0.0);
 
 
@@ -444,25 +466,67 @@ main(void) {
             testcase[j].setR(q2);
             testcase[j].sett(t);
 
-            testcase[j].universal();
             cout << f << ", ";
-            testcase[j].elements();
+            cout << t*TU_SEC << ", ";
 
-            // delta V 1 in (km/s)
-            // cout << norm(testcase[i].getVo() - vc1) * ER / TU_SEC << ", "; 
+            MR = false; // single revolution
+            L = false; // short way
+            testcase[j].universal(L,MR);
 
-            // delta V 2 in (km/s)
-            // cout << norm(testcase[i].getV() - vc2) * ER / TU_SEC << ", ";
-
-            deltav = ( norm(testcase[j].getVo() - vc1)
+            short_deltav = INF;  // set to INF if failed to converge
+            if (!testcase[j].failure){
+                short_deltav = ( norm(testcase[j].getVo() - vc1)
+                       + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
+            }
+            
+            L = true; // long way, still single rev.
+            testcase[j].universal(L,MR);
+            long_deltav = INF;
+            if (!testcase[j].failure){
+                long_deltav = ( norm(testcase[j].getVo() - vc1)
                     + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
+            }
 
+            if (short_deltav <= long_deltav)
+            {
+                deltav=short_deltav;
+                // cout << "0, ";
+            }else{
+                deltav=long_deltav;
+                // cout << "1, ";
+            }
+
+            MR = true; // multiple revolutions
+            L = false; // short way
+            testcase[j].universal(L,MR);
+            short_deltav = INF;
+            if (!testcase[j].failure)
+            {
+                short_deltav = ( norm(testcase[j].getVo() - vc1)
+                    + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
+            }
+
+
+            L = true; // long way , multiple revs
+            testcase[j].universal(L,MR);
+            long_deltav = INF;
+            if (!testcase[j].failure)
+            {
+                long_deltav = ( norm(testcase[j].getVo() - vc1)
+                    + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
+            }
+
+            if (short_deltav < deltav) deltav = short_deltav;
+            if (long_deltav < deltav) deltav = long_deltav;
+            
             cout << deltav << "\n";
         }
     }
 
     delete[] testcase;
     testcase = NULL;
+
+/*
 
     cout << "\n*****************************************************\n";
     cout << "Tolerance:             " << SMALL << "\n";
@@ -472,5 +536,6 @@ main(void) {
     cout << "Average # Iterations   " << sum_iter/problems/problems << "\n";
     cout << "Exceeded limit  count  " << limit << "\n"; 
     cout << "\n*****************************************************\n";
+*/
     return 0;
 }
