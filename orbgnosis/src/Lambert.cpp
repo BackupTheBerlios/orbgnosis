@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.27 2006/04/04 23:11:47 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.28 2006/04/05 01:06:15 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -101,16 +101,17 @@ Lambert::gett (void)
  * "Fundamentals of Astrodynamics and Applications"
  */
 void
-Lambert::universal (const bool L, const bool MR)
+Lambert::universal (const bool L, const int multirev)
 { 
     // Local variables
     const bool longway = L;
-    const bool multirev = MR;
     const int NumIter = 60;
     int Loops, YNegKtr;
     double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
            XOldCubed, PsiOld, PsiNew, C2New, C3New, dtNew;
     double Ro4, R4;
+
+    const int revs = multirev;
 
     failure = false;
 
@@ -140,7 +141,8 @@ Lambert::universal (const bool L, const bool MR)
     C3New  = 1.0/6.0;
 
     // Set up initial bounds for the bisection.
-    // We don't care about multiple revolutions, so...
+
+    /*
 
     if (true == multirev)
     {
@@ -149,14 +151,24 @@ Lambert::universal (const bool L, const bool MR)
         //Lower = 0.001 + 4.0 * PI * PI;
 
         // Testing N=2 multi-multi rev!!!
-        Upper = -0.001 + 36.0 * PI * PI;
-        Lower = 0.001 + 16.0 * PI * PI;
+        Upper = -0.001 + 64.0 * PI * PI;
+        Lower = 0.001 + 36.0 * PI * PI;
     }else{
         // common single revolution case
         Upper = 4.0 * PI * PI;
         Lower = -8.0 * PI;
     }
+    */
 
+
+    if (0 == revs)
+    {
+        Upper = 4.0 * PI * PI;
+        Lower = -8.0 * PI;
+    }else{
+        Upper = -SMALL + 4.0 * (revs+1)*(revs+1)*PI*PI;
+        Lower = SMALL + 4.0 * revs*revs * PI*PI;
+    }
 
     // Determine if the orbit is possible at all
     if (fabs(VarA) > SMALL)
@@ -327,7 +339,7 @@ main(void) {
     cout << "TITLE=\"Title goes here...\"\n";
     cout << "VARIABLES=\"delta-f(radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
     
-    const int problems = 200;
+    const int problems = 1000;
 
     cout << "ZONE T=\"THING,BG\", I=" << problems
          << ", J=" << problems << ", F=POINT\n";
@@ -436,7 +448,8 @@ main(void) {
     Vector vc2;
 
     double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
-    bool L, MR;
+    bool L;
+    int revs;
 
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical
     // t_max = 1/2 orbital period for a circ radius of 1.2 ER
@@ -469,9 +482,11 @@ main(void) {
             cout << f << ", ";
             cout << t*TU_SEC << ", ";
 
-            MR = false; // single revolution
+            /*
+
+            revs = 0; // single revolution
             L = false; // short way
-            testcase[j].universal(L,MR);
+            testcase[j].universal(L,revs);
 
             short_deltav = INF;  // set to INF if failed to converge
             if (!testcase[j].failure){
@@ -480,7 +495,7 @@ main(void) {
             }
             
             L = true; // long way, still single rev.
-            testcase[j].universal(L,MR);
+            testcase[j].universal(L,revs);
             long_deltav = INF;
             if (!testcase[j].failure){
                 long_deltav = ( norm(testcase[j].getVo() - vc1)
@@ -496,9 +511,9 @@ main(void) {
                 // cout << "1, ";
             }
 
-            MR = true; // multiple revolutions
+            revs = 1; // multiple revolutions
             L = false; // short way
-            testcase[j].universal(L,MR);
+            testcase[j].universal(L,revs);
             short_deltav = INF;
             if (!testcase[j].failure)
             {
@@ -508,7 +523,7 @@ main(void) {
 
 
             L = true; // long way , multiple revs
-            testcase[j].universal(L,MR);
+            testcase[j].universal(L,revs);
             long_deltav = INF;
             if (!testcase[j].failure)
             {
@@ -518,7 +533,31 @@ main(void) {
 
             if (short_deltav < deltav) deltav = short_deltav;
             if (long_deltav < deltav) deltav = long_deltav;
+            */
             
+            // cout << deltav << "\n";
+
+            deltav = INF;
+            for (int revs = 0; revs < 10; revs++)
+            {
+                L = false; // short way
+                testcase[j].universal(L,revs);
+                short_deltav = INF;
+                if (!testcase[j].failure)
+                    short_deltav = ( norm(testcase[j].getVo() - vc1)
+                                  + norm(testcase[j].getV() - vc2) )
+                                  * ER / TU_SEC;
+                L = true; // long way
+                testcase[j].universal(L,revs);
+                long_deltav = INF;
+                if (!testcase[j].failure)
+                    long_deltav = ( norm(testcase[j].getVo() - vc1)
+                                  + norm(testcase[j].getV() - vc2) )
+                                  * ER / TU_SEC;
+
+                if (short_deltav < deltav) deltav = short_deltav;
+                if (long_deltav < deltav) deltav = long_deltav;
+            }
             cout << deltav << "\n";
         }
     }

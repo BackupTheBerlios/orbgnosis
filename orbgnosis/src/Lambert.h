@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.13 2006/04/04 23:04:33 trs137 Exp $
+ * $Id: Lambert.h,v 1.14 2006/04/05 01:06:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -47,7 +47,7 @@ class Lambert
                 Lambert (const Lambert&); // copy ctor
 
                 // Universal Variable method
-                void universal(const bool, const bool);
+                void universal(const bool, const int);
 
                 // Battin's method
                 void battin(void);
