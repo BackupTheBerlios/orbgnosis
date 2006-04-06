@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2006/04/04 23:04:33 trs137 Exp $
+# $Id: Makefile,v 1.9 2006/04/06 20:38:08 trs137 Exp $
 #
 CC= g++
 LD= g++
@@ -8,9 +8,9 @@ RM= /bin/rm -f
 CFLAGS=-O2
 #LDFLAGS= -Wall
 LDFLAGS=-O2
-SRCS = Lambert.cpp Vector.cpp
+SRCS = Lambert.cpp Vector.cpp Orbgnosis.cpp
 OBJS = $(SRCS:.cpp=.o)
-TARGET = orbgnosis
+TARGET = orb
 
 $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) -o $(TARGET) -lm

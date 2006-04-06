@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.14 2006/04/05 01:06:16 trs137 Exp $
+ * $Id: Lambert.h,v 1.15 2006/04/06 20:38:08 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -65,6 +65,7 @@ class Lambert
                 double gett  (void);
 
                 bool failure;
+                double energy, e;
 
     private:
 
@@ -78,7 +79,7 @@ class Lambert
         Vector V;              // final velocity of xfer arc
 
         // TODO: orbital elements for xfer arc
-        double h, e, a;
+        double h, a,;
 };
 
 #endif /* _LAMBERT_H_ */
