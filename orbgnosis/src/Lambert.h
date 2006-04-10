@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.15 2006/04/06 20:38:08 trs137 Exp $
+ * $Id: Lambert.h,v 1.16 2006/04/10 11:00:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -52,20 +52,19 @@ class Lambert
                 // Battin's method
                 void battin(void);
 
-                // Calculate elements from (Vo, V)
-                void elements(void);
+                // Removed to outide of Lambert
+                // 
+                //void elements(void);
 
                 void setRo (Vector);
                 void setR  (Vector);
                 void sett  (double);
-                //void setbad(void);
 
                 Vector getVo (void);
                 Vector getV  (void);
                 double gett  (void);
 
-                bool failure;
-                double energy, e;
+                bool isFailure(void);
 
     private:
 
@@ -78,8 +77,7 @@ class Lambert
         Vector Vo;             // initial velocity of xfer arc
         Vector V;              // final velocity of xfer arc
 
-        // TODO: orbital elements for xfer arc
-        double h, a,;
+        bool failure;
 };
 
 #endif /* _LAMBERT_H_ */

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.1 2006/04/06 20:37:30 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.2 2006/04/10 11:00:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -38,22 +38,21 @@ using namespace std;
 
 int
 main(void) {
-    cout << "TITLE=\"Title goes here...\"\n";
-    cout << "VARIABLES=\"delta-f(radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
-    
-    const int problems = 400;
-
-    cout << "ZONE T=\"THING,BG\", I=" << problems
-         << ", J=" << problems << ", F=POINT\n";
-
+    const int problems = 100;
     double t;
     Vector q1, q2;
+    srand(time(NULL));
 
     Lambert* testcase = new Lambert[problems];
 
-    srand(time(NULL));
+    // Write file for tecplot.
 
-    
+    cout << "TITLE=\"Title goes here...\"\n";
+    cout << "VARIABLES=\"xfer angle (radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
+    cout << "ZONE T=\"MYZONE,BG\", I=" << problems
+         << ", J=" << problems << ", F=POINT\n";
+
+
 /*  TEST 1: Make random problems
 
     const int prange = 12000;  // -prange to +prange (km)
@@ -131,13 +130,10 @@ main(void) {
 */
 
 //  TEST 3:
-//  r1 = 1.1 (ER);
-//  r2 = 1.6 (ER);
 //  sweep delta-f (delta-nu) from zero to pi,
 //  vary TOF from small to large.
 
 //  Plotting a 2D cartesian of delta-f vs. TOF
-//  for delta V should be sort of like a porkchop plot.
 
     q1.set3(1.1, 0.0, 0.0);  // units of ER
 
@@ -154,12 +150,9 @@ main(void) {
     Vector vc2;
 
     double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
-    double short_p, long_p, best_p;
     bool L;
-    int revs;
 
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical
-    // t_max = 1/2 orbital period for a circ radius of r2 ER
     t_max = 6.0 * PI * sqrt(r2*r2*r2);
     t_inc = (t_max-t_min) / (problems-1);
 
@@ -189,121 +182,47 @@ main(void) {
             cout << f << ", ";
             cout << t*TU_SEC << ", ";
 
-            /*
-
-            revs = 0; // single revolution
-            L = false; // short way
-            testcase[j].universal(L,revs);
-
-            short_deltav = INF;  // set to INF if failed to converge
-            if (!testcase[j].failure){
-                short_deltav = ( norm(testcase[j].getVo() - vc1)
-                       + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
-            }
-            
-            L = true; // long way, still single rev.
-            testcase[j].universal(L,revs);
-            long_deltav = INF;
-            if (!testcase[j].failure){
-                long_deltav = ( norm(testcase[j].getVo() - vc1)
-                    + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
-            }
-
-            if (short_deltav <= long_deltav)
-            {
-                deltav=short_deltav;
-                // cout << "0, ";
-            }else{
-                deltav=long_deltav;
-                // cout << "1, ";
-            }
-
-            revs = 1; // multiple revolutions
-            L = false; // short way
-            testcase[j].universal(L,revs);
-            short_deltav = INF;
-            if (!testcase[j].failure)
-            {
-                short_deltav = ( norm(testcase[j].getVo() - vc1)
-                    + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
-            }
-
-
-            L = true; // long way , multiple revs
-            testcase[j].universal(L,revs);
-            long_deltav = INF;
-            if (!testcase[j].failure)
-            {
-                long_deltav = ( norm(testcase[j].getVo() - vc1)
-                    + norm(testcase[j].getV() - vc2) ) * ER / TU_SEC;
-            }
-
-            if (short_deltav < deltav) deltav = short_deltav;
-            if (long_deltav < deltav) deltav = long_deltav;
-            */
-            
-            // cout << deltav << "\n";
+            // Find minimum delta-V case among many multirev solutions.
 
             deltav = INF;
-            best_p = INF;
             for (int revs = 0; revs < 9; revs++)
             {
                 L = false; // short way
                 testcase[j].universal(L,revs);
                 short_deltav = INF;
-                short_p = INF;
-                if (!testcase[j].failure)
+                if (!testcase[j].isFailure())
                 {
                     short_deltav = ( norm(testcase[j].getVo() - vc1)
                                   + norm(testcase[j].getV() - vc2) )
                                   * ER / TU_SEC;
-                    testcase[j].elements();
-                    short_p = testcase[j].e;
                 }
 
                 L = true; // long way
                 testcase[j].universal(L,revs);
                 long_deltav = INF;
-                long_p = INF;
-                if (!testcase[j].failure)
+                if (!testcase[j].isFailure())
                 {
                     long_deltav = ( norm(testcase[j].getVo() - vc1)
                                   + norm(testcase[j].getV() - vc2) )
                                   * ER / TU_SEC;
-                    testcase[j].elements();
-                    long_p = testcase[j].e;
                 }
 
                 if (short_deltav < deltav)
                 {
                     deltav = short_deltav;
-                    best_p = short_p;
                 }
 
                 if (long_deltav < deltav)
                 {
                     deltav = long_deltav;
-                    best_p = long_p;
                 }
             }
-            cout << best_p << "\n";
-            // cout << deltav << "\n";
+            cout << deltav << "\n";
         }
     }
 
     delete[] testcase;
     testcase = NULL;
 
-/*
-
-    cout << "\n*****************************************************\n";
-    cout << "Tolerance:             " << SMALL << "\n";
-    cout << "# Problems:            " << problems*problems << "\n";
-    cout << "Max # Iterations:      " << max_iter << "\n";
-    cout << "Min # Iterations:      " << min_iter << "\n";
-    cout << "Average # Iterations   " << sum_iter/problems/problems << "\n";
-    cout << "Exceeded limit  count  " << limit << "\n"; 
-    cout << "\n*****************************************************\n";
-*/
     return 0;
 }
