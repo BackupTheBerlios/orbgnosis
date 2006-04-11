@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.2 2006/04/10 11:00:17 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.3 2006/04/11 11:54:20 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -38,7 +38,7 @@ using namespace std;
 
 int
 main(void) {
-    const int problems = 100;
+    const int problems = 500;
     double t;
     Vector q1, q2;
     srand(time(NULL));
