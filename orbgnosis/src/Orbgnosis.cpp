@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.3 2006/04/11 11:54:20 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.4 2006/05/01 19:48:18 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -47,7 +47,7 @@ main(void) {
 
     // Write file for tecplot.
 
-    cout << "TITLE=\"Title goes here...\"\n";
+    cout << "TITLE=\"Xfer from 1.1(ER) to 1.2(ER)\"\n";
     cout << "VARIABLES=\"xfer angle (radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
     cout << "ZONE T=\"MYZONE,BG\", I=" << problems
          << ", J=" << problems << ", F=POINT\n";
@@ -185,7 +185,7 @@ main(void) {
             // Find minimum delta-V case among many multirev solutions.
 
             deltav = INF;
-            for (int revs = 0; revs < 9; revs++)
+            for (int revs = 0; revs < 5; revs++)
             {
                 L = false; // short way
                 testcase[j].universal(L,revs);
