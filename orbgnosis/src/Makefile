@@ -1,5 +1,5 @@
 #
-# $ID: $
+# $Id: Makefile,v 1.13 2006/05/01 19:51:10 trs137 Exp $
 #
 # use gmake!
 CC=icpc
