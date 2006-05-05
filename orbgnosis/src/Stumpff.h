@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.h,v 1.3 2006/03/31 01:33:03 trs137 Exp $
+ * $Id: Stumpff.h,v 1.4 2006/05/05 21:50:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -43,7 +43,7 @@
 inline double
 stumpff_C0(double z)
 {
-    if (0.0 == z) return 1.0;        // C0(0) = 1;
+    if (fabs(z) < SMALL) return 1.0;        // C0(0) = 1;
 
     double sqz = 1.0;
     if (z > 0){
@@ -58,7 +58,7 @@ stumpff_C0(double z)
 inline double
 stumpff_C1(double z)
 {
-    if (0.0 == z) return 1.0;        // C1(0) = 1;
+    if (fabs(z) < SMALL) return 1.0;        // C1(0) = 1;
 
     double sqz = 1.0;
     if (z > 0){
@@ -73,7 +73,7 @@ stumpff_C1(double z)
 inline double
 stumpff_C2(double z)
 {
-    if (0.0 == z) return 0.5;        // C2(0) = 1/2;
+    if (fabs(z) < SMALL) return 0.5;        // C2(0) = 1/2;
 
     double sqz = 1.0;
     if (z > 0){
@@ -88,7 +88,7 @@ stumpff_C2(double z)
 inline double
 stumpff_C3(double z)
 {
-    if (0.0 == z) return (1.0/6.0);      // C3(0) = 1/6;
+    if (fabs(z) < SMALL) return (1.0/6.0);      // C3(0) = 1/6;
 
     double sqz = 1.0;
     if (z > 0){

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.4 2006/05/01 19:48:18 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.5 2006/05/05 21:50:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -170,8 +170,8 @@ main(void) {
             q2.setY( r2*sin(f) );
             q2.setZ(0.0);
 
-            vc2.setX (-sin(f) * sqrt(1/r2) );
-            vc2.setY (cos(f) * sqrt(1/r2) );
+            vc2.setX ((-sin(f)) * (sqrt(1/r2)) );
+            vc2.setY ((cos(f)) * (sqrt(1/r2)) );
             vc2.setZ (0.0);
 
 
@@ -192,8 +192,8 @@ main(void) {
                 short_deltav = INF;
                 if (!testcase[j].isFailure())
                 {
-                    short_deltav = ( norm(testcase[j].getVo() - vc1)
-                                  + norm(testcase[j].getV() - vc2) )
+                    short_deltav = ( (norm(testcase[j].getVo() - vc1))
+                                  + (norm(testcase[j].getV() - vc2)) )
                                   * ER / TU_SEC;
                 }
 
@@ -202,8 +202,8 @@ main(void) {
                 long_deltav = INF;
                 if (!testcase[j].isFailure())
                 {
-                    long_deltav = ( norm(testcase[j].getVo() - vc1)
-                                  + norm(testcase[j].getV() - vc2) )
+                    long_deltav = ( (norm(testcase[j].getVo() - vc1))
+                                  + (norm(testcase[j].getV() - vc2)) )
                                   * ER / TU_SEC;
                 }
 
