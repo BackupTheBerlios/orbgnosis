@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.33 2006/05/08 05:44:47 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.34 2006/05/08 17:16:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -289,7 +289,7 @@ Lambert::battin (void)
     double  u, b, Sinv, Cosv, rp, x, xn, y, L, m, CosDeltaNu,
             SinDeltaNu, DNu, a, tan2w, RoR, h1, h2, tempx, eps,
             denom, chord, k2, s, f, g, fDot, am, ae, be, tm, gDot,
-            arg1, arg2, AlpE, BetE, BetH, DE, DH;
+            arg1, arg2, AlpE, AlpH, BetE, BetH, DE, DH, sqdnu;
     double  Ro4, R4;
 
     // initialize values
@@ -307,9 +307,74 @@ Lambert::battin (void)
     tan2w = 0.25 * eps * eps / (sqrt(RoR) + RoR * (2.0 + sqrt (RoR)));
     rp    = sqrt(Ro4 * R4) * ( cos(0.25 * DNu) * cos(0.25 * DNu) + tan2w);
 
-    // if (DNu < PI)  WORK IN PROGRESS
-       
-    
+    if (DNu < PI)
+    {
+        sqdnu = sin(0.25 * DNu) * sin (0.25 * DNu);
+        L = (sqdnu + tan2w) / (sqdnu + tan2w + cos (0.5 * DNu));
+    }else{
+        sqdnu = cos(0.25 * DNu) * sin (0.25 * DNu);
+        L = (sqdnu + tan2w - cos(0.5 * DNu)) / (sqdnu + tan2w);
+    }
+
+    m     = t * t / (8.0 * rp * rp * rp); // t is time of flight
+    xn    = 0.0;   // 0 for parabolic and hyperbolic
+    chord = sqrt(Ro4 * Ro4 + R4 * R4 - 2.0 * Ro4 * R4 * cos(DNu));
+    s     = 0.5 * (Ro4 + R4 + chord);
+
+    Loops = 1;
+    while( Loops < 30)
+    {
+        x       = xn;
+        tempx   = bat_SEE(x);
+        denom   = 1.0 / ((1.0 + 2.0 * x + L)
+                  * (3.0 + x * (1.0 + 4.0 * tempx)));
+        h1      = (L+x)*(L+x) * (1.0 + (1.0 + 3.0 * x) * tempx) * denom;
+        h2      = m * (1.0 + (x-L) * tempx) * denom;
+
+        // evaluate cubic
+        b   = 0.25 * 27.0 * h2 / ((1.0+h1)*(1.0+h1)*(1.0+h1));
+        u   = -0.5 * b / (1.0 + sqrt(1.0 + b));
+        k2  = bat_K(u);
+        y   = ((1.0 + h1) / 3.0) * (2.0 + sqrt(1.0 + b) /
+              (1.0 - 2.0 * u * k2 * k2 ));
+        xn  = sqrt( (0.5 * (1.0 - L))*(0.5 * (1.0 - L)) + m / (y*y))
+              - 0.5 *  (1.0 + L);
+
+        if (fabs(xn -x) < SMALL) break; // ugly
+        Loops = Loops + 1;
+    } // end while loop
+    a = t * t / (16.0 * rp * rp * xn * y * y);
+    // a = rp * m / (2.0 * xn * y * y);  -- commented out in original
+    // Find eccentric anomalies
+    // Hyperbolic
+    if (a < -SMALL)
+    {
+        arg1 = sqrt(s / (-2.0 * a));
+        arg2 = sqrt((s - chord) / (-2.0 * a));
+
+        // evaluate f and g functions
+
+        /*
+         * C++ note: asinh() acosh() and atanh() are not in the C90
+         * standard.
+         * doing #include <math.h> may or may not transparently
+         * include the appropriate header, ymmv.
+         *
+         * Where to find asinh() and friends...
+         *
+         * FreeBSD: in /usr/include/math.h, only if 
+         * #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __XSI_VISIBLE
+         *
+         * Linux RHEL: [TODO]
+         *
+         * AIX 4.3: [TODO]
+         *
+         * MacOS X: [TODO]
+         */
+        AlpH = 2.0 * asinh(arg1);
+
+    } // end if
+
 } // end Lambert::battin
 
 double
