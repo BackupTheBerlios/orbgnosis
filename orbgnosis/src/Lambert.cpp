@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.32 2006/05/08 03:04:56 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.33 2006/05/08 05:44:47 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -272,7 +272,7 @@ Lambert::universal (const bool Lin, const int multirev)
     Vo = Vo * ER / TU_SEC;
     V = V * ER / TU_SEC;
 */
-}
+} // end Lambert::universal
 
 /*
  * BATTIN'S METHOD
@@ -283,32 +283,113 @@ Lambert::universal (const bool Lin, const int multirev)
 void
 Lambert::battin (void)
 {
-    // TODO
-
-    // Will start by porting Vallado's top-down Battin method,
-    // then extend it to multiple revs per Tsioritas.
-
     // Local variables
     int     Loops;
     Vector  RCrossR;
-    double  u, b, Sinv, Cosv, rp, x, xn, y, l, m, CosDeltaNu,
+    double  u, b, Sinv, Cosv, rp, x, xn, y, L, m, CosDeltaNu,
             SinDeltaNu, DNu, a, tan2w, RoR, h1, h2, tempx, eps,
             denom, chord, k2, s, f, g, fDot, am, ae, be, tm, gDot,
             arg1, arg2, AlpE, BetE, BetH, DE, DH;
-}
+    double  Ro4, R4;
+
+    // initialize values
+    // Magnitudes of Ro and R
+    Ro4 = norm(Ro);
+    R4  = norm(R);
+
+    CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
+    RCrossR    = cross(Ro, R);
+    SinDeltaNu = norm(RCrossR) / (Ro4 * R4);
+    DNu        = atan2(SinDeltaNu, CosDeltaNu); // quadrant check!
+
+    RoR   = R4 / Ro4;
+    eps   = RoR / 1.0;
+    tan2w = 0.25 * eps * eps / (sqrt(RoR) + RoR * (2.0 + sqrt (RoR)));
+    rp    = sqrt(Ro4 * R4) * ( cos(0.25 * DNu) * cos(0.25 * DNu) + tan2w);
+
+    // if (DNu < PI)  WORK IN PROGRESS
+       
+    
+} // end Lambert::battin
 
 double
-Lambert::bat_SEE(double vin)
+Lambert::bat_SEE(double v)
 {
     // c: array (0..20) of Real;
+    double  c[20];
     double  term, termold, del, delold, sum1, temp, eta, SQRTopv;
     int     i;
-}
+
+    c[0] = 0.2;
+    for (int j = 1; j<21; j++)
+    {
+        temp = (double)(j + 2);
+        c[j] = (temp * temp) / ((4 * temp * temp) - 1);
+    }
+    SQRTopv = sqrt(1.0 + v);
+    eta = v / (1.0 + 2*SQRTopv + SQRTopv*SQRTopv);
+
+    // Process Forwards
+    delold  = 1.0;
+    termold = c[0]; // * eta
+    sum1    = termold;
+    i       = 1;
+    while ((i<=20) && (fabs(termold) > 0.000001))
+    {
+        del     = 1.0 / (1.0 + c[i] * eta * delold);
+        term    = termold * (del - 1.0);
+        sum1    = sum1 + term;
+        i       = i + 1;
+        delold  = del;
+        termold = term;
+    } // end while loop
+
+    return (1.0 / (8.0 * (1.0 + SQRTopv))) *
+           (3.0 + sum1 / (1.0 + eta * sum1));
+} // end Lambert::bat_SEE
 
 double
-Lambert::bat_K(double vin)
+Lambert::bat_K(double v)
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
+    double d[20];
+    d[1]    = 1.0       / 3.0;
+    d[2]    = 4.0       / 27.0;
+    d[3]    = 8.0       / 27.0;
+    d[4]    = 2.0       / 9.0;
+    d[5]    = 22.0      / 81.0;
+    d[6]    = 208.0     / 891.0;
+    d[7]    = 340.0     / 1287.0;
+    d[8]    = 418.0     / 1755.0;
+    d[9]    = 598.0     / 2295.0;
+    d[10]   = 700.0     / 2907.0;
+    d[11]   = 928.0     / 3591.0;
+    d[12]   = 1054.0    / 4347.0;
+    d[13]   = 1330.0    / 5175.0;
+    d[13]   = 1480.0    / 6075.0;
+    d[14]   = 1804.0    / 7047.0;
+    d[15]   = 1978.0    / 8091.0;
+    d[16]   = 2350.0    / 9207.0;
+    d[17]   = 2548.0    / 10395.0;
+    d[18]   = 2968.0    / 11655.0;
+    d[19]   = 3190.0    / 12987.0;
+    d[20]   = 3658.0    / 14391.0;
     int     i;
     double  del, delold, term, termold, sum1;
-}
+
+    // process fowards
+    sum1 = d[0];
+    delold = 1.0;
+    termold = d[0];
+    i = 1;
+    while ((i <= 20) && ( fabs(termold > 0.000001) ))
+    {
+        del     = 1.0 / (1.0 - d[i] * v * delold);
+        term    = termold * (del - 1.0);
+        sum1    = sum1 + term;
+        i       = i + 1;
+        delold  = del;
+        termold = term;
+    } // end while loop
+    return sum1;
+} // end Lambert::bat_K
