@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.16 2006/04/10 11:00:17 trs137 Exp $
+ * $Id: Lambert.h,v 1.17 2006/05/08 03:04:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -50,7 +50,9 @@ class Lambert
                 void universal(const bool, const int);
 
                 // Battin's method
-                void battin(void);
+                void    battin(void);
+                double  bat_SEE(double);
+                double  bat_K(double);
 
                 // Removed to outide of Lambert
                 // 

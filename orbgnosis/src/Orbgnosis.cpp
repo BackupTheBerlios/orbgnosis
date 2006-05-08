@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.5 2006/05/05 21:50:40 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.6 2006/05/08 03:04:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -185,7 +185,7 @@ main(void) {
             // Find minimum delta-V case among many multirev solutions.
 
             deltav = INF;
-            for (int revs = 0; revs < 5; revs++)
+            for (int revs = 0; revs < 15; revs++)
             {
                 L = false; // short way
                 testcase[j].universal(L,revs);

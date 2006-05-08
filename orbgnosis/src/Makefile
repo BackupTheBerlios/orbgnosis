@@ -1,20 +1,19 @@
 #
-# $Id: Makefile,v 1.14 2006/05/05 21:50:40 trs137 Exp $
+# $Id: Makefile,v 1.15 2006/05/08 03:04:57 trs137 Exp $
 #
 # *** use gmake! ***
 #
 CC=icpc
 LD=icpc
 RM=/bin/rm -f
-#CFLAGS=-Wall -Werror -ansi -pedantic -g
-#CFLAGS=-ansi -O2 -ip -static -xN -opt_report
-CFLAGS=-O2 -ip -static -xN
-REPORT=-opt_report_level max -opt_report_phase all -opt_report_file optreport
-#REPORT=
+CFLAGS=-Wall -pedantic -g
+#CFLAGS=-Wall -O2 -ip -static -xN
+#REPORT=-opt_report_level min -opt_report_phase all -opt_report_file optreport
+REPORT=
 LDFLAGS=
 SRCS = Lambert.cpp Vector.cpp Orbgnosis.cpp
 OBJS:=$(SRCS:.cpp=.o)
-MAIN=icc_orb
+MAIN=orb
 all:$(MAIN)
 
 $(MAIN):$(OBJS)

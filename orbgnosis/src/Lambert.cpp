@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.31 2006/05/01 19:48:18 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.32 2006/05/08 03:04:56 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -111,10 +111,10 @@ Lambert::isFailure(void)
  * "Fundamentals of Astrodynamics and Applications"
  */
 void
-Lambert::universal (const bool L, const int multirev)
+Lambert::universal (const bool Lin, const int multirev)
 { 
     // Local variables
-    const bool longway = L;
+    const bool longway = Lin;
     const int NumIter = 40;
     int Loops, YNegKtr;
     double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
@@ -287,4 +287,28 @@ Lambert::battin (void)
 
     // Will start by porting Vallado's top-down Battin method,
     // then extend it to multiple revs per Tsioritas.
+
+    // Local variables
+    int     Loops;
+    Vector  RCrossR;
+    double  u, b, Sinv, Cosv, rp, x, xn, y, l, m, CosDeltaNu,
+            SinDeltaNu, DNu, a, tan2w, RoR, h1, h2, tempx, eps,
+            denom, chord, k2, s, f, g, fDot, am, ae, be, tm, gDot,
+            arg1, arg2, AlpE, BetE, BetH, DE, DH;
+}
+
+double
+Lambert::bat_SEE(double vin)
+{
+    // c: array (0..20) of Real;
+    double  term, termold, del, delold, sum1, temp, eta, SQRTopv;
+    int     i;
+}
+
+double
+Lambert::bat_K(double vin)
+{
+    // d: array (0..20) of Real; -- hardcoded, see astiod.adb
+    int     i;
+    double  del, delold, term, termold, sum1;
 }
