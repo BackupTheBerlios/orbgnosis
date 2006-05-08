@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Global.h,v 1.5 2006/03/31 16:52:04 trs137 Exp $
+ * $Id: Global.h,v 1.6 2006/05/08 20:05:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,10 +31,10 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
-#define INF 1.0e99
-#define EPS 1.0e-14
-#define E  2.71828182845905
-#define PI 3.14159265358979
+// #define INF 1.0e99           use INFINITY defined in <math.h> instead
+//#define EPS 1.0e-14
+//#define E  2.71828182845905
+//#define PI 3.14159265358979   use M_PI from <math.h> instead
 #define SMALL 1.0e-8
 #define ER 6378.137           // Earth radius in km
 #define MU 398600.4418        // Earth Mu (km^3 / s^2)

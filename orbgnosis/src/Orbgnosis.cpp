@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.6 2006/05/08 03:04:57 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.7 2006/05/08 20:05:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -105,7 +105,7 @@ main(void) {
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical TU
     // t_max = 1 orbital period for a cirular orbit of radius q1.
     double radius = norm(q1);
-    t_max = 2.0 * PI * sqrt(radius*radius*radius);
+    t_max = 2.0 * M_PI * sqrt(radius*radius*radius);
 
     // we want (problems) incrments from t_min to t_max.
     t_inc = (t_max-t_min) / (problems-1);
@@ -139,7 +139,7 @@ main(void) {
 
     double f, f_max, f_min, f_inc;
     f_min = 2.0 * SMALL;
-    f_max = 2.0 * PI + SMALL;
+    f_max = 2.0 * M_PI + SMALL;
     f_inc = (f_max-f_min) / (problems-1);
 
     const double r1 = 1.1;
@@ -153,7 +153,7 @@ main(void) {
     bool L;
 
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical
-    t_max = 6.0 * PI * sqrt(r2*r2*r2);
+    t_max = 6.0 * M_PI * sqrt(r2*r2*r2);
     t_inc = (t_max-t_min) / (problems-1);
 
     // This will run (problems * problems) times!!!!!
@@ -184,12 +184,12 @@ main(void) {
 
             // Find minimum delta-V case among many multirev solutions.
 
-            deltav = INF;
+            deltav = INFINITY;
             for (int revs = 0; revs < 15; revs++)
             {
                 L = false; // short way
                 testcase[j].universal(L,revs);
-                short_deltav = INF;
+                short_deltav = INFINITY;
                 if (!testcase[j].isFailure())
                 {
                     short_deltav = ( (norm(testcase[j].getVo() - vc1))
@@ -199,7 +199,7 @@ main(void) {
 
                 L = true; // long way
                 testcase[j].universal(L,revs);
-                long_deltav = INF;
+                long_deltav = INFINITY;
                 if (!testcase[j].isFailure())
                 {
                     long_deltav = ( (norm(testcase[j].getVo() - vc1))

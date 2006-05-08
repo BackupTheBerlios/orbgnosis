@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.34 2006/05/08 17:16:04 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.35 2006/05/08 20:05:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -153,11 +153,11 @@ Lambert::universal (const bool Lin, const int multirev)
     // Set up initial bounds for the bisection.
     if (0 == revs)
     {
-        Upper = 4.0 * PI * PI;
-        Lower = -8.0 * PI;
+        Upper = 4.0 * M_PI * M_PI;
+        Lower = -8.0 * M_PI;
     }else{
-        Upper = -SMALL + 4.0 * ((revs/2)+1)*((revs/2)+1)*PI*PI;
-        Lower = SMALL + 4.0 * (revs/2)*(revs/2) * PI*PI;
+        Upper = -SMALL + 4.0 * ((revs/2)+1)*((revs/2)+1)*M_PI*M_PI;
+        Lower = SMALL + 4.0 * (revs/2)*(revs/2) * M_PI*M_PI;
     }
 
     // Determine if the orbit is possible at all
@@ -248,8 +248,8 @@ Lambert::universal (const bool Lin, const int multirev)
             // cout << "Error: Lambert Universal failed to converge. \n";
             //if (YNegKtr > 10) cout << "Y is negative\n";
             //cout << "NumIter = " << NumIter << "\n";
-            Vo.set3(INF, INF, INF);
-            V.set3(INF, INF, INF);
+            Vo.set3(INFINITY, INFINITY, INFINITY);
+            V.set3(INFINITY, INFINITY, INFINITY);
             failure = true;
         }else{
 
@@ -263,8 +263,8 @@ Lambert::universal (const bool Lin, const int multirev)
         } // end if answer has converged
     }else{
         // cout << "Vectors are 180 degrees apart.\n";
-        Vo.set3(INF, INF, INF);
-        V.set3(INF, INF, INF);
+        Vo.set3(INFINITY, INFINITY, INFINITY);
+        V.set3(INFINITY, INFINITY, INFINITY);
         failure = true;
     } // end if VarA > SMALL
 
@@ -307,7 +307,7 @@ Lambert::battin (void)
     tan2w = 0.25 * eps * eps / (sqrt(RoR) + RoR * (2.0 + sqrt (RoR)));
     rp    = sqrt(Ro4 * R4) * ( cos(0.25 * DNu) * cos(0.25 * DNu) + tan2w);
 
-    if (DNu < PI)
+    if (DNu < M_PI)
     {
         sqdnu = sin(0.25 * DNu) * sin (0.25 * DNu);
         L = (sqdnu + tan2w) / (sqdnu + tan2w + cos (0.5 * DNu));
@@ -365,9 +365,10 @@ Lambert::battin (void)
          * FreeBSD: in /usr/include/math.h, only if 
          * #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __XSI_VISIBLE
          *
-         * Linux RHEL: [TODO]
+         * Linux RHEL: [TODO] it's not in /usr/include/math.h... yet it works?
          *
-         * AIX 4.3: [TODO]
+         * AIX 4.3: in /usr/include/math.h, only if
+         * #if _XOPEN_SOURCE_EXTENDED==1
          *
          * MacOS X: [TODO]
          */
