@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.7 2006/05/08 20:05:57 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.8 2006/05/12 23:51:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -36,8 +36,8 @@
 #include <iostream>
 using namespace std;
 
-int
-main(void) {
+int main(void)
+{
     const int problems = 500;
     double t;
     Vector q1, q2;
@@ -224,5 +224,5 @@ main(void) {
     delete[] testcase;
     testcase = NULL;
 
-    return 0;
+    return EXIT_SUCCESS;
 }
