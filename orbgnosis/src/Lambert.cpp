@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.35 2006/05/08 20:05:57 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.36 2006/05/23 15:23:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -300,7 +300,7 @@ Lambert::battin (void)
     CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
     RCrossR    = cross(Ro, R);
     SinDeltaNu = norm(RCrossR) / (Ro4 * R4);
-    DNu        = atan2(SinDeltaNu, CosDeltaNu); // quadrant check!
+    DNu        = atan2(SinDeltaNu, CosDeltaNu); // quadrant safe
 
     RoR   = R4 / Ro4;
     eps   = RoR / 1.0;
@@ -317,7 +317,7 @@ Lambert::battin (void)
     }
 
     m     = t * t / (8.0 * rp * rp * rp); // t is time of flight
-    xn    = 0.0;   // 0 for parabolic and hyperbolic
+    xn    = 0.0;                          // 0 for parabolic and hyperbolic
     chord = sqrt(Ro4 * Ro4 + R4 * R4 - 2.0 * Ro4 * R4 * cos(DNu));
     s     = 0.5 * (Ro4 + R4 + chord);
 
@@ -331,7 +331,7 @@ Lambert::battin (void)
         h1      = (L+x)*(L+x) * (1.0 + (1.0 + 3.0 * x) * tempx) * denom;
         h2      = m * (1.0 + (x-L) * tempx) * denom;
 
-        // evaluate cubic
+        // Evaluate the cubic.
         b   = 0.25 * 27.0 * h2 / ((1.0+h1)*(1.0+h1)*(1.0+h1));
         u   = -0.5 * b / (1.0 + sqrt(1.0 + b));
         k2  = bat_K(u);
@@ -340,11 +340,11 @@ Lambert::battin (void)
         xn  = sqrt( (0.5 * (1.0 - L))*(0.5 * (1.0 - L)) + m / (y*y))
               - 0.5 *  (1.0 + L);
 
-        if (fabs(xn -x) < SMALL) break; // ugly
+        if (fabs(xn -x) < SMALL) break; // XXX ugly
         Loops = Loops + 1;
     } // end while loop
     a = t * t / (16.0 * rp * rp * xn * y * y);
-    // a = rp * m / (2.0 * xn * y * y);  -- commented out in original
+    // a = rp * m / (2.0 * xn * y * y);  -- XXX commented out in original
     // Find eccentric anomalies
     // Hyperbolic
     if (a < -SMALL)
@@ -360,7 +360,7 @@ Lambert::battin (void)
          * doing #include <math.h> may or may not transparently
          * include the appropriate header, ymmv.
          *
-         * Where to find asinh() and friends...
+         * asinh() and friends will work, if...
          *
          * FreeBSD: in /usr/include/math.h, only if 
          * #if __BSD_VISIBLE || __ISO_C_VISIBLE >= 1999 || __XSI_VISIBLE
@@ -418,7 +418,8 @@ double
 Lambert::bat_K(double v)
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
-    double d[20];
+    // XXX ugly
+    double d[21];
     d[1]    = 1.0       / 3.0;
     d[2]    = 4.0       / 27.0;
     d[3]    = 8.0       / 27.0;
