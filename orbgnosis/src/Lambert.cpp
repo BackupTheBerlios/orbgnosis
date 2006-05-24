@@ -23,11 +23,15 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.37 2006/05/24 14:19:19 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.38 2006/05/24 14:20:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
  *
+ */
+
+/*
+ * DEPRECATED: Use ULambert or BLambert.
  */
 
 #include <math.h>
