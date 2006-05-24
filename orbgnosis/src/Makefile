@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2006/05/24 14:19:19 trs137 Exp $
+# $Id: Makefile,v 1.19 2006/05/24 14:22:27 trs137 Exp $
 #
 # *** use gmake! ***
 #
@@ -13,7 +13,7 @@ CFLAGS=-Wall -pedantic -g
 #REPORT=-opt_report_level min -opt_report_phase all -opt_report_file optreport
 REPORT=
 LDFLAGS=
-SRCS = Lambert.cpp Vector.cpp Orbgnosis.cpp
+SRCS = ULambert.cpp Vector.cpp Orbgnosis.cpp
 OBJS:=$(SRCS:.cpp=.o)
 MAIN=orb
 all:$(MAIN)

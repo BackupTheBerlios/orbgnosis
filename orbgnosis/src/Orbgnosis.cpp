@@ -23,14 +23,14 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.9 2006/05/24 14:19:19 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.10 2006/05/24 14:21:39 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
  */
 
 #include "Vector.h"
-#include "Lambert.h"
+#include "ULambert.h"
 #include "Global.h"
 #include <math.h>
 #include <iostream>
@@ -43,7 +43,7 @@ int main(void)
     Vector q1, q2;
     srand(time(NULL));
 
-    Lambert* testcase = new Lambert[problems];
+    ULambert* testcase = new ULambert[problems];
 
     // Write file for tecplot.
 
