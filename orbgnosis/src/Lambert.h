@@ -23,10 +23,15 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.h,v 1.17 2006/05/08 03:04:57 trs137 Exp $
+ * $Id: Lambert.h,v 1.18 2006/05/24 14:19:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
+ */
+
+
+/*
+ * DEPRECATED: use ULambert or BLambert instead.
  */
 
 #ifndef _LAMBERT_H_
@@ -56,7 +61,7 @@ class Lambert
 
                 // Removed to outide of Lambert
                 // 
-                //void elements(void);
+                // void elements(void);
 
                 void setRo (Vector);
                 void setR  (Vector);

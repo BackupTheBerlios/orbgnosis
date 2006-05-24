@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.8 2006/05/12 23:51:17 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.9 2006/05/24 14:19:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -173,7 +173,6 @@ int main(void)
             vc2.setX ((-sin(f)) * (sqrt(1/r2)) );
             vc2.setY ((cos(f)) * (sqrt(1/r2)) );
             vc2.setZ (0.0);
-
 
             testcase[j].setRo(q1);
             testcase[j].setR(q2);

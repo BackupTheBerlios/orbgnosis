@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Lambert.cpp,v 1.36 2006/05/23 15:23:37 trs137 Exp $
+ * $Id: Lambert.cpp,v 1.37 2006/05/24 14:19:19 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -419,7 +419,8 @@ Lambert::bat_K(double v)
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
     // XXX ugly
-    double d[21];
+    /*
+    double d[20];
     d[1]    = 1.0       / 3.0;
     d[2]    = 4.0       / 27.0;
     d[3]    = 8.0       / 27.0;
@@ -441,6 +442,30 @@ Lambert::bat_K(double v)
     d[18]   = 2968.0    / 11655.0;
     d[19]   = 3190.0    / 12987.0;
     d[20]   = 3658.0    / 14391.0;
+    */
+
+    const double d[] = {
+        0.3333333333333333,
+        0.1481481481481481,
+        0.2962962962962963,
+        0.2222222222222222,
+        0.2716049382716049,
+        0.2334455667789001,
+        0.2641802641802642,
+        0.2381766381766382,
+        0.2605664488017429,
+        0.2407980736154111,
+        0.2584238373712058,
+        0.2424660685530251,
+        0.2436213991769547,
+        0.2559954590605932,
+        0.2444691632678284,
+        0.2552405778212230,
+        0.2451178451178451,
+        0.2546546546546546,
+        0.2456302456302456,
+        0.2541866444305469 };
+
     int     i;
     double  del, delold, term, termold, sum1;
 
