@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.cpp,v 1.2 2006/05/24 15:19:57 trs137 Exp $
+ * $Id: BLambert.cpp,v 1.3 2006/05/24 16:14:17 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -248,32 +248,6 @@ double
 BLambert::bat_K(double v)
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
-    /*
-    double d[21];
-    d[0]    = 0; // Padding. Not used.
-    d[1]    = 1.0       / 3.0;
-    d[2]    = 4.0       / 27.0;
-    d[3]    = 8.0       / 27.0;
-    d[4]    = 2.0       / 9.0;
-    d[5]    = 22.0      / 81.0;
-    d[6]    = 208.0     / 891.0;
-    d[7]    = 340.0     / 1287.0;
-    d[8]    = 418.0     / 1755.0;
-    d[9]    = 598.0     / 2295.0;
-    d[10]   = 700.0     / 2907.0;
-    d[11]   = 928.0     / 3591.0;
-    d[12]   = 1054.0    / 4347.0;
-    d[13]   = 1330.0    / 5175.0;
-    d[14]   = 1480.0    / 6075.0;
-    d[15]   = 1804.0    / 7047.0;
-    d[16]   = 1978.0    / 8091.0;
-    d[17]   = 2350.0    / 9207.0;
-    d[18]   = 2548.0    / 10395.0;
-    d[19]   = 2968.0    / 11655.0;
-    d[20]   = 3190.0    / 12987.0;
-    d[21]   = 3658.0    / 14391.0;
-    */
-
     // Static function variables are initialized once and only one
     // copy is created even if the function is called recursively.
 
