@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.h,v 1.1 2006/05/24 14:17:33 trs137 Exp $
+ * $Id: BLambert.h,v 1.2 2006/05/24 15:19:57 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -36,30 +36,30 @@ class BLambert
 {
     public:
 
-                BLambert (void);         // just zeros
+            BLambert (void);         // just zeros
 
-                BLambert (Vector r1in,
+            BLambert (Vector r1in,
                          Vector r2in,
                          double tin);
 
-                virtual ~BLambert (void);
+            virtual ~BLambert (void);
 
-                BLambert (const BLambert&); // copy ctor
+            BLambert (const BLambert&); // copy ctor
 
-                // Battin's method
-                void    battin(void);
-                double  bat_SEE(double);
-                double  bat_K(double);
+            // Battin's method
+            void    battin(void);
+            double  bat_SEE(double);
+            double  bat_K(double);
 
-                void setRo (Vector);
-                void setR  (Vector);
-                void sett  (double);
+            void setRo (Vector);
+            void setR  (Vector);
+            void sett  (double);
 
-                Vector getVo (void);
-                Vector getV  (void);
-                double gett  (void);
+            Vector getVo (void);
+            Vector getV  (void);
+            double gett  (void);
 
-                bool isFailure(void);
+            bool isFailure(void);
 
     private:
 
@@ -73,6 +73,7 @@ class BLambert
         Vector V;              // final velocity of xfer arc
 
         bool failure;
+
 };
 
 #endif /* _BLAMBERT_H_ */
