@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.h,v 1.1 2006/05/24 14:17:33 trs137 Exp $
+ * $Id: ULambert.h,v 1.2 2006/06/05 22:21:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -32,6 +32,16 @@
 #ifndef _ULAMBERT_H_
 #define _ULAMBERT_H_
 
+/**
+ * ULambert is the universal variables method of solving a Lamberts problem.
+ * Solving Lamberts problem with this technique is difficult because the
+ * iteration isn't always well-behaved.  Simple Newtonian iteration may fail
+ * to converte on diffucult hyperbolic trajectories.  Therefore, this class
+ * uses a simple bisection technique which works well on all trajectory types
+ * and is only slightly slower.  The upper and lower bounds are set accordingly
+ * so that the solution converges to the desired solution, but only the
+ * zero-revolution case(s) are garuanteed.
+ */
 class ULambert 
 {
     public:
@@ -62,15 +72,15 @@ class ULambert
     private:
 
         // Inputs:
-        double t;
-        Vector Ro;
-        Vector R;
+        double t;   //<! specified time of flight from Ro to R.
+        Vector Ro;  //<! initial position vector.
+        Vector R;   //<! final position vector.
 
         // Results:        
-        Vector Vo;             // initial velocity of xfer arc
-        Vector V;              // final velocity of xfer arc
+        Vector Vo;  //<! initial velocity of at start of the transfer arc.
+        Vector V;   //<! final velocity at the end of transfer arc.
 
-        bool failure;
+        bool failure;   //<! is true if the solution fails to converge.
 };
 
 #endif /* _ULAMBERT_H_ */

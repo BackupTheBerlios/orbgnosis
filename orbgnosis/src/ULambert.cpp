@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.cpp,v 1.5 2006/06/05 20:51:37 trs137 Exp $
+ * $Id: ULambert.cpp,v 1.6 2006/06/05 22:21:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -48,62 +48,98 @@ using namespace std;
 #pragma warning (disable:981)
 #endif
 
+/**
+ * The universal variable Lambert constructor with no arguments.
+ * All member variables are set to zero.
+ */
 ULambert::ULambert(void)
 {
     t = 0.0;
     Ro.toZero();
     R.toZero();
-    failure = false;
+    failure = false; //<! All Lambert problems begin life as un-failed and must be proven otherwise.
 }
 
+/**
+ * The universal variable Lambert constructor with three arguments specified.
+ * @param r1in is the initial position.
+ * @param r2in is the final position.
+ * @param tin is the specified time of flight.
+ */
 ULambert::ULambert(Vector r1in, Vector r2in, double tin) :
     t(tin), Ro(r1in), R(r2in) 
 {
     // cout << "ULambert constructor called \n";
-    failure = false;
+    failure = false; //<! All Lambert problems begin life as un-failed and must be profen otherwise.
 }
 
+/**
+ * The universal variable Lambert destructor.
+ */
 ULambert::~ULambert (void)
 {
     // cout << "ULambert destructor called \n";
 }
 
+/**
+ * Sets the initial position vector, Ro.
+ */
 void
 ULambert::setRo (Vector vin)
 {
     Ro = vin;
 }
 
+/**
+ * Sets the final position vector, R.
+ */
 void
 ULambert::setR (Vector vin)
 {
     R = vin;
 }
 
+/**
+ * Sets the time of flight, t.
+ */
 void
 ULambert::sett (double tin)
 {
     t = tin;
 }
 
+/**
+ * Gets the initial velocity vector, Vo.
+ * This is the velocity at the point Ro which satisfies the Lamberts problem.
+ */
 Vector
 ULambert::getVo (void)
 {
     return Vo;
 }
-
+/**
+ * Gets the final velocity vector, V.
+ * This is the velocity at the point R which satisfies the Lamberts problem.
+ */
 Vector
 ULambert::getV (void)
 {
     return V;
 }
 
+/**
+ * Gets the time of flight, t.
+ */
 double
 ULambert::gett (void)
 {
     return t;
 }
 
+/**
+ * Returns true if failure is true, false if faluire is false.
+ * This method is necessary because failure is private.
+ */
 bool
 ULambert::isFailure(void)
 {
@@ -114,24 +150,44 @@ ULambert::isFailure(void)
     }
 }
 
-/*
- * UNIVERSAL VARIABLES METHOD
- *
- * Adapted from David Vallado's implementations
- * "Fundamentals of Astrodynamics and Applications"
+/**
+ * Lamberts Problem, universal variables method.
+ * Adapted from David Vallado's Ada implementation in "Fundamentals of
+ * Astrodynamics and Applications".
  */
 void
 ULambert::universal (const bool Lin, const int multirev)
-{ 
-    // Local variables
+{
+    /// True if desired solution is to be the "long way", e.g.
+    /// the swept angle is greater than pi or 180 degrees.
     const bool longway = Lin;
-    const int NumIter = 40;
-    int Loops, YNegKtr;
-    double VarA, Y, Upper, Lower, CosDeltaNu, F, G, GDot, XOld,
-           XOldCubed, PsiOld, PsiNew, C2New, C3New, dtNew;
-    double Ro4, R4;
 
-    const int revs = multirev;
+    /// The maximum number of iterations allowed.
+    const int NumIter = 40;  
+
+    int Loops;      //<! loop counter.
+    int YNegKtr;    //<! counts how many times Y returned negative.
+    double VarA;    //<! see Algorithm #55 of "Fundamentals of Astrodynamics and Applications".
+    double Y;       //<! see Algorithm #55.
+    double Upper;   //<! upper bound for initial bisection.
+    double Lower;   //<! lower bound for initial bisection.
+    double CosDeltaNu; //<! the cosine of the swept angle in true anomaly.
+    double F;       //<! the f function, see http://scienceworld.wolfram.com/physics/F-andG-Functions.html.
+    double G;       //<! the g function, see http://scienceworld.wolfram.com/physics/F-andG-Functions.html.
+    double GDot;    //<! the g rate of change of G.
+    double XOld;    //<! Greek letter Chi from Algorithm #55.
+    double XOldCubed; //<! simply XOld cubed.
+    double PsiOld;  //<! Greek letter Psi_n from Algorithm #55
+    double PsiNew;  //<! Greek letter Psi_n+1 from Algorithm #55
+    double C2New;   //<! Locally stored value of the C2 Stumpff function.
+    double C3New;   //<! Locally stored value of the C3 Stumpff function.
+    double dtNew;   //<! delta-T from Algoritm #55.
+
+
+    double Ro4; //<! magnitude of the Vector Ro.  The naming convention traces back to Vallado's Ada version which used the 4th element of an array to hold the vector norm of the first 3 elements.
+    double R4;  //<! magnitude of the Vector R.
+
+    const int revs = multirev; //<! is only roughly related to the number of multiple revolutions when attempting to find multi-rev solutions.
 
     failure = false;
 
