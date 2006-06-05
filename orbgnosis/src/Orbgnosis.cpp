@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.10 2006/05/24 14:21:39 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.11 2006/06/05 13:30:23 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -33,11 +33,13 @@
 #include "ULambert.h"
 #include "Global.h"
 #include <math.h>
+#include <float.h>
 #include <iostream>
 using namespace std;
 
 int main(void)
 {
+    cout << FLT_MAX << "\n\n";
     const int problems = 500;
     double t;
     Vector q1, q2;
@@ -183,12 +185,12 @@ int main(void)
 
             // Find minimum delta-V case among many multirev solutions.
 
-            deltav = INFINITY;
+            deltav = DBL_MAX;
             for (int revs = 0; revs < 15; revs++)
             {
                 L = false; // short way
                 testcase[j].universal(L,revs);
-                short_deltav = INFINITY;
+                short_deltav = DBL_MAX;
                 if (!testcase[j].isFailure())
                 {
                     short_deltav = ( (norm(testcase[j].getVo() - vc1))
@@ -198,7 +200,7 @@ int main(void)
 
                 L = true; // long way
                 testcase[j].universal(L,revs);
-                long_deltav = INFINITY;
+                long_deltav = DBL_MAX;
                 if (!testcase[j].isFailure())
                 {
                     long_deltav = ( (norm(testcase[j].getVo() - vc1))

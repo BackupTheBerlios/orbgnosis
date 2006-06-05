@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.cpp,v 1.1 2006/05/24 14:17:33 trs137 Exp $
+ * $Id: ULambert.cpp,v 1.2 2006/06/05 13:30:23 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -35,6 +35,7 @@
 #include "Global.h"
 #include "Stumpff.h"
 #include "ULambert.h"
+#include <float.h>
 #include <iostream>
 using namespace std;
 
@@ -248,8 +249,8 @@ ULambert::universal (const bool Lin, const int multirev)
             // cout << "Error: Lambert Universal failed to converge. \n";
             //if (YNegKtr > 10) cout << "Y is negative\n";
             //cout << "NumIter = " << NumIter << "\n";
-            Vo.set3(INFINITY, INFINITY, INFINITY);
-            V.set3(INFINITY, INFINITY, INFINITY);
+            Vo.set3(DBL_MAX, DBL_MAX, DBL_MAX);
+            V.set3(DBL_MAX, DBL_MAX, DBL_MAX);
             failure = true;
         }else{
 
@@ -263,8 +264,8 @@ ULambert::universal (const bool Lin, const int multirev)
         } // end if answer has converged
     }else{
         // cout << "Vectors are 180 degrees apart.\n";
-        Vo.set3(INFINITY, INFINITY, INFINITY);
-        V.set3(INFINITY, INFINITY, INFINITY);
+        Vo.set3(DBL_MAX, DBL_MAX, DBL_MAX);
+        V.set3(DBL_MAX, DBL_MAX, DBL_MAX);
         failure = true;
     } // end if VarA > SMALL
 

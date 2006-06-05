@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.cpp,v 1.3 2006/05/24 16:14:17 trs137 Exp $
+ * $Id: BLambert.cpp,v 1.4 2006/06/05 13:30:23 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -35,6 +35,7 @@
 #include "Global.h"
 #include "Stumpff.h"
 #include "BLambert.h"
+#include <float.h>
 #include <iostream>
 using namespace std;
 
@@ -244,14 +245,14 @@ BLambert::bat_SEE(double v)
            (3.0 + sum1 / (1.0 + eta * sum1));
 } // end BLambert::bat_SEE
 
-double
+inline double
 BLambert::bat_K(double v)
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
     // Static function variables are initialized once and only one
     // copy is created even if the function is called recursively.
 
-    const static double d[] =
+    static const double d[] =
     {   0,
         (1.0       / 3.0 ),
         (4.0       / 27.0),

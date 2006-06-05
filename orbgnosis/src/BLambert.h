@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.h,v 1.2 2006/05/24 15:19:57 trs137 Exp $
+ * $Id: BLambert.h,v 1.3 2006/06/05 13:30:23 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -73,7 +73,6 @@ class BLambert
         Vector V;              // final velocity of xfer arc
 
         bool failure;
-
 };
 
 #endif /* _BLAMBERT_H_ */

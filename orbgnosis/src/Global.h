@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Global.h,v 1.6 2006/05/08 20:05:57 trs137 Exp $
+ * $Id: Global.h,v 1.7 2006/06/05 13:30:23 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,7 +31,16 @@
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
 
-// #define INF 1.0e99           use INFINITY defined in <math.h> instead
+//define INF 1.0e99           use INFINITY defined in <math.h> instead
+
+// Assigning doubles to INFINITY cases problems on some platforms.
+// USE DBL_MAX instead.  DBL_MAX should be in <float.h> per
+// ISO C standard:
+#ifndef _FLOAT_H___
+#define DBL_MAX     __DBL_MAX__
+#endif // _FLOAT_H___
+
+
 //#define EPS 1.0e-14
 //#define E  2.71828182845905
 //#define PI 3.14159265358979   use M_PI from <math.h> instead
