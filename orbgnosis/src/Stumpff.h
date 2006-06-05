@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.h,v 1.5 2006/06/05 19:13:01 trs137 Exp $
+ * $Id: Stumpff.h,v 1.6 2006/06/05 19:22:09 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -34,6 +34,8 @@
  * C_k(z) = [1/k!] - [z / (k+2)!] + [z^2 / (k+4)!] + ...
  *
  */
+
+/** @file */
 #ifndef _STUMPFF_H_
 #define _STUMPFF_H_
 
