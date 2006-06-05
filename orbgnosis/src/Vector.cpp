@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.15 2006/06/05 16:45:40 trs137 Exp $
+ * $Id: Vector.cpp,v 1.16 2006/06/05 19:13:01 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -44,11 +44,20 @@ using namespace std;
 #pragma warning (disable:981)
 #endif
 
+/**
+ * The Vector constructor with no arguments defaults to all zeroes.
+ */
 Vector::Vector (void)
 {
     x = y = z = 0.0;    // Vectors with no args default to zero.
 }
 
+/**
+ * The Vector constructor takes three doubles, the vector elements.
+ * @param xin the first element.
+ * @param yin the second element.
+ * @param zin the third element.
+ */
 Vector::Vector (double xin, double yin, double zin)
 {
     x = xin;
@@ -56,11 +65,18 @@ Vector::Vector (double xin, double yin, double zin)
     z = zin;
 }
 
+/**
+ * The Vector destructor.
+ */
 Vector::~Vector (void)
 {
     //cout << "Vector dtor.\n";
 }
 
+/**
+ * The Vector copy constructor.
+ * @param copy the reference to the Vector to be copied.
+ */
 Vector::Vector (const Vector& copy)
 {
     x = copy.x;
@@ -68,6 +84,10 @@ Vector::Vector (const Vector& copy)
     z = copy.z;
 }
 
+/**
+ * The Vector copy assignment operator.
+ * @param q the Vector on the right hand side of the equality.
+ */
 Vector&
 Vector::operator = (Vector q)
 {
@@ -77,12 +97,11 @@ Vector::operator = (Vector q)
     return *this;
 }
 
-/*
- * Multiplication and division are overloaded to work
- * regardless of the order of the arguments:
- * (Vector, double) or (double, Vector).
+/**
+ * Multiplies a Vector with a scalar of type double and returns a Vector.
+ * @param q the vector (type must be Vector).
+ * @param s the scalar (type must be double).
  */
-
 Vector
 operator * (const Vector& q, const double& s)
 {
@@ -91,6 +110,11 @@ operator * (const Vector& q, const double& s)
                    q.z * s);
 }
 
+/**
+ * Multiplies a scalar of type double with a Vector and returns a Vector.
+ * @param s the scalar (type must be double).
+ * @param q the vector (type must be Vector).
+ */
 Vector
 operator * (const double& s, const Vector& q)
 {
@@ -99,6 +123,11 @@ operator * (const double& s, const Vector& q)
                    q.z * s);
 }
 
+/**
+ * Divides a Vector by a scalar of type double and returns a Vector.
+ * @param q the vector (type must be Vector).
+ * @param s the scalar (type must be double).
+ */
 Vector
 operator / (const Vector& q, const double& s)
 {
@@ -107,6 +136,11 @@ operator / (const Vector& q, const double& s)
                    q.z / s);
 }
 
+/**
+ * Multiplies scalar of type double by a Vector and returns a Vector.
+ * @param s the scalar (type must be double).
+ * @param q the vector (type must be Vector).
+ */
 Vector
 operator / (const double& s, const Vector& q)
 {
@@ -115,10 +149,11 @@ operator / (const double& s, const Vector& q)
                    q.z / s);
 }
 
-/*
- * Vector addition and subtraction requires two vectors.
+/**
+ * Vector addition.
+ * @param a a constant reference to the first Vector.
+ * @param b a constant reference to the second Vector.
  */
-
 Vector
 operator + (const Vector& a, const Vector& b)
 {
@@ -127,6 +162,11 @@ operator + (const Vector& a, const Vector& b)
                    a.z + b.z);
 }
 
+/**
+ * Vector subtraction.
+ * @param a a constant reference to the first Vector.
+ * @param b a constant reference to the second Vector.
+ */
 Vector
 operator - (const Vector& a, const Vector& b)
 {
@@ -135,6 +175,11 @@ operator - (const Vector& a, const Vector& b)
                    a.z - b.z);
 }
 
+/**
+ * Cross product, returns type Vector.
+ * @param a a constant reference to the first Vector.
+ * @param b a constant reference to the second Vector.
+ */
 Vector
 cross (const Vector& a, const Vector& b)
 {
@@ -144,18 +189,32 @@ cross (const Vector& a, const Vector& b)
     return Vector(nx, ny, nz);
 }
 
+/**
+ * Dot product, returns type double.
+ * @param a a constant reference to the first Vector.
+ * @param b a constant reference to the second Vector.
+ */
 double
 dot (const Vector& a, const Vector& b)
 {
     return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
+/**
+ * The Euclidean vector norm.
+ * @param q a constant reference to a Vector.
+ */
 double
 norm (const Vector& q)
 {
     return sqrt (q.x*q.x + q.y*q.y + q.z*q.z);
 }
 
+/**
+ * The iostream output operator is overloaded for the Vector type.
+ * @param s a reference to ostream.
+ * @param q the Vector to be printed with nice formatting. 
+ */
 ostream&
 operator << (ostream& s, Vector q)
 {
@@ -163,6 +222,11 @@ operator << (ostream& s, Vector q)
     return s;
 }
 
+/**
+ * The iostream input operator is overloaded for the Vector type.
+ * @param s a reference to istream.
+ * @param q the Vector which we're going to try to read from input.
+ */
 istream&
 operator >> (istream& s, Vector q)
 {
@@ -170,30 +234,50 @@ operator >> (istream& s, Vector q)
     return s;
 }
 
+/**
+ * Get method for the first element of a Vector.
+ */
 double
 Vector::getX (void)
 {
     return x;
 }
 
+/**
+ * Get method for the second element of a Vector.
+ */
 double
 Vector::getY (void)
 {
     return y;
 }
 
+/**
+ * Get method for the third element of a Vector.
+ */
 double
 Vector::getZ (void)
 {
     return z;
 }
 
+/**
+ * Sets all three elements of a Vector to zero.
+ */
 void
 Vector::toZero (void)
 {
     x = y = z = 0.0;
 }
 
+/**
+ * Sets all three elements of a Vector to DBL_MAX (may cause problems).
+ * NOTE: Using INFINITY as defined in <math.h> works on Linux and FreeBSD,
+ * but generates errors with gcc4.0 on Mac OS X because INFINITY (1.0e99)
+ * is greater than DBL_MAX.  DBL_MAX is friendlier, but still needs testing.
+ * TODO: Add a boolean to the Vector class to track whether a Vector is
+ * Very Large.
+ */
 void
 Vector::toInf (void)
 {
@@ -207,6 +291,12 @@ Vector::toInf (void)
     return;
 }
 
+/**
+ * Sets all three elements of a Vector by taking three arguments.
+ * @param a the first element.
+ * @param b the second element.
+ * @param c the third element.
+ */
 void
 Vector::set3 (double a, double b, double c)
 {
@@ -215,17 +305,27 @@ Vector::set3 (double a, double b, double c)
     z = c;
 }
 
+/**
+ * Set method for the first element of a Vector.
+ */
 void
 Vector::setX (double xin)
 {
     x = xin;
 }
 
+/**
+ * Set method for the second element of a Vector.
+ */
 void
 Vector::setY (double yin)
 {
     y = yin;
 }
+
+/**
+ * Set method for the third element of a Vector.
+ */
 void
 Vector::setZ (double zin)
 {

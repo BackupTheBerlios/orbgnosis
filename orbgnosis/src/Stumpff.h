@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.h,v 1.4 2006/05/05 21:50:40 trs137 Exp $
+ * $Id: Stumpff.h,v 1.5 2006/06/05 19:13:01 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -40,6 +40,10 @@
 #include <math.h>
 #include <iostream>
 
+/**
+ * The zeroth Stumpff c function
+ * @param z the argument of the function, a double.
+ */
 inline double
 stumpff_C0(double z)
 {
@@ -55,6 +59,10 @@ stumpff_C0(double z)
     }
 }
 
+/**
+ * The first Stumpff c function
+ * @param z the argument of the function, a double.
+ */
 inline double
 stumpff_C1(double z)
 {
@@ -70,6 +78,10 @@ stumpff_C1(double z)
     }
 }
 
+/**
+ * The second Stumpff c function
+ * @param z the argument of the function, a double.
+ */
 inline double
 stumpff_C2(double z)
 {
@@ -85,6 +97,10 @@ stumpff_C2(double z)
     }
 }
 
+/**
+ * The third Stumpff c function
+ * @param z the argument of the function, a double.
+ */
 inline double
 stumpff_C3(double z)
 {

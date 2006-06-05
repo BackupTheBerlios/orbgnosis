@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.cpp,v 1.1 2006/06/05 18:38:58 trs137 Exp $
+ * $Id: Traj.cpp,v 1.2 2006/06/05 19:13:01 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -72,7 +72,7 @@ Traj::~Traj (void)
 
 /**
  * The Traj copy constructor.
- * @param the reference to the Traj to be copied.
+ * @param copy the reference to the Traj to be copied.
  */
 Traj::Traj (const Traj& copy)
 {
@@ -85,7 +85,7 @@ Traj::Traj (const Traj& copy)
 }
 
 /**
- * The Tracj copy assignment operator.
+ * The Traj copy assignment operator.
  * @param t the Traj on the right hand side of the equality.
  */
 Traj&

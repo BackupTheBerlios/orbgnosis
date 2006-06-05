@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.h,v 1.1 2006/06/05 18:38:58 trs137 Exp $
+ * $Id: Traj.h,v 1.2 2006/06/05 19:13:01 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -32,7 +32,8 @@
 #define _TRAJ_H_
 
 /**
- * The Traj class represents a geocentric trajectory (or orbit) and
+ * The Traj class represents an orbit or trajectory.
+ * The Traj class represents a geocentric trajectory and
  * contains the classical orbital elements needed to specify that
  * trajectory uniquely.
  */
@@ -64,4 +65,4 @@ class Traj
         double f;       //!< True Anomaly (radians).
 };
 
-#endif /* _Traj_H_ */
+#endif /* _TRAJ_H_ */

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.14 2006/06/05 16:45:40 trs137 Exp $
+ * $Id: Vector.h,v 1.15 2006/06/05 19:13:01 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -32,6 +32,11 @@
 #define _VECTOR_H_
 #include <iostream>
 using namespace std;
+
+/**
+ * The Vector class represents a vector of three doubles.
+ * The Vector class contains 
+ */
 
 class Vector
 {
@@ -46,10 +51,10 @@ class Vector
 
                     Vector (const Vector&); // copy constructor
 
-                    Vector& operator =  (Vector); // JBQ is smart
+                    Vector& operator =  (Vector);
 
-        // multiplcation and division with scalar doubles
-        // order can be either way.
+        // Multiplcation and division with scalar doubles
+        // The order of args can be either way.
         friend      Vector  operator * (const Vector&, const double&);
         friend      Vector  operator * (const double&, const Vector&);
         friend      Vector  operator / (const Vector&, const double&);
@@ -59,16 +64,16 @@ class Vector
         friend      Vector  operator + (const Vector&, const Vector&);
         friend      Vector  operator - (const Vector&, const Vector&);
 
-        // cross- and dot-products 
+        // Cross- and dot-products 
         friend      Vector cross (const Vector&, const Vector&);
         friend      double dot   (const Vector&, const Vector&);
         friend      double norm  (const Vector&);
 
-        // input and output with >> and <<
+        // Formatted input and output by overloading >> and <<
         friend      ostream& operator << (ostream&, Vector);
         friend      istream& operator >> (istream&, Vector);
 
-        // standard get-n-set methods *snore*...
+        // Standard get-n-set methods.
                     double getX (void);
                     double getY (void);
                     double getZ (void);
