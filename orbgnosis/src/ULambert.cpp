@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.cpp,v 1.3 2006/06/05 14:24:16 trs137 Exp $
+ * $Id: ULambert.cpp,v 1.4 2006/06/05 16:45:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -38,6 +38,16 @@
 #include <float.h>
 #include <iostream>
 using namespace std;
+
+/*
+ * This pragma disables 
+ * "remark #981: operands are evaluated in unspecified order"
+ * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
+ * cases.  Leave NO_ICC_981 undefined to get the warnings.
+ */
+#ifdef NO_ICC_981
+#pragma warning (disable:981)
+#endif
 
 ULambert::ULambert(void)
 {
@@ -248,9 +258,9 @@ ULambert::universal (const bool Lin, const int multirev)
         {
             // cout << "Error: Lambert Universal failed to converge. \n";
             //if (YNegKtr > 10) cout << "Y is negative\n";
-            //cout << "NumIter = " << NumIter << "\n";
-            Vo.set3(DBL_MAX, DBL_MAX, DBL_MAX);
-            V.set3(DBL_MAX, DBL_MAX, DBL_MAX);
+            //cout << "NmIter = " << NumIter << "\n";
+            Vo.toInf();
+            V.toInf();
             failure = true;
         }else{
 
@@ -264,8 +274,8 @@ ULambert::universal (const bool Lin, const int multirev)
         } // end if answer has converged
     }else{
         // cout << "Vectors are 180 degrees apart.\n";
-        Vo.set3(DBL_MAX, DBL_MAX, DBL_MAX);
-        V.set3(DBL_MAX, DBL_MAX, DBL_MAX);
+        Vo.toInf();
+        V.toInf();
         failure = true;
     } // end if VarA > SMALL
 
@@ -274,3 +284,8 @@ ULambert::universal (const bool Lin, const int multirev)
     V = V * ER / TU_SEC;
 */
 } // end ULambert::universal
+
+// Re-enable ICC remark #981
+#ifdef NO_ICC_981
+#pragma warning (default:981)
+#endif

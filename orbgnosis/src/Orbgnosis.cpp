@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.12 2006/06/05 14:24:16 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.13 2006/06/05 16:45:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -36,6 +36,16 @@
 #include <float.h>
 #include <iostream>
 using namespace std;
+
+/*
+ * This pragma disables 
+ * "remark #981: operands are evaluated in unspecified order"
+ * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
+ * cases.  Leave NO_ICC_981 undefined to get the warnings.
+ */
+#ifdef NO_ICC_981
+#pragma warning (disable:981)
+#endif
 
 int main(void)
 {
@@ -227,3 +237,8 @@ int main(void)
 
     return EXIT_SUCCESS;
 }
+
+// Re-enable ICC remark #981
+#ifdef NO_ICC_981
+#pragma warning (default:981)
+#endif

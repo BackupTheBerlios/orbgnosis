@@ -23,15 +23,26 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.14 2006/03/31 06:38:47 trs137 Exp $
+ * $Id: Vector.cpp,v 1.15 2006/06/05 16:45:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Vector.h"
+#include "Orbgnosis.h" // defines DBL_MAX from <float.h>
 #include <math.h>
 #include <iostream>
 using namespace std;
+
+/*
+ * This pragma disables 
+ * "remark #981: operands are evaluated in unspecified order"
+ * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
+ * cases.  Leave NO_ICC_981 undefined to get the warnings.
+ */
+#ifdef NO_ICC_981
+#pragma warning (disable:981)
+#endif
 
 Vector::Vector (void)
 {
@@ -184,6 +195,19 @@ Vector::toZero (void)
 }
 
 void
+Vector::toInf (void)
+{
+    try
+    {
+        x = y = z = DBL_MAX; // INFINITY defined in math.h causes problems
+                             // with gcc4.0 on Mac OS X.
+    } catch(...) {
+        cerr << "Vector::toInf could not set double to <float.h>'s DBL_MAX.\n";
+    }
+    return;
+}
+
+void
 Vector::set3 (double a, double b, double c)
 {
     x = a;
@@ -207,3 +231,8 @@ Vector::setZ (double zin)
 {
     z = zin;
 }
+
+// Re-enable ICC remark #981
+#ifdef NO_ICC_981
+#pragma warning (default:981)
+#endif
