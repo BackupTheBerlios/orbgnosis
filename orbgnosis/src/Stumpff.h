@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Stumpff.h,v 1.6 2006/06/05 19:22:09 trs137 Exp $
+ * $Id: Stumpff.h,v 1.7 2006/06/05 20:51:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -35,7 +35,12 @@
  *
  */
 
-/** @file */
+/** @file
+  * Stumpff functions are used in the universal variables solution to
+  * the orbital equation.  The Stumpff function is defined by,
+  * C_k(z) = 1/k! - x/(k+2)! + x^2 / (k+4)! + ...
+  * This header file defines the first four functions, C_0 through C_3.
+  */
 #ifndef _STUMPFF_H_
 #define _STUMPFF_H_
 
@@ -44,7 +49,6 @@
 
 /**
  * The zeroth Stumpff c function
- * @param z the argument of the function, a double.
  */
 inline double
 stumpff_C0(double z)
@@ -63,7 +67,6 @@ stumpff_C0(double z)
 
 /**
  * The first Stumpff c function
- * @param z the argument of the function, a double.
  */
 inline double
 stumpff_C1(double z)
@@ -82,7 +85,6 @@ stumpff_C1(double z)
 
 /**
  * The second Stumpff c function
- * @param z the argument of the function, a double.
  */
 inline double
 stumpff_C2(double z)
@@ -101,7 +103,6 @@ stumpff_C2(double z)
 
 /**
  * The third Stumpff c function
- * @param z the argument of the function, a double.
  */
 inline double
 stumpff_C3(double z)

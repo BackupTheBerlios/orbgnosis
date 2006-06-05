@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.16 2006/06/05 19:13:01 trs137 Exp $
+ * $Id: Vector.cpp,v 1.17 2006/06/05 20:51:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -54,9 +54,9 @@ Vector::Vector (void)
 
 /**
  * The Vector constructor takes three doubles, the vector elements.
- * @param xin the first element.
- * @param yin the second element.
- * @param zin the third element.
+ * @param xin is the first element.
+ * @param yin is the second element.
+ * @param zin is the third element.
  */
 Vector::Vector (double xin, double yin, double zin)
 {
@@ -75,7 +75,7 @@ Vector::~Vector (void)
 
 /**
  * The Vector copy constructor.
- * @param copy the reference to the Vector to be copied.
+ * @param copy is a reference to the Vector to be copied.
  */
 Vector::Vector (const Vector& copy)
 {
@@ -86,7 +86,7 @@ Vector::Vector (const Vector& copy)
 
 /**
  * The Vector copy assignment operator.
- * @param q the Vector on the right hand side of the equality.
+ * @param q is the Vector on the right hand side of the equality.
  */
 Vector&
 Vector::operator = (Vector q)
@@ -99,8 +99,8 @@ Vector::operator = (Vector q)
 
 /**
  * Multiplies a Vector with a scalar of type double and returns a Vector.
- * @param q the vector (type must be Vector).
- * @param s the scalar (type must be double).
+ * @param q is a vector (type must be Vector).
+ * @param s is a scalar (type must be double).
  */
 Vector
 operator * (const Vector& q, const double& s)
@@ -112,8 +112,8 @@ operator * (const Vector& q, const double& s)
 
 /**
  * Multiplies a scalar of type double with a Vector and returns a Vector.
- * @param s the scalar (type must be double).
- * @param q the vector (type must be Vector).
+ * @param s is a scalar (type must be double).
+ * @param q is a vector (type must be Vector).
  */
 Vector
 operator * (const double& s, const Vector& q)
@@ -125,8 +125,8 @@ operator * (const double& s, const Vector& q)
 
 /**
  * Divides a Vector by a scalar of type double and returns a Vector.
- * @param q the vector (type must be Vector).
- * @param s the scalar (type must be double).
+ * @param q is a vector (type must be Vector).
+ * @param s is a scalar (type must be double).
  */
 Vector
 operator / (const Vector& q, const double& s)
@@ -138,8 +138,8 @@ operator / (const Vector& q, const double& s)
 
 /**
  * Multiplies scalar of type double by a Vector and returns a Vector.
- * @param s the scalar (type must be double).
- * @param q the vector (type must be Vector).
+ * @param s is a scalar (type must be double).
+ * @param q is a vector (type must be Vector).
  */
 Vector
 operator / (const double& s, const Vector& q)
@@ -151,8 +151,8 @@ operator / (const double& s, const Vector& q)
 
 /**
  * Vector addition.
- * @param a a constant reference to the first Vector.
- * @param b a constant reference to the second Vector.
+ * @param a is a constant reference to the first Vector.
+ * @param b is a constant reference to the second Vector.
  */
 Vector
 operator + (const Vector& a, const Vector& b)
@@ -164,8 +164,8 @@ operator + (const Vector& a, const Vector& b)
 
 /**
  * Vector subtraction.
- * @param a a constant reference to the first Vector.
- * @param b a constant reference to the second Vector.
+ * @param a is a constant reference to the first Vector.
+ * @param b is a constant reference to the second Vector.
  */
 Vector
 operator - (const Vector& a, const Vector& b)
@@ -177,8 +177,8 @@ operator - (const Vector& a, const Vector& b)
 
 /**
  * Cross product, returns type Vector.
- * @param a a constant reference to the first Vector.
- * @param b a constant reference to the second Vector.
+ * @param a is a constant reference to the first Vector.
+ * @param b is a constant reference to the second Vector.
  */
 Vector
 cross (const Vector& a, const Vector& b)
@@ -191,8 +191,8 @@ cross (const Vector& a, const Vector& b)
 
 /**
  * Dot product, returns type double.
- * @param a a constant reference to the first Vector.
- * @param b a constant reference to the second Vector.
+ * @param a is a constant reference to the first Vector.
+ * @param b is a constant reference to the second Vector.
  */
 double
 dot (const Vector& a, const Vector& b)
@@ -202,7 +202,7 @@ dot (const Vector& a, const Vector& b)
 
 /**
  * The Euclidean vector norm.
- * @param q a constant reference to a Vector.
+ * @param q is a constant reference to a Vector.
  */
 double
 norm (const Vector& q)
@@ -212,8 +212,8 @@ norm (const Vector& q)
 
 /**
  * The iostream output operator is overloaded for the Vector type.
- * @param s a reference to ostream.
- * @param q the Vector to be printed with nice formatting. 
+ * @param s is a reference to ostream.
+ * @param q is the Vector to be printed with nice formatting. 
  */
 ostream&
 operator << (ostream& s, Vector q)
@@ -224,8 +224,8 @@ operator << (ostream& s, Vector q)
 
 /**
  * The iostream input operator is overloaded for the Vector type.
- * @param s a reference to istream.
- * @param q the Vector which we're going to try to read from input.
+ * @param s is a reference to istream.
+ * @param q is the Vector which we're going to try to read from input.
  */
 istream&
 operator >> (istream& s, Vector q)
@@ -293,9 +293,9 @@ Vector::toInf (void)
 
 /**
  * Sets all three elements of a Vector by taking three arguments.
- * @param a the first element.
- * @param b the second element.
- * @param c the third element.
+ * @param a is the first element.
+ * @param b is the second element.
+ * @param c is the third element.
  */
 void
 Vector::set3 (double a, double b, double c)

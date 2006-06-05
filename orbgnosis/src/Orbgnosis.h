@@ -23,14 +23,26 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.h,v 1.2 2006/06/05 19:22:09 trs137 Exp $
+ * $Id: Orbgnosis.h,v 1.3 2006/06/05 20:51:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
-/** @file */
-#ifndef _GLOBAL_H_
-#define _GLOBAL_H_
+/** @file
+ * This header file contains some useful constants.
+ * @param DBL_MAX is borrowed from <float.h>
+ * @param SMALL a small number used as a tolerance.
+ * @param ER is the mean radius of the Earth in km.
+ * @param MU is the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
+ * @param ROOTMU is the square root of MU.
+ * @param TU_SEC is one canonical time unit in seconds.
+ * @param TU_MIN is one canonical time unit in minutes.
+ */
+
+#ifndef _ORBGNOSIS_H_
+#define _ORBGNOSIS_H_
+
+#include <float.h>
 
 //define INF 1.0e99           use INFINITY defined in <math.h> instead
 
@@ -52,4 +64,4 @@
 #define TU_SEC 806.81112382429    // canonical time units (s)
 #define TU_MIN 13.44685206374     // canonical time units (m)
 
-#endif /* _GLOBAL_H_ */
+#endif /* _ORBGNOSIS_H_ */

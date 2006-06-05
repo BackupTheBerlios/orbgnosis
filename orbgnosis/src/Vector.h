@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.15 2006/06/05 19:13:01 trs137 Exp $
+ * $Id: Vector.h,v 1.16 2006/06/05 20:51:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -35,7 +35,10 @@ using namespace std;
 
 /**
  * The Vector class represents a vector of three doubles.
- * The Vector class contains 
+ * The Vector class overloads vector addition and subtraction,
+ * as well as vector-scalar multiplication and division.  Member functions
+ * include Euclidean norm, dot product and cross product.  For nicer I/O
+ * the >> and << operators are overloaded as well.
  */
 
 class Vector

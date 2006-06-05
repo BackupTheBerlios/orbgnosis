@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.13 2006/06/05 16:45:40 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.14 2006/06/05 20:51:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -33,7 +33,6 @@
 #include "ULambert.h"
 #include "Orbgnosis.h"
 #include <math.h>
-#include <float.h>
 #include <iostream>
 using namespace std;
 
@@ -47,6 +46,9 @@ using namespace std;
 #pragma warning (disable:981)
 #endif
 
+/**
+ * The main program.
+ */
 int main(void)
 {
     cout << FLT_MAX << "\n\n";
