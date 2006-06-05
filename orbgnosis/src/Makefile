@@ -1,12 +1,12 @@
 #
-# $Id: Makefile,v 1.21 2006/06/05 16:45:40 trs137 Exp $
+# $Id: Makefile,v 1.22 2006/06/05 18:38:58 trs137 Exp $
 #
 # *** use gmake! ***
 #
 CC=icpc
 LD=icpc
-#CC=/usr/local/bin/g++42
-#LD=/usr/local/bin/g++42
+#CC=g++42
+#LD=g++42
 RM=/bin/rm -f
 CFLAGS=-Wall -pedantic -g -DNO_ICC_981
 #CFLAGS=-Wall -O2 -ip -static -xN
