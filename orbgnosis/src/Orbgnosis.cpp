@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.11 2006/06/05 13:30:23 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.12 2006/06/05 14:24:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -31,7 +31,7 @@
 
 #include "Vector.h"
 #include "ULambert.h"
-#include "Global.h"
+#include "Orbgnosis.h"
 #include <math.h>
 #include <float.h>
 #include <iostream>
