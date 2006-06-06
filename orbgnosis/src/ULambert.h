@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.h,v 1.3 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: ULambert.h,v 1.4 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -54,8 +54,6 @@ class ULambert
 
                 virtual ~ULambert (void);
 
-                ULambert (const ULambert&); // copy ctor
-
                 // Universal Variable method
                 void universal(const bool, const int);
 
@@ -72,15 +70,15 @@ class ULambert
     private:
 
         // Inputs:
-        double t;   //<! specified time of flight from Ro to R.
-        Vector Ro;  //<! initial position vector.
-        Vector R;   //<! final position vector.
+        double t;   //!< specified time of flight from Ro to R.
+        Vector Ro;  //!< initial position vector.
+        Vector R;   //!< final position vector.
 
         // Results:        
-        Vector Vo;  //<! initial velocity of at start of the transfer arc.
-        Vector V;   //<! final velocity at the end of transfer arc.
+        Vector Vo;  //!< initial velocity of at start of the transfer arc.
+        Vector V;   //!< final velocity at the end of transfer arc.
 
-        bool failure;   //<! is true if the solution fails to converge.
+        bool failure;   //!< is true if the solution fails to converge.
 };
 
 #endif /* _ULAMBERT_H_ */

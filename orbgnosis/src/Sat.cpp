@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Sat.cpp,v 1.1 2006/06/06 19:56:35 trs137 Exp $
+ * $Id: Sat.cpp,v 1.2 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -32,8 +32,7 @@
 #include "Sat.h"
 
 /**
- * Default Sat constructor with no args.
- * Sets mass to 1.0, and everything else to zero.
+ * Default Sat constructor with no args. Triggers default constructors for Traj and Body.
  */
 Sat::Sat (void)
 {

@@ -23,20 +23,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.h,v 1.3 2006/06/05 20:51:37 trs137 Exp $
+ * $Id: Orbgnosis.h,v 1.4 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 /** @file
- * This header file contains some useful constants.
- * @param DBL_MAX is borrowed from <float.h>
- * @param SMALL a small number used as a tolerance.
- * @param ER is the mean radius of the Earth in km.
- * @param MU is the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
- * @param ROOTMU is the square root of MU.
- * @param TU_SEC is one canonical time unit in seconds.
- * @param TU_MIN is one canonical time unit in minutes.
+ * This header file defines constants, limits and tolerances.
  */
 
 #ifndef _ORBGNOSIS_H_
@@ -50,18 +43,18 @@
 // USE DBL_MAX instead.  DBL_MAX should be in <float.h> per
 // ISO C standard:
 #ifndef _FLOAT_H___
-#define DBL_MAX     __DBL_MAX__
+#define DBL_MAX     __DBL_MAX__     //!< Largest possible double float.
 #endif // _FLOAT_H___
 
 
 //#define EPS 1.0e-14
 //#define E  2.71828182845905
 //#define PI 3.14159265358979   use M_PI from <math.h> instead
-#define SMALL 1.0e-8
-#define ER 6378.137           // Earth radius in km
-#define MU 398600.4418        // Earth Mu (km^3 / s^2)
-#define ROOTMU 631.3481
-#define TU_SEC 806.81112382429    // canonical time units (s)
-#define TU_MIN 13.44685206374     // canonical time units (m)
+#define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"
+#define ER 6378.137    //!< Earth radius in km.
+#define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
+#define ROOTMU 631.3481     //!< the square root of Mu.
+#define TU_SEC 806.81112382429    //!< canonical time units (s)
+#define TU_MIN 13.44685206374     //!< canonical time units (m)
 
 #endif /* _ORBGNOSIS_H_ */

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.h,v 1.5 2006/06/06 19:54:41 trs137 Exp $
+ * $Id: Traj.h,v 1.6 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -32,11 +32,11 @@
 #define _TRAJ_H_
 
 /**
- * The Traj class represents an orbit or trajectory.
+ * The extrinsic properties of a body: its orbit or trajectory through space.
  * The Traj class represents a geocentric trajectory and
- * contains the classical orbital elements needed to specify that
- * trajectory uniquely.  Target satellites have orbits, and the transfer
- * arcs between targets are also defineable as trajectories.
+ * contains classical Keplerian orbital elements needed to specify that
+ * trajectory uniquely.  Target satellites are defined in part by their
+ * trajectories.  Transfer arcs between targets are also trajectories.
  */
 class Traj
 {
@@ -59,12 +59,12 @@ class Traj
                     void setFoo   (double);
 
     protected:
-        double a;       // Semimajor Axis (length).
-        double e;       // Eccentricity (dimensionless).
-        double i;       // Inclination  (radians).
-        double raan;    // Right Ascension of the Ascending Node (radians).
-        double w;       // Argument of Perigee (radians).
-        double f;       // True Anomaly (radians).
+        double a;       //!< Semimajor Axis (length).
+        double e;       //!< Eccentricity (dimensionless).
+        double i;       //!< Inclination  (radians).
+        double raan;    //!< Right Ascension of the Ascending Node (radians).
+        double w;       //!< Argument of Perigee (radians).
+        double f;       //!< True Anomaly (radians).
 };
 
 #endif /* _TRAJ_H_ */

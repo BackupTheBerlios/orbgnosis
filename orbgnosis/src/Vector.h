@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.h,v 1.17 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: Vector.h,v 1.18 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -88,7 +88,9 @@ class Vector
                     void setZ   (double);
 
     private:
-        double x, y, z;
+        double x; //!< first vector element
+        double y; //!< second vector element
+        double z; //!< third vector element
 };
 
 #endif /* _VECTOR_H_ */

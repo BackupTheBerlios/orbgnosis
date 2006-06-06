@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.h,v 1.5 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: BLambert.h,v 1.6 2006/06/06 20:45:54 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -49,7 +49,6 @@ class BLambert
 
             virtual ~BLambert (void);
 
-            BLambert (const BLambert&); // copy ctor
 
             void    battin(void);
             double  bat_SEE(double);
@@ -66,16 +65,15 @@ class BLambert
             bool isFailure(void);
 
     private:
-
-        double t;   //<! specified time of flight from Ro to R.
-        Vector Ro;  //<! initial position vector.
-        Vector R;   //<! final position vector.
+        double t;   //!< specified time of flight from Ro to R.
+        Vector Ro;  //!< initial position vector.
+        Vector R;   //!< final position vector.
 
         // Results:        
-        Vector Vo;  //<! initial velocity of at start of the transfer arc.
-        Vector V;   //<! final velocity at the end of transfer arc.
+        Vector Vo;  //!< initial velocity of at start of the transfer arc.
+        Vector V;   //!< final velocity at the end of transfer arc.
 
-        bool failure;   //<! is true if the solution fails to converge.
+        bool failure;   //!< is true if the solution fails to converge.
 };
 
 #endif /* _BLAMBERT_H_ */
