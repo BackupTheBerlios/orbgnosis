@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.6 2006/06/06 15:07:15 trs137 Exp $
+ * $Id: Body.cpp,v 1.7 2006/06/06 15:26:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -32,24 +32,24 @@
 
 /**
  * Default Body constructor with no args.
- * Sets name to "NO NAME", mass to 1.0, and everything else to zero.
+ * Sets mass to 1.0, and everything else to zero.
  */
 Body::Body (void)
 {
-    name = "NO NAME                       ";
     mass = 1.0;
     position = Vector(0.0, 0.0, 0.0);
     velocity = Vector(0.0, 0.0, 0.0);
     ang_vel  = Vector(0.0, 0.0, 0.0);
     moments  = Vector(0.0, 0.0, 0.0);
-    //trajectory = Traj(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    trajectory = Traj(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
+
 /**
  * The Body destructor.
  */
 Body::~Body (void)
 {
-    //
+    // cout << "Body destructor called\n";
 }
 
 /**
@@ -62,7 +62,7 @@ Body::Body (const Body& copy)
     velocity = copy.velocity;
     ang_vel = copy.ang_vel;
     moments = copy.moments;
-    //trajectory = copy.trajectory;
+    trajectory = copy.trajectory;
 }
 
 /**
@@ -71,7 +71,6 @@ Body::Body (const Body& copy)
 Body&
 Body::operator = (Body b)
 {
-    name = b.name;
     mass = b.mass;
     position = b.position;
     velocity = b.velocity;

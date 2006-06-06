@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.h,v 1.6 2006/06/06 15:07:15 trs137 Exp $
+ * $Id: Body.h,v 1.7 2006/06/06 15:26:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -40,7 +40,6 @@
 class Body
 {
     private:
-        char    *name;
         double  mass;
         Vector  position;
         Vector  velocity;
@@ -49,10 +48,10 @@ class Body
         Traj    trajectory;     // current trajectory of the Body.
 
     public:
-                Body (void);
-        virtual ~Body (void);
+                Body (void);    // Default ctor
                 Body (const Body&);       // copy constructor
                 Body& operator = (Body);  // copy assignment operator
+        virtual ~Body (void);             // destructor
 
         double  kineticEnergy (void);     // kinetic energy of body
         double  transMomentum (void);     // translational momentum
