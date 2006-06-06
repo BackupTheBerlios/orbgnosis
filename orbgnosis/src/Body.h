@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.h,v 1.5 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: Body.h,v 1.6 2006/06/06 15:07:15 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -51,8 +51,8 @@ class Body
     public:
                 Body (void);
         virtual ~Body (void);
-
                 Body (const Body&);       // copy constructor
+                Body& operator = (Body);  // copy assignment operator
 
         double  kineticEnergy (void);     // kinetic energy of body
         double  transMomentum (void);     // translational momentum
@@ -60,7 +60,6 @@ class Body
 
         void    move (Vector);
         void    accelerate (Vector);
-
         Vector  findForce (void);         // sum of all forces on Body
 };
 

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2006/06/06 01:57:40 trs137 Exp $
+# $Id: Makefile,v 1.24 2006/06/06 15:07:15 trs137 Exp $
 #
 # *** use gmake! ***
 #
@@ -8,8 +8,9 @@
 CC=g++42
 LD=g++42
 RM=/bin/rm -f
-CFLAGS=-Wall -pedantic -g -DNO_ICC_981
 #CFLAGS=-Wall -O2 -ip -static -xN
+#CFLAGS=-Wall -pedantic -g -DNO_ICC_981
+CFLAGS=-Wall -pedantic -g
 #REPORT=-opt_report_level min -opt_report_phase all -opt_report_file optreport
 REPORT=
 LDFLAGS=

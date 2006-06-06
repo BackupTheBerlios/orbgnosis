@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.5 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: Body.cpp,v 1.6 2006/06/06 15:07:15 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -63,6 +63,21 @@ Body::Body (const Body& copy)
     ang_vel = copy.ang_vel;
     moments = copy.moments;
     //trajectory = copy.trajectory;
+}
+
+/**
+ * The Body copy assignment operator.
+ */
+Body&
+Body::operator = (Body b)
+{
+    name = b.name;
+    mass = b.mass;
+    position = b.position;
+    velocity = b.velocity;
+    moments = b.moments;
+    trajectory = b.trajectory;
+    return *this;
 }
 
 /**

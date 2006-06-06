@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.h,v 1.3 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: Traj.h,v 1.4 2006/06/06 15:07:15 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -53,18 +53,18 @@ class Traj
 
                     Traj (const Traj&); // copy constructor
 
-                    Traj& operator =  (Traj);
+                    Traj& operator =  (Traj); // copy assignment operator
 
                     double getfoo (void);
                     void setFoo   (double);
 
     private:
-        double a;       //!< Semimajor Axis (length).
-        double e;       //!< Eccentricity (dimensionless).
-        double i;       //!< Inclination  (radians).
-        double raan;    //!< Right Ascension of the Ascending Node (radians).
-        double w;       //!< Argument of Perigee (radians).
-        double f;       //!< True Anomaly (radians).
+        double a;       // Semimajor Axis (length).
+        double e;       // Eccentricity (dimensionless).
+        double i;       // Inclination  (radians).
+        double raan;    // Right Ascension of the Ascending Node (radians).
+        double w;       // Argument of Perigee (radians).
+        double f;       // True Anomaly (radians).
 };
 
 #endif /* _TRAJ_H_ */
