@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.h,v 1.4 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: BLambert.h,v 1.5 2006/06/06 19:01:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -33,7 +33,7 @@
 #define _BLAMBERT_H_
 
 /**
- * BLambert is Battin's method of solving the Lambert's problem.
+ * Battin's method of solving the Lambert's problem.
  * It is robust and does not suffer from from convergence failure.
  * This implementation is adapted from Vallado's Ada procedure.
  */
@@ -44,14 +44,13 @@ class BLambert
             BLambert (void);         // just zeros
 
             BLambert (Vector r1in,
-                         Vector r2in,
-                         double tin);
+                      Vector r2in,
+                      double tin);
 
             virtual ~BLambert (void);
 
             BLambert (const BLambert&); // copy ctor
 
-            // Battin's method
             void    battin(void);
             double  bat_SEE(double);
             double  bat_K(double);
@@ -68,7 +67,6 @@ class BLambert
 
     private:
 
-        // Inputs:
         double t;   //<! specified time of flight from Ro to R.
         Vector Ro;  //<! initial position vector.
         Vector R;   //<! final position vector.

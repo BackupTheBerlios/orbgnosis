@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.h,v 1.7 2006/06/06 15:26:16 trs137 Exp $
+ * $Id: Body.h,v 1.8 2006/06/06 19:01:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,11 +31,9 @@
 #ifndef _BODY_H_
 #define _BODY_H_
 #include "Vector.h"
-#include "Traj.h"
 
 /**
- * The Body class represents any massive body in space.
- * Mass properties and state vector are stored here.
+ * Any rigid body with position, velocity, rotation, and mass properties.
  */
 class Body
 {
@@ -45,7 +43,6 @@ class Body
         Vector  velocity;
         Vector  ang_vel;        // angular velocity, rad/s
         Vector  moments;        // principle moments of inertia
-        Traj    trajectory;     // current trajectory of the Body.
 
     public:
                 Body (void);    // Default ctor

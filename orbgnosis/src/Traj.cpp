@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.cpp,v 1.3 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: Traj.cpp,v 1.4 2006/06/06 19:01:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -73,14 +73,6 @@ double win, double fin)
 }
 
 /**
- * The Traj destructor.
- */
-Traj::~Traj (void)
-{
-    // cout << "Traj destructor called.\n";
-}
-
-/**
  * The Traj copy constructor.
  * @param copy the reference to the Traj to be copied.
  */
@@ -108,6 +100,14 @@ Traj::operator = (Traj t)
     w = t.w;
     f = t.f;
     return *this;
+}
+
+/**
+ * The Traj destructor.
+ */
+Traj::~Traj (void)
+{
+    // cout << "Traj destructor called.\n";
 }
 
 

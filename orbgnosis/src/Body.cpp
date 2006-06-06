@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.7 2006/06/06 15:26:16 trs137 Exp $
+ * $Id: Body.cpp,v 1.8 2006/06/06 19:01:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -41,7 +41,6 @@ Body::Body (void)
     velocity = Vector(0.0, 0.0, 0.0);
     ang_vel  = Vector(0.0, 0.0, 0.0);
     moments  = Vector(0.0, 0.0, 0.0);
-    trajectory = Traj(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 /**
@@ -62,7 +61,6 @@ Body::Body (const Body& copy)
     velocity = copy.velocity;
     ang_vel = copy.ang_vel;
     moments = copy.moments;
-    trajectory = copy.trajectory;
 }
 
 /**
@@ -75,7 +73,6 @@ Body::operator = (Body b)
     position = b.position;
     velocity = b.velocity;
     moments = b.moments;
-    trajectory = b.trajectory;
     return *this;
 }
 
@@ -134,5 +131,5 @@ Body::accelerate (Vector vin)
 Vector
 Body::findForce (void)
 {
-    return Vector(0,0,0); //TODO
+    return Vector(0,0,0); //TODO not really necessary yet
 }

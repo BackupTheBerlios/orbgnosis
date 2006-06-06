@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.h,v 1.2 2006/06/05 22:21:04 trs137 Exp $
+ * $Id: ULambert.h,v 1.3 2006/06/06 19:01:16 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -33,7 +33,7 @@
 #define _ULAMBERT_H_
 
 /**
- * ULambert is the universal variables method of solving a Lamberts problem.
+ * The universal variables method of solving the Lambert's problem.
  * Solving Lamberts problem with this technique is difficult because the
  * iteration isn't always well-behaved.  Simple Newtonian iteration may fail
  * to converte on diffucult hyperbolic trajectories.  Therefore, this class
