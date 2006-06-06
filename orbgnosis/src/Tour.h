@@ -23,26 +23,24 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Sat.h,v 1.2 2006/06/06 20:10:22 trs137 Exp $
+ * $Id: Tour.h,v 1.1 2006/06/06 20:10:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
-#ifndef _SAT_H_
-#define _SAT_H_
-#include "Body.h"
-#include "Traj.h"
+#ifndef _TOUR_H_
+#define _TOUR_H_
 
 /**
- * Represents a Body moving on a particular Traj.
+ * A sequence of trajectories that visits each target once.
  */
-class Sat : public Body, public Traj
+class Tour
 {
     public:
-                Sat (void);    // Default ctor
-                Sat (const Sat&);       // copy constructor
-                Sat& operator = (Sat);  // copy assignment operator
-        virtual ~Sat (void);             // destructor
+                Tour (void);    // Default ctor
+                Tour (const Tour&);       // copy constructor
+                Tour& operator = (Tour);  // copy assignment operator
+        virtual ~Tour (void);             // destructor
 
     private:
 

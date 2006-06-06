@@ -23,29 +23,44 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Sat.h,v 1.2 2006/06/06 20:10:22 trs137 Exp $
+ * $Id: Tour.cpp,v 1.1 2006/06/06 20:10:22 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
-#ifndef _SAT_H_
-#define _SAT_H_
-#include "Body.h"
-#include "Traj.h"
+#include "Orbgnosis.h"
+#include "Tour.h"
 
 /**
- * Represents a Body moving on a particular Traj.
+ * Default Tour constructor with no args.
+ * Sets mass to 1.0, and everything else to zero.
  */
-class Sat : public Body, public Traj
+Tour::Tour (void)
 {
-    public:
-                Sat (void);    // Default ctor
-                Sat (const Sat&);       // copy constructor
-                Sat& operator = (Sat);  // copy assignment operator
-        virtual ~Sat (void);             // destructor
+    // Nothing in Tour yet.
+}
 
-    private:
+/**
+ * The Tour destructor.
+ */
+Tour::~Tour (void)
+{
+    // cout << "Tour destructor called\n";
+}
 
-};
+/**
+ * The Tour copy constructor.
+ */
+Tour::Tour (const Tour& copy)
+{
+    // TODO
+}
 
-#endif /* _BODY_H_ */
+/**
+ * The Tour copy assignment operator.
+ */
+Tour&
+Tour::operator = (Tour b)
+{
+    // TODO
+}
