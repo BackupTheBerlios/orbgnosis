@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.cpp,v 1.7 2006/06/05 20:51:37 trs137 Exp $
+ * $Id: BLambert.cpp,v 1.8 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -48,6 +48,10 @@ using namespace std;
 #pragma warning (disable:981)
 #endif
 
+/**
+ * The Battin Lambert constructor with no arguments.
+ * All member variables are set to zero.
+ */
 BLambert::BLambert(void)
 {
     t = 0.0;
@@ -56,6 +60,12 @@ BLambert::BLambert(void)
     failure = false;
 }
 
+/**
+ * The Battin Lambert constructor with three arguments specified.
+ * @param r1in is the initial position.
+ * @param r2in is the final position.
+ * @param tin is the specified time of flight.
+ */
 BLambert::BLambert(Vector r1in, Vector r2in, double tin) :
     t(tin), Ro(r1in), R(r2in) 
 {
@@ -63,47 +73,76 @@ BLambert::BLambert(Vector r1in, Vector r2in, double tin) :
     failure = false;
 }
 
+/**
+ * The Battin Lambert destructor.
+ */
 BLambert::~BLambert (void)
 {
     // cout << "BLambert destructor called \n";
 }
 
+/**
+ * Sets the initial position vector, Ro.
+ */
 void
 BLambert::setRo (Vector vin)
 {
     Ro = vin;
 }
 
+/**
+ * Sets the final position vector, R.
+ */
 void
 BLambert::setR (Vector vin)
 {
     R = vin;
 }
 
+
+/**
+ * Sets the time of flight, t.
+ */
 void
 BLambert::sett (double tin)
 {
     t = tin;
 }
 
+/**
+ * Gets the initial velocity vector, Vo.
+ * This is the velocity at the point Ro which satisfies the Lamberts problem.
+ */
 Vector
 BLambert::getVo (void)
 {
     return Vo;
 }
 
+
+/**
+ * Gets the final velocity vector, V.
+ * This is the velocity at the point R which satisfies the Lamberts problem.
+ */
 Vector
 BLambert::getV (void)
 {
     return V;
 }
 
+/**
+ * Gets the time fo flight, t.
+ */
 double
 BLambert::gett (void)
 {
     return t;
 }
 
+/**
+ * Returns true if failure is true, false if faluire is false.
+ * This method is necessary because failure is private.
+ */
 bool
 BLambert::isFailure(void)
 {
@@ -114,11 +153,10 @@ BLambert::isFailure(void)
     }
 }
 
-/*
- * BATTIN'S METHOD
- *
- * Adapted from David Vallado's implementations
- * "Fundamentals of Astrodynamics and Applications"
+/**
+ * Solves Lamberts Problem using Battin's Method.
+ * Adapted from David Vallado's Ada implementation in  "Fundamentals of
+ * Astrodynamics and Applications"
  */
 void
 BLambert::battin (void)
@@ -218,6 +256,9 @@ BLambert::battin (void)
 
 } // end BLambert::battin
 
+/**
+ * bat_SEE function, ported from Vallado's Ada code.
+ */
 double
 BLambert::bat_SEE(double v)
 {
@@ -254,6 +295,9 @@ BLambert::bat_SEE(double v)
            (3.0 + sum1 / (1.0 + eta * sum1));
 } // end BLambert::bat_SEE
 
+/**
+ * bat_K function, ported from Vallado's Ada code.
+ */
 double
 BLambert::bat_K(double v)
 {

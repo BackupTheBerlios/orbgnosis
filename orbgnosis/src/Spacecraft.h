@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Spacecraft.h,v 1.3 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Spacecraft.h,v 1.4 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,13 +31,26 @@
 #ifndef _SPACECRAFT_H_
 #define _SPACECRAFT_H_
 
+#include "Body.h"
+#include "Propellant.h"
+
+/**
+ * The Spacecraft class is an extension of Body.
+ * This is where extra data and methods specific to spacecraft will be kept.
+ */
 class Spacecraft : public Body
 {
-    private:
-
     public:
                 Spacecraft (void);
+
+                Spacecraft (int);   // specify numTanks
+
+
         virtual ~Spacecraft (void);
+
+    private:
+        int         numTanks;   // Number of propellant tanks.
+        Propellant* tank;       // Pointer to prop tanks. 
 };
 
 #endif /* _SPACECRAFT_H_ */

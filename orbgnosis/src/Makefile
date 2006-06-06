@@ -1,19 +1,19 @@
 #
-# $Id: Makefile,v 1.22 2006/06/05 18:38:58 trs137 Exp $
+# $Id: Makefile,v 1.23 2006/06/06 01:57:40 trs137 Exp $
 #
 # *** use gmake! ***
 #
-CC=icpc
-LD=icpc
-#CC=g++42
-#LD=g++42
+#CC=icpc
+#LD=icpc
+CC=g++42
+LD=g++42
 RM=/bin/rm -f
 CFLAGS=-Wall -pedantic -g -DNO_ICC_981
 #CFLAGS=-Wall -O2 -ip -static -xN
 #REPORT=-opt_report_level min -opt_report_phase all -opt_report_file optreport
 REPORT=
 LDFLAGS=
-SRCS = ULambert.cpp BLambert.cpp Vector.cpp Orbgnosis.cpp
+SRCS = Orbgnosis.cpp Vector.cpp ULambert.cpp BLambert.cpp Traj.cpp Body.cpp Propellant.cpp Spacecraft.cpp
 OBJS:=$(SRCS:.cpp=.o)
 MAIN=orb
 all:$(MAIN)

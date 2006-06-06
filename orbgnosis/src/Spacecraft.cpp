@@ -23,19 +23,36 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Spacecraft.cpp,v 1.3 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Spacecraft.cpp,v 1.4 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Spacecraft.h"
 
+/**
+ * The Spacecraft constructor.
+ */
 Spacecraft::Spacecraft (void)
 {
-    // TODO
+    numTanks = 0;
+    tank = new Propellant [numTanks];
 }
 
+/**
+ * Spacecraft contructor.
+ */
+Spacecraft::Spacecraft (int inumTanks)
+{
+    numTanks = inumTanks;
+    tank = new Propellant [numTanks];
+}
+
+/**
+ * The Spacecraft destructor.
+ */
 Spacecraft::~Spacecraft (void)
 {
-    // TODO
+    delete[] tank;
+    tank = NULL;
 }

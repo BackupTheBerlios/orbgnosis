@@ -23,64 +23,102 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.4 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Body.cpp,v 1.5 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Body.h"
 
+/**
+ * Default Body constructor with no args.
+ * Sets name to "NO NAME", mass to 1.0, and everything else to zero.
+ */
 Body::Body (void)
 {
     name = "NO NAME                       ";
-    mass = 1.0
-    position = new Vector(); // 0, 0, 0
-    velocity = new Vector(); // 0, 0, 0
+    mass = 1.0;
+    position = Vector(0.0, 0.0, 0.0);
+    velocity = Vector(0.0, 0.0, 0.0);
+    ang_vel  = Vector(0.0, 0.0, 0.0);
+    moments  = Vector(0.0, 0.0, 0.0);
+    //trajectory = Traj(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
-
+/**
+ * The Body destructor.
+ */
 Body::~Body (void)
 {
     //
 }
 
+/**
+ * The Body copy constructor.
+ */
 Body::Body (const Body& copy)
 {
-    name = copy.name;  // this is wrong
     mass = copy.mass;
-    position = new Vector();
     position = copy.position;
-    velocity = new Vector();
     velocity = copy.velocity;
+    ang_vel = copy.ang_vel;
+    moments = copy.moments;
+    //trajectory = copy.trajectory;
 }
 
+/**
+ * Returns the kinetic energy of the Body.
+ */
 double
 Body::kineticEnergy (void)
 {
-    double speed = velocity.norm();
+    double speed = norm(velocity);
     return (0.5 * mass * speed * speed );
 }
 
+/**
+ * Returns the translational momentum of the Body.
+ */
 double
 Body::transMomentum (void)
 {
-    double speed = velocity.norm();
+    double speed = norm(velocity);
     return (mass * speed);
 }
 
+/**
+ * Returns the angular momentum Vector of the Body.
+ */
+Vector
+Body::angMomentum (void)
+{
+    return (cross(ang_vel, moments));
+}
+
+/**
+ * Moves the Body by vector addition.
+ * @param vin is the Vector to be added to the Body's position.
+ */
 void
 Body::move (Vector vin)
 {
-    position.add(vin);
+    position = position + vin;
 }
 
+/**
+ * Accelerates the Body by vector addition.
+ * @param vin is the Vector to be added to the Body's velocity.
+ */
 void
 Body::accelerate (Vector vin)
 {
-    velocity.add(vin);
+    velocity = velocity + vin;
 }
 
+/**
+ * Returns the sum of all forces acting upon the Body.
+ */
 Vector
 Body::findForce (void)
 {
-    //TODO
+    return Vector(0,0,0); //TODO
 }

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Propellant.h,v 1.3 2006/03/19 22:05:34 trs137 Exp $
+ * $Id: Propellant.h,v 1.4 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,12 +31,15 @@
 #ifndef _PROPELLANT_H_
 #define _PROPELLANT_H_
 
+/**
+ * The Propellant class represents maneuvering capability of a Spacecraft.
+ */
 class Propellant
 {
     private:
         char            *name;
-        const double    max_capacity;
-        const double    min_capacity;   // ullage
+        // const double    max_capacity;
+        // const double    min_capacity;   // ullage
         double          current_capacity;
 
     public:

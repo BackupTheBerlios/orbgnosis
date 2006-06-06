@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.h,v 1.2 2006/06/05 19:13:01 trs137 Exp $
+ * $Id: Traj.h,v 1.3 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -35,11 +35,13 @@
  * The Traj class represents an orbit or trajectory.
  * The Traj class represents a geocentric trajectory and
  * contains the classical orbital elements needed to specify that
- * trajectory uniquely.
+ * trajectory uniquely.  Target satellites have orbits, and the transfer
+ * arcs between targets are also defineable as trajectories.
  */
 class Traj
 {
     public:
+                    Traj (void);
                     Traj (double,   // a
                           double,   // e
                           double,   // i

@@ -23,12 +23,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.cpp,v 1.2 2006/06/05 19:13:01 trs137 Exp $
+ * $Id: Traj.cpp,v 1.3 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Orbgnosis.h"
+#include "Traj.h"
 #include <math.h>
 
 /*
@@ -43,7 +44,15 @@
 
 /**
  * The Traj constructor.
- * All six classical Keplerian elements must be
+ */
+Traj::Traj (void)
+{
+    a = e = i = raan = w = f = 0.0;
+}
+
+/**
+ * The Traj constructor.
+ * All six classical Keplerian elements are
  * specified in the constructor.
  * @param ain the semimajor axis (length units).
  * @param ein the eccentricity (dimensionless).
@@ -52,7 +61,8 @@
  * @param win the argument of periapsis (radians).
  * @param fin the true anomaly (radians).
  */
-Traj::Traj (double )
+Traj::Traj (double ain, double ein, double iin, double raanin,
+double win, double fin)
 {
     a = ain;
     e = ein;
@@ -80,7 +90,7 @@ Traj::Traj (const Traj& copy)
     e = copy.e;
     i = copy.i;
     raan = copy.raan;
-    w = copy.win;
+    w = copy.w;
     f = copy.f;
 }
 

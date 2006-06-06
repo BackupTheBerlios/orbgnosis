@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.cpp,v 1.6 2006/06/05 22:21:04 trs137 Exp $
+ * $Id: ULambert.cpp,v 1.7 2006/06/06 01:57:40 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -57,7 +57,7 @@ ULambert::ULambert(void)
     t = 0.0;
     Ro.toZero();
     R.toZero();
-    failure = false; //<! All Lambert problems begin life as un-failed and must be proven otherwise.
+    failure = false;
 }
 
 /**
@@ -117,6 +117,7 @@ ULambert::getVo (void)
 {
     return Vo;
 }
+
 /**
  * Gets the final velocity vector, V.
  * This is the velocity at the point R which satisfies the Lamberts problem.
@@ -151,7 +152,7 @@ ULambert::isFailure(void)
 }
 
 /**
- * Lamberts Problem, universal variables method.
+ * Solves Lamberts Problem using universal variables method.
  * Adapted from David Vallado's Ada implementation in "Fundamentals of
  * Astrodynamics and Applications".
  */
