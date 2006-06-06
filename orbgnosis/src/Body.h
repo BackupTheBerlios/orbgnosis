@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.h,v 1.8 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: Body.h,v 1.9 2006/06/06 19:54:41 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -34,10 +34,12 @@
 
 /**
  * Any rigid body with position, velocity, rotation, and mass properties.
+ * This class represents only properties intrinsic to the body itself, but
+ * not motion of the body with respect to other bodies (i.e. trajectories).
  */
 class Body
 {
-    private:
+    protected:
         double  mass;
         Vector  position;
         Vector  velocity;

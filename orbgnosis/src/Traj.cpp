@@ -23,14 +23,13 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.cpp,v 1.4 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: Traj.cpp,v 1.5 2006/06/06 19:54:41 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
 #include "Orbgnosis.h"
 #include "Traj.h"
-#include <math.h>
 
 /*
  * This pragma disables 

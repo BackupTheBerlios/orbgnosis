@@ -23,11 +23,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.8 2006/06/06 19:01:16 trs137 Exp $
+ * $Id: Body.cpp,v 1.9 2006/06/06 19:54:41 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
 
+#include "Orbgnosis.h"
 #include "Body.h"
 
 /**
