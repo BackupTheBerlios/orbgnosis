@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.h,v 1.4 2006/06/06 20:45:54 trs137 Exp $
+ * $Id: Orbgnosis.h,v 1.5 2006/06/08 22:39:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -35,26 +35,23 @@
 #ifndef _ORBGNOSIS_H_
 #define _ORBGNOSIS_H_
 
-#include <float.h>
+#ifdef INF
+#undef INF
+#endif
+#define INF 1.0e14 
 
-//define INF 1.0e99           use INFINITY defined in <math.h> instead
-
-// Assigning doubles to INFINITY cases problems on some platforms.
-// USE DBL_MAX instead.  DBL_MAX should be in <float.h> per
-// ISO C standard:
-#ifndef _FLOAT_H___
-#define DBL_MAX     __DBL_MAX__     //!< Largest possible double float.
-#endif // _FLOAT_H___
-
-
-//#define EPS 1.0e-14
-//#define E  2.71828182845905
+#define EPS 1.0e-14
+#define E  2.71828182845905
 //#define PI 3.14159265358979   use M_PI from <math.h> instead
+#define GNUPLOT_COMMAND "gnuplot -persist"
+
 #define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"
 #define ER 6378.137    //!< Earth radius in km.
 #define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
 #define ROOTMU 631.3481     //!< the square root of Mu.
 #define TU_SEC 806.81112382429    //!< canonical time units (s)
 #define TU_MIN 13.44685206374     //!< canonical time units (m)
+
+
 
 #endif /* _ORBGNOSIS_H_ */

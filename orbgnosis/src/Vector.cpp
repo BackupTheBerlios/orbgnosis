@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.17 2006/06/05 20:51:37 trs137 Exp $
+ * $Id: Vector.cpp,v 1.18 2006/06/08 22:39:37 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -283,10 +283,10 @@ Vector::toInf (void)
 {
     try
     {
-        x = y = z = DBL_MAX; // INFINITY defined in math.h causes problems
+        x = y = z = INF; // INFINITY defined in math.h causes problems
                              // with gcc4.0 on Mac OS X.
     } catch(...) {
-        cerr << "Vector::toInf could not set double to <float.h>'s DBL_MAX.\n";
+        cerr << "Vector::toInf could not set double to " << INF << "\n";
     }
     return;
 }
