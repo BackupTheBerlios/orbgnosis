@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.cpp,v 1.8 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: BLambert.cpp,v 1.9 2006/06/08 20:42:49 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -131,7 +131,7 @@ BLambert::getV (void)
 }
 
 /**
- * Gets the time fo flight, t.
+ * Gets the time of flight, t.
  */
 double
 BLambert::gett (void)

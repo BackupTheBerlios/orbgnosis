@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Tour.cpp,v 1.1 2006/06/06 20:10:22 trs137 Exp $
+ * $Id: Tour.cpp,v 1.2 2006/06/08 20:42:49 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -33,7 +33,6 @@
 
 /**
  * Default Tour constructor with no args.
- * Sets mass to 1.0, and everything else to zero.
  */
 Tour::Tour (void)
 {
