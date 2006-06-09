@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Body.cpp,v 1.9 2006/06/06 19:54:41 trs137 Exp $
+ * $Id: Body.cpp,v 1.10 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -33,15 +33,16 @@
 
 /**
  * Default Body constructor with no args.
- * Sets mass to 1.0, and everything else to zero.
+ * Sets mass and moments to 1.0, and everything else to zero.
  */
-Body::Body (void)
+Body::Body (void) :
+    mass(1.0),
+    position(0.0, 0.0, 0.0),
+    velocity(0.0, 0.0, 0.0),
+    ang_vel(0.0, 0.0, 0.0),
+    moments(1.0, 1.0, 1.0)
 {
-    mass = 1.0;
-    position = Vector(0.0, 0.0, 0.0);
-    velocity = Vector(0.0, 0.0, 0.0);
-    ang_vel  = Vector(0.0, 0.0, 0.0);
-    moments  = Vector(0.0, 0.0, 0.0);
+    //cout << "Body constructor called with no args.\n";
 }
 
 /**
@@ -55,13 +56,14 @@ Body::~Body (void)
 /**
  * The Body copy constructor.
  */
-Body::Body (const Body& copy)
+Body::Body (const Body& copy) :
+    mass(copy.mass),
+    position(copy.position),
+    velocity(copy.velocity),
+    ang_vel(copy.ang_vel),
+    moments(copy.moments)
 {
-    mass = copy.mass;
-    position = copy.position;
-    velocity = copy.velocity;
-    ang_vel = copy.ang_vel;
-    moments = copy.moments;
+    //cout << "Body copy constructor called\n";
 }
 
 /**

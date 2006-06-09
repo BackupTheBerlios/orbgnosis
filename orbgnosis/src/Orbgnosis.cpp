@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Orbgnosis.cpp,v 1.15 2006/06/08 22:39:37 trs137 Exp $
+ * $Id: Orbgnosis.cpp,v 1.16 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *
@@ -35,16 +35,6 @@
 #include <math.h>
 #include <iostream>
 using namespace std;
-
-/*
- * This pragma disables 
- * "remark #981: operands are evaluated in unspecified order"
- * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
- * cases.  Leave NO_ICC_981 undefined to get the warnings.
- */
-#ifdef NO_ICC_981
-#pragma warning (disable:981)
-#endif
 
 /**
  * The main program.
@@ -238,8 +228,3 @@ int main(void)
 
     return EXIT_SUCCESS;
 }
-
-// Re-enable ICC remark #981
-#ifdef NO_ICC_981
-#pragma warning (default:981)
-#endif

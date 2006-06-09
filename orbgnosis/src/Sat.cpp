@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Sat.cpp,v 1.2 2006/06/06 20:45:54 trs137 Exp $
+ * $Id: Sat.cpp,v 1.3 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -36,7 +36,7 @@
  */
 Sat::Sat (void)
 {
-    // Nothing in Sat yet.
+    //cout << "Sat constructor called.\n";
 }
 
 /**
@@ -50,32 +50,20 @@ Sat::~Sat (void)
 /**
  * The Sat copy constructor.
  */
-Sat::Sat (const Sat& copy)
+Sat::Sat (const Sat& copy) : Body(copy), Traj(copy)
 {
-    // Body
-    mass = copy.mass;
-    position = copy.position;
-    velocity = copy.velocity;
-    ang_vel = copy.ang_vel;
-    moments = copy.moments;
-    // Traj
-    a = copy.a;
-    e = copy.e;
-    i = copy.i;
-    raan = copy.raan;
-    w = copy.w;
-    f = copy.f;
+    //cout << "Sat copy constructor called.\n";
 }
 
 /**
  * The Sat copy assignment operator.
  */
 Sat&
-Sat::operator = (Sat b)
+Sat::operator = (Sat s)
 {
-    mass = b.mass;
-    position = b.position;
-    velocity = b.velocity;
-    moments = b.moments;
+    mass = s.mass;
+    position = s.position;
+    velocity = s.velocity;
+    moments = s.moments;
     return *this;
 }

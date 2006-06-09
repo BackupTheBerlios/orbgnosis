@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Traj.cpp,v 1.5 2006/06/06 19:54:41 trs137 Exp $
+ * $Id: Traj.cpp,v 1.6 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,22 +31,18 @@
 #include "Orbgnosis.h"
 #include "Traj.h"
 
-/*
- * This pragma disables 
- * "remark #981: operands are evaluated in unspecified order"
- * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
- * cases.  Leave NO_ICC_981 undefined to get the warnings.
- */
-#ifdef NO_ICC_981
-#pragma warning (disable:981)
-#endif
-
 /**
  * The Traj constructor.
  */
-Traj::Traj (void)
+Traj::Traj (void) :
+    a(0.0),
+    e(0.0),
+    i(0.0),
+    raan(0.0),
+    w(0.0),
+    f(0.0)
 {
-    a = e = i = raan = w = f = 0.0;
+    //cout << "Traj constructor called with zero args.\n";
 }
 
 /**
@@ -61,28 +57,30 @@ Traj::Traj (void)
  * @param fin the true anomaly (radians).
  */
 Traj::Traj (double ain, double ein, double iin, double raanin,
-double win, double fin)
+double win, double fin) :
+    a(ain),
+    e(ein),
+    i(iin),
+    raan(raanin),
+    w(win),
+    f(fin)
 {
-    a = ain;
-    e = ein;
-    i = iin;
-    raan = raanin;
-    w = win;
-    f = fin;
+    //cout << "Traj constructor called with 6 args.\n";
 }
 
 /**
  * The Traj copy constructor.
  * @param copy the reference to the Traj to be copied.
  */
-Traj::Traj (const Traj& copy)
+Traj::Traj (const Traj& copy) :
+    a(copy.a),
+    e(copy.e),
+    i(copy.i),
+    raan(copy.raan),
+    w(copy.w),
+    f(copy.f)
 {
-    a = copy.a;
-    e = copy.e;
-    i = copy.i;
-    raan = copy.raan;
-    w = copy.w;
-    f = copy.f;
+    //cout << "Traj copy constructor called.\n";
 }
 
 /**
@@ -108,9 +106,3 @@ Traj::~Traj (void)
 {
     // cout << "Traj destructor called.\n";
 }
-
-
-// Re-enable ICC remark #981
-#ifdef NO_ICC_981
-#pragma warning (default:981)
-#endif

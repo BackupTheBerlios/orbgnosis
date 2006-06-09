@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.18 2006/06/08 22:39:37 trs137 Exp $
+ * $Id: Vector.cpp,v 1.19 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -34,22 +34,12 @@
 #include <iostream>
 using namespace std;
 
-/*
- * This pragma disables 
- * "remark #981: operands are evaluated in unspecified order"
- * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
- * cases.  Leave NO_ICC_981 undefined to get the warnings.
- */
-#ifdef NO_ICC_981
-#pragma warning (disable:981)
-#endif
-
 /**
  * The Vector constructor with no arguments defaults to all zeroes.
  */
-Vector::Vector (void)
+Vector::Vector (void) : x(0.0), y(0.0), z(0.0)
 {
-    x = y = z = 0.0;    // Vectors with no args default to zero.
+    // cout << "Default Vector constructor called.\n";
 }
 
 /**
@@ -58,11 +48,9 @@ Vector::Vector (void)
  * @param yin is the second element.
  * @param zin is the third element.
  */
-Vector::Vector (double xin, double yin, double zin)
+Vector::Vector (double xin, double yin, double zin) : x(xin), y(yin), z(zin)
 {
-    x = xin;
-    y = yin;
-    z = zin;
+    // cout << "3-arg Vector constructor called.\n";
 }
 
 /**
@@ -77,11 +65,9 @@ Vector::~Vector (void)
  * The Vector copy constructor.
  * @param copy is a reference to the Vector to be copied.
  */
-Vector::Vector (const Vector& copy)
+Vector::Vector (const Vector& copy) : x(copy.x), y(copy.y), z(copy.z)
 {
-    x = copy.x;
-    y = copy.y;
-    z = copy.z;
+    //cout << "Vector coppy constructor called\n";
 }
 
 /**
@@ -331,8 +317,3 @@ Vector::setZ (double zin)
 {
     z = zin;
 }
-
-// Re-enable ICC remark #981
-#ifdef NO_ICC_981
-#pragma warning (default:981)
-#endif

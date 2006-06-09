@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: BLambert.cpp,v 1.9 2006/06/08 20:42:49 trs137 Exp $
+ * $Id: BLambert.cpp,v 1.10 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -38,26 +38,19 @@
 #include <iostream>
 using namespace std;
 
-/*
- * This pragma disables 
- * "remark #981: operands are evaluated in unspecified order"
- * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
- * cases.  Leave NO_ICC_981 undefined to get the warnings.
- */
-#ifdef NO_ICC_981
-#pragma warning (disable:981)
-#endif
-
 /**
  * The Battin Lambert constructor with no arguments.
  * All member variables are set to zero.
  */
-BLambert::BLambert(void)
+BLambert::BLambert(void) :
+    t(0.0),
+    Ro(0.0, 0.0, 0.0),
+    R(0.0, 0.0, 0.0),
+    Vo(0.0, 0.0, 0.0),
+    V(0.0, 0.0, 0.0),
+    failure(false)
 {
-    t = 0.0;
-    Ro.toZero();
-    R.toZero();
-    failure = false;
+    //cout << "BLambert constructor called with no args.\n";
 }
 
 /**
@@ -67,10 +60,14 @@ BLambert::BLambert(void)
  * @param tin is the specified time of flight.
  */
 BLambert::BLambert(Vector r1in, Vector r2in, double tin) :
-    t(tin), Ro(r1in), R(r2in) 
+    t(tin),
+    Ro(r1in),
+    R(r2in),
+    Vo(0.0, 0.0, 0.0),
+    V(0.0, 0.0, 0.0),
+    failure(false)
 {
-    // cout << "BLambert constructor called \n";
-    failure = false;
+    //cout << "BLambert constructor called with 2 vectors and 1 time.\n";
 }
 
 /**
@@ -270,7 +267,7 @@ BLambert::bat_SEE(double v)
     c[0] = 0.2;
     for (int j = 1; j<21; j++)
     {
-        temp = (double)(j + 2);
+        temp = (double)(j) + 2.0;
         c[j] = (temp * temp) / ((4 * temp * temp) - 1);
     }
     SQRTopv = sqrt(1.0 + v);
@@ -349,8 +346,3 @@ BLambert::bat_K(double v)
     } // end while loop
     return sum1;
 } // end BLambert::bat_K
-
-// Re-enable ICC remark #981
-#ifdef NO_ICC_981
-#pragma warning (default:981)
-#endif

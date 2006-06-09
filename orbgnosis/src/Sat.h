@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Sat.h,v 1.2 2006/06/06 20:10:22 trs137 Exp $
+ * $Id: Sat.h,v 1.3 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -34,7 +34,7 @@
 #include "Traj.h"
 
 /**
- * Represents a Body moving on a particular Traj.
+ * A Satellite is Body moving on uniquely one Traj, so it "is" a Traj, too.
  */
 class Sat : public Body, public Traj
 {

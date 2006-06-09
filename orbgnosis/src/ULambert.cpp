@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: ULambert.cpp,v 1.7 2006/06/06 01:57:40 trs137 Exp $
+ * $Id: ULambert.cpp,v 1.8 2006/06/09 00:07:12 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  *                  David Vallado <valladodl@worldnet.att.net>
@@ -38,26 +38,19 @@
 #include <iostream>
 using namespace std;
 
-/*
- * This pragma disables 
- * "remark #981: operands are evaluated in unspecified order"
- * on the Intel C/C++ compiler.  ICC warns about this in unneccessary
- * cases.  Leave NO_ICC_981 undefined to get the warnings.
- */
-#ifdef NO_ICC_981
-#pragma warning (disable:981)
-#endif
-
 /**
  * The universal variable Lambert constructor with no arguments.
  * All member variables are set to zero.
  */
-ULambert::ULambert(void)
+ULambert::ULambert(void) :
+    t(0.0),
+    Ro(0.0, 0.0, 0.0),
+    R(0.0, 0.0, 0.0),
+    Vo(0.0, 0.0, 0.0),
+    V(0.0, 0.0, 0.0),
+    failure(false)
 {
-    t = 0.0;
-    Ro.toZero();
-    R.toZero();
-    failure = false;
+    //cout << "ULambert constructor called with no args.\n";
 }
 
 /**
@@ -67,10 +60,14 @@ ULambert::ULambert(void)
  * @param tin is the specified time of flight.
  */
 ULambert::ULambert(Vector r1in, Vector r2in, double tin) :
-    t(tin), Ro(r1in), R(r2in) 
+    t(tin),
+    Ro(r1in),
+    R(r2in),
+    Vo(0.0, 0.0, 0.0),
+    V(0.0, 0.0, 0.0),
+    failure(false)
 {
-    // cout << "ULambert constructor called \n";
-    failure = false; //<! All Lambert problems begin life as un-failed and must be profen otherwise.
+    // cout << "ULambert constructor called with 2 vectors and 1 time.\n";
 }
 
 /**
@@ -340,8 +337,3 @@ ULambert::universal (const bool Lin, const int multirev)
     V = V * ER / TU_SEC;
 */
 } // end ULambert::universal
-
-// Re-enable ICC remark #981
-#ifdef NO_ICC_981
-#pragma warning (default:981)
-#endif
