@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.19 2006/06/09 00:07:12 trs137 Exp $
+ * $Id: Vector.cpp,v 1.20 2006/06/09 20:26:11 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -258,9 +258,6 @@ Vector::toZero (void)
 
 /**
  * Sets all three elements of a Vector to DBL_MAX (may cause problems).
- * NOTE: Using INFINITY as defined in <math.h> works on Linux and FreeBSD,
- * but generates errors with gcc4.0 on Mac OS X because INFINITY (1.0e99)
- * is greater than DBL_MAX.  DBL_MAX is friendlier, but still needs testing.
  * TODO: Add a boolean to the Vector class to track whether a Vector is
  * Very Large.
  */
@@ -269,8 +266,8 @@ Vector::toInf (void)
 {
     try
     {
-        x = y = z = INF; // INFINITY defined in math.h causes problems
-                             // with gcc4.0 on Mac OS X.
+        x = y = z = INF;    // INFINITY defined in math.h causes problems
+                            // with gcc4.0 on Mac OS X.
     } catch(...) {
         cerr << "Vector::toInf could not set double to " << INF << "\n";
     }
