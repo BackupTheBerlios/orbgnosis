@@ -9,12 +9,6 @@ int main (void)
     cout << "Enter number of targets [1-" << SJT_MAX << "]: ";
     cin >> numTargets;
 
-    if (numTargets < 1)
-    {
-        cout << "Error: bad input.";
-        return 1;
-    }
-
     SJT blah(numTargets);
     blah.print();
 

@@ -13,7 +13,7 @@
  * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.cpp,v 1.2 2006/06/09 21:16:29 trs137 Exp $
+ * $Id: SJT.cpp,v 1.3 2006/06/09 23:07:21 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -66,6 +66,31 @@ SJT::~SJT (void)
     }
 }
 
+SJT::SJT (const SJT& copy) :
+    n(copy.n),
+    m(copy.m),
+    currentRow(copy.currentRow),
+    p2d(copy.p2d)
+    // p(copy.p),
+    // pi(copy.pi),
+    // dir(copy.dir)
+{
+    // FIXME
+}
+
+SJT&
+SJT::operator = (const SJT t)
+{
+    //n = t.n;  /* FIXME */
+    //m = t.m;
+    currentRow = t.currentRow;
+    p2d = t.p2d;
+    //p = t.p;
+    //pi = t.pi;
+    //dir = t.dir;
+    return *this;
+}
+
 void
 SJT::permutate (int a)
 {
@@ -108,7 +133,7 @@ SJT::exchange (int x, int d)
 int
 SJT::factorial (int x)
 {
-    if (SJT_MAX < x)
+    if ((SJT_MAX < x) || ( 1 > x ))
     {
         std::cerr << "error, SJT::factorial tried to find factorial of " << x;
         std::cerr << "\n but is restricted to positive integers of ";

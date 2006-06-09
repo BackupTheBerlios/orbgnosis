@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.h,v 1.2 2006/06/09 21:16:29 trs137 Exp $
+ * $Id: SJT.h,v 1.3 2006/06/09 23:07:21 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -52,6 +52,9 @@ class SJT
     public:
                 SJT (int);              // constructor
         virtual ~SJT (void);            // destructor
+
+                SJT (const SJT&);       // copy constructor
+           SJT& operator = (const SJT);// copy assignment operator
 
             void permutate (int);       // this is called recursively
             void storeRow  (void);      // store 1 tour-order in matrix
