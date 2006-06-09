@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.28 2006/06/09 20:26:11 trs137 Exp $
+# $Id: Makefile,v 1.29 2006/06/09 21:16:29 trs137 Exp $
 #
 # *** use gmake! ***
 #
@@ -23,6 +23,10 @@ $(MAIN):$(OBJS)
 
 %.o: %.cpp Orbgnosis.h
 	$(CC) $(CFLAGS) $(REPORT) -c $<
+
+sjt:
+	$(CC) $(CFLAGS) $(REPORT) -o sjt_test SJT.cpp sjt_test.cpp
+
 
 clean:
 	$(RM) *.o *.core $(MAIN)

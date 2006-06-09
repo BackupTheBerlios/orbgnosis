@@ -1,5 +1,5 @@
 /*-
- * Copyright 2005 (c) Ted Stodgell. All rights reserved.
+ * Copyright 2006 (c) Ted Stodgell. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -13,7 +13,7 @@
  * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.cpp,v 1.1 2006/06/09 20:26:11 trs137 Exp $
+ * $Id: SJT.cpp,v 1.2 2006/06/09 21:16:29 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -26,29 +26,14 @@ using namespace std;
  * The SJT constructor.
  * @param nin is the number of targets in the tour.
  */
-SJT::SJT (int nin) : n(nin), m(factorial(n)), currentRow(0)
+SJT::SJT (int nin) try :
+        n(nin),
+        m(factorial(n)),
+        currentRow(0),
+        p2d(new int*[m])
 {
-    if ( n > SJT_MAX)
-    {
-        cerr << "SJT::SJT number of targets exceeds SJT_MAX.\n";
-        exit(1);
-    }
-
-    try
-    {
-        p2d = new int* [m];         // allocate double pointer.
-        for (int i = 0; i < m; i++)
-            p2d[i] = new int [n];   // allocate every i-th row.a
-    } catch(...) {
-        cerr << "SJT::SJT could not allocate memory for an ";
-        cerr << m << " x " << n << " arrray of ints.\n";
-        exit(1);
-    }
-
-    /* This is just temporary.  Fill array with -999's for no good reason */
     for (int i = 0; i < m; i++)
-        for (int j = 0; j < n; j++)
-            p2d[i][j] = -999;
+        p2d[i] = new int [n];   // allocate every i-th row.a
 
     for (int i=1; i<=n; ++i)
     {
@@ -56,6 +41,9 @@ SJT::SJT (int nin) : n(nin), m(factorial(n)), currentRow(0)
         pi[i] = i;
     }
     permutate(1);
+}catch (...) {
+    std::cerr << "Couldn't create SJT.\n";
+    exit(1);
 }
 
 /**
@@ -63,13 +51,19 @@ SJT::SJT (int nin) : n(nin), m(factorial(n)), currentRow(0)
  */
 SJT::~SJT (void)
 {
-    for (int i = 0; i < m; i++)
+    try
     {
-        delete[] p2d[i];
-        p2d[i] = NULL;
+        for (int i = 0; i < m; i++)
+        {
+            delete[] p2d[i];
+            p2d[i] = NULL;
+        }
+        delete[] p2d;
+        p2d = NULL;
+    }catch(...){
+        std::cerr << "SJT::~SJT could not free and delete memory.\n";
+        exit(1);
     }
-    delete[] p2d;
-    p2d = NULL;
 }
 
 void
@@ -112,10 +106,17 @@ SJT::exchange (int x, int d)
 }
 
 int
-SJT::factorial (int n)
+SJT::factorial (int x)
 {
+    if (SJT_MAX < x)
+    {
+        std::cerr << "error, SJT::factorial tried to find factorial of " << x;
+        std::cerr << "\n but is restricted to positive integers of ";
+        std::cerr << SJT_MAX << " or less.\n";
+        exit(1);
+    }
     int f = 1;
-    for (int i=1; i<=n; i++)
+    for (int i=1; i<=x; i++)
         f = f * i;
     return f;
 }
@@ -127,8 +128,8 @@ SJT::print (void)
     {
         for (int j = 0; j < n; j++)
         {
-            cout << p2d[i][j] << " ";
+            std::cout << p2d[i][j] << " ";
         }
-        cout << "\n";
+        std::cout << "\n";
     }
 }

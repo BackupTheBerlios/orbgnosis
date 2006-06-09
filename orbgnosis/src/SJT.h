@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) SJT_MAX05 Ted Stodgell. All rights reserved.
+ * Copyright (c) 2006 Ted Stodgell. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.h,v 1.1 2006/06/09 20:26:11 trs137 Exp $
+ * $Id: SJT.h,v 1.2 2006/06/09 21:16:29 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -62,8 +62,8 @@ class SJT
     private:
                 const int   n;          //!< The number of targets.
                 const int   m;          //!< Holds value of n-factorial.
-                int**       p2d;        //!< matrix of ints, m rows by n cols
                 int         currentRow; //!< counter
+                int**       p2d;        //!< matrix of ints, m rows by n cols
                 int         p[SJT_MAX];      //!< a permutation.
                 int         pi[SJT_MAX];     //!< the permutation's inverse.
                 int         dir[SJT_MAX];    //!< direction for each element.
