@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.h,v 1.3 2006/06/09 23:07:21 trs137 Exp $
+ * $Id: SJT.h,v 1.4 2006/06/10 23:07:09 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -31,7 +31,7 @@
 #ifndef _TOUR_H_
 #define _TOUR_H_
 
-#define SJT_MAX 10
+#define SJT_MAX 20
 
 /**
  * All permutations of tour-orders for n targets.
@@ -54,22 +54,27 @@ class SJT
         virtual ~SJT (void);            // destructor
 
                 SJT (const SJT&);       // copy constructor
-           SJT& operator = (const SJT);// copy assignment operator
+           SJT& operator = (const SJT); // copy assignment operator
 
+        void    print   (void);         // print the matrix to stdout.
+
+        int     getElement(int, int);   // returns p2d[int][int]
+        int     getRows();              // returns m;
+        int     getCols();              // returns n;
+
+    private:
+            int  factorial (int);       // returns factorial
             void permutate (int);       // this is called recursively
             void storeRow  (void);      // store 1 tour-order in matrix
             void exchange  (int, int);  // exchange 2 elements
-            int  factorial (int);       // returns factorial
-            void print     (void);      // print the matrix to stdout
 
-    private:
                 const int   n;          //!< The number of targets.
-                const int   m;          //!< Holds value of n-factorial.
+                const int   m;          //!< Holds value of n-factorial.a
                 int         currentRow; //!< counter
                 int**       p2d;        //!< matrix of ints, m rows by n cols
-                int         p[SJT_MAX];      //!< a permutation.
-                int         pi[SJT_MAX];     //!< the permutation's inverse.
-                int         dir[SJT_MAX];    //!< direction for each element.
+                int         p[SJT_MAX+1];      //!< a permutation.
+                int         pi[SJT_MAX+1];     //!< the permutation's inverse.
+                int         dir[SJT_MAX+1];    //!< direction for each element.
                 
 };
 

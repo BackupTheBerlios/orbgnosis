@@ -13,7 +13,7 @@
  * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.cpp,v 1.3 2006/06/09 23:07:21 trs137 Exp $
+ * $Id: SJT.cpp,v 1.4 2006/06/10 23:07:04 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -112,9 +112,9 @@ SJT::permutate (int a)
 void
 SJT::storeRow (void)
 {
-    for (int i = 1; i <=  n; ++i)
+    for (int i = 0; i < n; ++i)
     {
-        p2d[currentRow][i-1] = p[i]; // SJT algorithm is off by one, this fixes.
+        p2d[currentRow][i] = p[i+1]-1; // XXX SJT algorithm is off by one, this fixes.
     }
     currentRow += 1;
 }
@@ -157,4 +157,22 @@ SJT::print (void)
         }
         std::cout << "\n";
     }
+}
+
+int
+SJT::getElement (int row, int col)
+{
+    return p2d[row][col];
+}
+
+int
+SJT::getRows (void)
+{
+    return m;
+}
+
+int
+SJT::getCols (void)
+{
+    return n;
 }
