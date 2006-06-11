@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.h,v 1.4 2006/06/10 23:07:09 trs137 Exp $
+ * $Id: SJT.h,v 1.5 2006/06/11 00:09:28 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -75,6 +75,7 @@ class SJT
                 int         p[SJT_MAX+1];      //!< a permutation.
                 int         pi[SJT_MAX+1];     //!< the permutation's inverse.
                 int         dir[SJT_MAX+1];    //!< direction for each element.
+                int         recursionDepth;  
                 
 };
 

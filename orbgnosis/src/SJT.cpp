@@ -13,7 +13,7 @@
  * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: SJT.cpp,v 1.4 2006/06/10 23:07:04 trs137 Exp $
+ * $Id: SJT.cpp,v 1.5 2006/06/11 00:09:27 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -30,7 +30,8 @@ SJT::SJT (int nin) try :
         n(nin),
         m(factorial(n)),
         currentRow(0),
-        p2d(new int*[m])
+        p2d(new int*[m]),
+        recursionDepth(0)
 {
     for (int i = 0; i < m; i++)
         p2d[i] = new int [n];   // allocate every i-th row.a
@@ -41,6 +42,7 @@ SJT::SJT (int nin) try :
         pi[i] = i;
     }
     permutate(1);
+    cout << "recursionDepth = " << recursionDepth << ".\n";
 }catch (...) {
     std::cerr << "Couldn't create SJT.\n";
     exit(1);
@@ -94,15 +96,16 @@ SJT::operator = (const SJT t)
 void
 SJT::permutate (int a)
 {
-    int i;
     if (a > n)
     {
         storeRow();
     }else{
+        recursionDepth += 1;
         permutate(a+1);
-        for (i=1; i <= a-1; ++i)
+        for (int i=1; i <= a-1; ++i)
         {
             exchange(a, dir[a]);
+            recursionDepth += 1;
             permutate(a+1);
         }
         dir[a] = -dir[a];
