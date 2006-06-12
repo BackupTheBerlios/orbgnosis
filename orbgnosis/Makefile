@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.1 2006/06/12 20:11:19 trs137 Exp $
+# $Id: Makefile,v 1.2 2006/06/12 20:37:24 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -70,7 +70,7 @@ DEPENDS := $(addprefix $(DEPDIR)/,$(addsuffix .d,$(basename $(BASESOURCES))))
 BASEHEADERS := $(shell cd $(SRCDIR) && ls -1 *.h)
 HEADERS := $(addprefix $(SRCDIR)/,$(BASEHEADERS))
 
-.PHONY : default release clean binarchive sourcearchive all
+.PHONY : default release clean all
 
 .DELETE_ON_ERROR : $(BINARY)
 
@@ -86,11 +86,7 @@ clean :
 	@echo cleaning
 	@rm -rf $(BINARY) $(OBJDIR) $(DEPDIR) $(filter-out data.zip,$(wildcard *.zip)) *.zip~
 
-all : sourcearchive binarchive
-
-sourcearchive : $(FULLNAME)-src.zip
-
-binarchive : $(FULLNAME).zip
+all : build
 
 cvsup:
 	@echo CVS up -d
@@ -109,28 +105,6 @@ $(DEPDIR)/%.d : $(SRCDIR)/%.cpp
 	@/bin/echo generating dependencies for $<
 	@/bin/echo $@ $(OBJDIR)/$(shell $(DEP) $<) > $(TEMPDEPFILE)
 	@/bin/echo $(OBJDIR)/$(basename $(@F))".o : $(MAKEFILE)" | /bin/cat - $(TEMPDEPFILE) > $@
-
-$(FULLNAME).zip : $(BINARY) $(DATA) $(EXTRADATA) $(MAKEFILE)
-	@rm -rf $@~
-	@mkdir -p $@~/$(FULLNAME)/
-ifneq "$(EXTRADATA)" ""
-	@unzip $(EXTRADATA) -d $@~/$(FULLNAME)/
-endif
-	@rm -rf $@~/$(FULLNAME)/CVS $@~/$(FULLNAME)/protocol/CVS $@~/$(FULLNAME)/help/CVS $@~/$(FULLNAME)/scripts/CVS
-	@rm -rf $@~/$(FULLNAME)/CVS $@~/$(FULLNAME)/help/content/CVS $@~/$(FULLNAME)/help/images/CVS
-	@cd $@~ && $(ZIP) $@ $(FULLNAME)
-	@mv -f $@~/$@ .
-	@rm -rf $@~
-
-$(FULLNAME)-src.zip : $(SOURCES) $(HEADERS) $(DATA) $(EXTRADATA) $(MAKEFILE)
-	@rm -rf $@~
-	@mkdir -p $@~/$(FULLNAME)-src/
-	@rm -rf $@~/$(FULLNAME)-src/src/CVS $@~/$(FULLNAME)-src/data/CVS
-	@rm -rf $@~/$(FULLNAME)-src/CVS $@~/$(FULLNAME)-src/data/protocol/CVS $@~/$(FULLNAME)-src/data/help/CVS $@~/$(FULLNAME)-src/data/scripts/CVS
-	@rm -rf $@~/$(FULLNAME)-src/CVS $@~/$(FULLNAME)-src/data/help/content/CVS $@~/$(FULLNAME)-src/data/help/images/CVS
-	@cd $@~ && $(ZIP) $@ $(FULLNAME)-src
-	@mv -f $@~/$@ .
-	@rm -rf $@~
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),depend)
