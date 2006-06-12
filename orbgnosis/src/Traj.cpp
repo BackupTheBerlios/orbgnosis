@@ -1,32 +1,32 @@
 /*-
- * Copyright 2005 (c) Ted Stodgell. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * $Id: Traj.cpp,v 1.6 2006/06/09 00:07:12 trs137 Exp $
- *
- * Contributor(s):  Ted Stodgell <trs137@psu.edu>
- */
+* Copyright 2005 (c) Ted Stodgell. All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*
+* $Id: Traj.cpp,v 1.7 2006/06/12 21:22:17 trs137 Exp $
+*
+* Contributor(s):  Ted Stodgell <trs137@psu.edu>
+*/
 
 #include "Orbgnosis.h"
 #include "Traj.h"
@@ -35,12 +35,12 @@
  * The Traj constructor.
  */
 Traj::Traj (void) :
-    a(0.0),
-    e(0.0),
-    i(0.0),
-    raan(0.0),
-    w(0.0),
-    f(0.0)
+        a(0.0),
+        e(0.0),
+        i(0.0),
+        raan(0.0),
+        w(0.0),
+        f(0.0)
 {
     //cout << "Traj constructor called with zero args.\n";
 }
@@ -57,13 +57,13 @@ Traj::Traj (void) :
  * @param fin the true anomaly (radians).
  */
 Traj::Traj (double ain, double ein, double iin, double raanin,
-double win, double fin) :
-    a(ain),
-    e(ein),
-    i(iin),
-    raan(raanin),
-    w(win),
-    f(fin)
+            double win, double fin) :
+        a(ain),
+        e(ein),
+        i(iin),
+        raan(raanin),
+        w(win),
+        f(fin)
 {
     //cout << "Traj constructor called with 6 args.\n";
 }
@@ -73,12 +73,12 @@ double win, double fin) :
  * @param copy the reference to the Traj to be copied.
  */
 Traj::Traj (const Traj& copy) :
-    a(copy.a),
-    e(copy.e),
-    i(copy.i),
-    raan(copy.raan),
-    w(copy.w),
-    f(copy.f)
+        a(copy.a),
+        e(copy.e),
+        i(copy.i),
+        raan(copy.raan),
+        w(copy.w),
+        f(copy.f)
 {
     //cout << "Traj copy constructor called.\n";
 }

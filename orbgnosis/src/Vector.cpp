@@ -1,32 +1,32 @@
 /*-
- * Copyright (c) 2005 Ted Stodgell. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * $Id: Vector.cpp,v 1.21 2006/06/12 20:11:20 trs137 Exp $
- *
- * Contributor(s):  Ted Stodgell <trs137@psu.edu>
- */
+* Copyright (c) 2005 Ted Stodgell. All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*
+* $Id: Vector.cpp,v 1.22 2006/06/12 21:22:17 trs137 Exp $
+*
+* Contributor(s):  Ted Stodgell <trs137@psu.edu>
+*/
 
 #include "Vector.h"
 #include "Orbgnosis.h" // defines DBL_MAX from <float.h>
@@ -37,7 +37,10 @@ using namespace std;
 /**
  * The Vector constructor with no arguments defaults to all zeroes.
  */
-Vector::Vector (void) : x(0.0), y(0.0), z(0.0)
+Vector::Vector (void)
+        : x(0.0),
+        y(0.0),
+        z(0.0)
 {
     // cout << "Default Vector constructor called.\n";
 }
@@ -48,7 +51,10 @@ Vector::Vector (void) : x(0.0), y(0.0), z(0.0)
  * @param yin is the second element.
  * @param zin is the third element.
  */
-Vector::Vector (double xin, double yin, double zin) : x(xin), y(yin), z(zin)
+Vector::Vector (double xin, double yin, double zin)
+        : x(xin),
+        y(yin),
+        z(zin)
 {
     // cout << "3-arg Vector constructor called.\n";
 }
@@ -65,7 +71,10 @@ Vector::~Vector (void)
  * The Vector copy constructor.
  * @param copy is a reference to the Vector to be copied.
  */
-Vector::Vector (const Vector& copy) : x(copy.x), y(copy.y), z(copy.z)
+Vector::Vector (const Vector& copy)
+        : x(copy.x),
+        y(copy.y),
+        z(copy.z)
 {
     //cout << "Vector coppy constructor called\n";
 }
@@ -267,11 +276,13 @@ Vector::toInf (void)
     try
     {
         x = y = z = INF;    // INFINITY defined in math.h causes problems
-                            // with gcc4.0 on Mac OS X.
-    } catch(...) {
+        // with gcc4.0 on Mac OS X.
+    }
+    catch (...)
+    {
         cerr << "Vector::toInf could not set double to " << INF << "\n";
     }
-    return;
+    return ;
 }
 
 /**

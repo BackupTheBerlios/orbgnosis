@@ -1,22 +1,22 @@
 /*-
- * Copyright 2006 (c) Ted Stodgell. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * $Id: SJT.cpp,v 1.5 2006/06/11 00:09:27 trs137 Exp $
- *
- * Contributor(s):  Ted Stodgell <trs137@psu.edu>
- */
+* Copyright 2006 (c) Ted Stodgell. All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+* * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*
+* $Id: SJT.cpp,v 1.6 2006/06/12 21:22:17 trs137 Exp $
+*
+* Contributor(s):  Ted Stodgell <trs137@psu.edu>
+*/
 
 #include "SJT.h"
 #include <iostream>
@@ -26,24 +26,28 @@ using namespace std;
  * The SJT constructor.
  * @param nin is the number of targets in the tour.
  */
-SJT::SJT (int nin) try :
-        n(nin),
-        m(factorial(n)),
-        currentRow(0),
-        p2d(new int*[m]),
-        recursionDepth(0)
+SJT::SJT (int nin) try
+:
+    n(nin),
+    m(factorial(n)),
+    currentRow(0),
+    p2d(new int*[m]),
+    recursionDepth(0)
 {
     for (int i = 0; i < m; i++)
         p2d[i] = new int [n];   // allocate every i-th row.a
 
-    for (int i=1; i<=n; ++i)
+    for (int i = 1; i <= n; ++i)
     {
-        dir[i] = -1; p[i] = i;
+        dir[i] = -1;
+        p[i] = i;
         pi[i] = i;
     }
     permutate(1);
     cout << "recursionDepth = " << recursionDepth << ".\n";
-}catch (...) {
+}
+catch (...)
+{
     std::cerr << "Couldn't create SJT.\n";
     exit(1);
 }
@@ -62,20 +66,22 @@ SJT::~SJT (void)
         }
         delete[] p2d;
         p2d = NULL;
-    }catch(...){
+    }
+    catch (...)
+    {
         std::cerr << "SJT::~SJT could not free and delete memory.\n";
         exit(1);
     }
 }
 
 SJT::SJT (const SJT& copy) :
-    n(copy.n),
-    m(copy.m),
-    currentRow(copy.currentRow),
-    p2d(copy.p2d)
-    // p(copy.p),
-    // pi(copy.pi),
-    // dir(copy.dir)
+        n(copy.n),
+        m(copy.m),
+        currentRow(copy.currentRow),
+        p2d(copy.p2d)
+        // p(copy.p),
+        // pi(copy.pi),
+        // dir(copy.dir)
 {
     // FIXME
 }
@@ -99,14 +105,16 @@ SJT::permutate (int a)
     if (a > n)
     {
         storeRow();
-    }else{
+    }
+    else
+    {
         recursionDepth += 1;
-        permutate(a+1);
-        for (int i=1; i <= a-1; ++i)
+        permutate(a + 1);
+        for (int i = 1; i <= a - 1; ++i)
         {
             exchange(a, dir[a]);
             recursionDepth += 1;
-            permutate(a+1);
+            permutate(a + 1);
         }
         dir[a] = -dir[a];
     }
@@ -117,7 +125,7 @@ SJT::storeRow (void)
 {
     for (int i = 0; i < n; ++i)
     {
-        p2d[currentRow][i] = p[i+1]-1; // XXX SJT algorithm is off by one, this fixes.
+        p2d[currentRow][i] = p[i + 1] - 1; // XXX SJT algorithm is off by one, this fixes.
     }
     currentRow += 1;
 }
@@ -126,11 +134,11 @@ void
 SJT::exchange (int x, int d)
 {
     int z;
-    z = p[pi[x]+d];
+    z = p[pi[x] + d];
     p[pi[x]] = z;
-    p[pi[x]+d] = x;
+    p[pi[x] + d] = x;
     pi[z] = pi[x];
-    pi[x] = pi[x]+d;
+    pi[x] = pi[x] + d;
 }
 
 int
@@ -144,7 +152,7 @@ SJT::factorial (int x)
         exit(1);
     }
     int f = 1;
-    for (int i=1; i<=x; i++)
+    for (int i = 1; i <= x; i++)
         f = f * i;
     return f;
 }

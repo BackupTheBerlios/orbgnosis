@@ -1,34 +1,34 @@
 /*-
- * Copyright (c) 2006 Ted Stodgell. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * $Id: ULambert.cpp,v 1.8 2006/06/09 00:07:12 trs137 Exp $
- *
- * Contributor(s):  Ted Stodgell <trs137@psu.edu>
- *                  David Vallado <valladodl@worldnet.att.net>
- *
- */
+* Copyright (c) 2006 Ted Stodgell. All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*
+* $Id: ULambert.cpp,v 1.9 2006/06/12 21:22:17 trs137 Exp $
+*
+* Contributor(s):  Ted Stodgell <trs137@psu.edu>
+*                  David Vallado <valladodl@worldnet.att.net>
+*
+*/
 
 #include <math.h>
 #include "Vector.h"
@@ -43,12 +43,12 @@ using namespace std;
  * All member variables are set to zero.
  */
 ULambert::ULambert(void) :
-    t(0.0),
-    Ro(0.0, 0.0, 0.0),
-    R(0.0, 0.0, 0.0),
-    Vo(0.0, 0.0, 0.0),
-    V(0.0, 0.0, 0.0),
-    failure(false)
+        t(0.0),
+        Ro(0.0, 0.0, 0.0),
+        R(0.0, 0.0, 0.0),
+        Vo(0.0, 0.0, 0.0),
+        V(0.0, 0.0, 0.0),
+        failure(false)
 {
     //cout << "ULambert constructor called with no args.\n";
 }
@@ -60,12 +60,12 @@ ULambert::ULambert(void) :
  * @param tin is the specified time of flight.
  */
 ULambert::ULambert(Vector r1in, Vector r2in, double tin) :
-    t(tin),
-    Ro(r1in),
-    R(r2in),
-    Vo(0.0, 0.0, 0.0),
-    V(0.0, 0.0, 0.0),
-    failure(false)
+        t(tin),
+        Ro(r1in),
+        R(r2in),
+        Vo(0.0, 0.0, 0.0),
+        V(0.0, 0.0, 0.0),
+        failure(false)
 {
     // cout << "ULambert constructor called with 2 vectors and 1 time.\n";
 }
@@ -141,9 +141,12 @@ ULambert::gett (void)
 bool
 ULambert::isFailure(void)
 {
-    if (true == failure) {
+    if (true == failure)
+    {
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
 }
@@ -161,7 +164,7 @@ ULambert::universal (const bool Lin, const int multirev)
     const bool longway = Lin;
 
     /// The maximum number of iterations allowed.
-    const int NumIter = 40;  
+    const int NumIter = 40;
 
     int Loops;      //<! loop counter.
     int YNegKtr;    //<! counts how many times Y returned negative.
@@ -195,7 +198,7 @@ ULambert::universal (const bool Lin, const int multirev)
 
     // Magnitudes of Ro and R
     Ro4 = norm(Ro);
-    R4  = norm(R);
+    R4 = norm(R);
 
     // "Nu" is true anomaly.
     CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
@@ -203,25 +206,29 @@ ULambert::universal (const bool Lin, const int multirev)
     if (true == longway)
     {
         VarA = -sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
-    }else{
+    }
+    else
+    {
         VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
     }
 
     // Form initial guesses.
     PsiOld = 0.0;
     PsiNew = 0.0;
-    XOld   = 0.0;
-    C2New  = 0.5;
-    C3New  = 1.0/6.0;
+    XOld = 0.0;
+    C2New = 0.5;
+    C3New = 1.0 / 6.0;
 
     // Set up initial bounds for the bisection.
     if (0 == revs)
     {
         Upper = 4.0 * M_PI * M_PI;
         Lower = -8.0 * M_PI;
-    }else{
-        Upper = -SMALL + 4.0 * ((revs/2)+1)*((revs/2)+1)*M_PI*M_PI;
-        Lower = SMALL + 4.0 * (revs/2)*(revs/2) * M_PI*M_PI;
+    }
+    else
+    {
+        Upper = -SMALL + 4.0 * ((revs / 2) + 1) * ((revs / 2) + 1) * M_PI * M_PI;
+        Lower = SMALL + 4.0 * (revs / 2) * (revs / 2) * M_PI * M_PI;
     }
 
     // Determine if the orbit is possible at all
@@ -236,17 +243,19 @@ ULambert::universal (const bool Lin, const int multirev)
             {
                 Y = Ro4 + R4 -
                     (VarA * (1.0 - PsiOld * C3New) / sqrt(C2New));
-            }else{
+            }
+            else
+            {
                 Y = Ro4 + R4;
             }
             // Check for negative values of Y.
             if ( (0 < VarA) && (0 > Y))
             {
                 YNegKtr = 1;
-                while ((0 > Y)&&(10 > YNegKtr))
+                while ((0 > Y) && (10 > YNegKtr))
                 {
-                    PsiNew = 0.8 * (1/C3New) * (1.0
-                             - (Ro4 + R4) * sqrt(C2New)/VarA);
+                    PsiNew = 0.8 * (1 / C3New) * (1.0
+                                                  - (Ro4 + R4) * sqrt(C2New) / VarA);
                     // Find C2 and C3 functions.
                     C2New = stumpff_C2(PsiNew);
                     C3New = stumpff_C3(PsiNew);
@@ -255,8 +264,10 @@ ULambert::universal (const bool Lin, const int multirev)
                     if (fabs(C2New) > SMALL)
                     {
                         Y = Ro4 + R4 - (VarA * (1.0 -
-                             PsiOld*C3New)/sqrt(C2New) );
-                    }else{
+                                                PsiOld * C3New) / sqrt(C2New) );
+                    }
+                    else
+                    {
                         Y = Ro4 + R4;
                     }
                     YNegKtr = YNegKtr + 1;
@@ -267,21 +278,25 @@ ULambert::universal (const bool Lin, const int multirev)
             {
                 if (fabs(C2New) > SMALL)
                 {
-                    XOld = sqrt(Y/C2New);
-                }else{
+                    XOld = sqrt(Y / C2New);
+                }
+                else
+                {
                     XOld = 0.0;
                 }
                 XOldCubed = XOld * XOld * XOld;
-                dtNew = XOldCubed * C3New + VarA*sqrt(Y);
+                dtNew = XOldCubed * C3New + VarA * sqrt(Y);
 
                 // Readjust upper and lower bounds.
                 if (dtNew < t)
                 {
                     Lower = PsiOld;
-                }else{
+                }
+                else
+                {
                     Upper = PsiOld;
                 }
-                PsiNew = (Upper+Lower) * 0.5;
+                PsiNew = (Upper + Lower) * 0.5;
 
                 // Find C2 and C3 functions.
                 C2New = stumpff_C2(PsiNew);
@@ -315,25 +330,29 @@ ULambert::universal (const bool Lin, const int multirev)
             Vo.toInf();
             V.toInf();
             failure = true;
-        }else{
+        }
+        else
+        {
 
             // Use F and G series to find velocity vectors.
-            F    = 1.0 - Y/Ro4;
-            GDot = 1.0 - Y/R4;
-            G    = 1.0 / (VarA * sqrt(Y)); // 1 over G
+            F = 1.0 - Y / Ro4;
+            GDot = 1.0 - Y / R4;
+            G = 1.0 / (VarA * sqrt(Y)); // 1 over G
 
-            Vo = (R - F*Ro) * G;
-            V  = (GDot * R - Ro) * G;
+            Vo = (R - F * Ro) * G;
+            V = (GDot * R - Ro) * G;
         } // end if answer has converged
-    }else{
+    }
+    else
+    {
         // cout << "Vectors are 180 degrees apart.\n";
         Vo.toInf();
         V.toInf();
         failure = true;
     } // end if VarA > SMALL
 
-/* Convert from canonical units back to S.I.
-    Vo = Vo * ER / TU_SEC;
-    V = V * ER / TU_SEC;
-*/
+    /* Convert from canonical units back to S.I.
+        Vo = Vo * ER / TU_SEC;
+        V = V * ER / TU_SEC;
+    */
 } // end ULambert::universal
