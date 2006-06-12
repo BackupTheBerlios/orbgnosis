@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Vector.cpp,v 1.20 2006/06/09 20:26:11 trs137 Exp $
+ * $Id: Vector.cpp,v 1.21 2006/06/12 20:11:20 trs137 Exp $
  *
  * Contributor(s):  Ted Stodgell <trs137@psu.edu>
  */
@@ -314,3 +314,4 @@ Vector::setZ (double zin)
 {
     z = zin;
 }
+
