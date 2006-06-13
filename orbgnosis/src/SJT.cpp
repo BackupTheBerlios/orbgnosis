@@ -13,7 +13,7 @@
 * * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: SJT.cpp,v 1.6 2006/06/12 21:22:17 trs137 Exp $
+* $Id: SJT.cpp,v 1.7 2006/06/13 23:19:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -31,8 +31,7 @@ SJT::SJT (int nin) try
     n(nin),
     m(factorial(n)),
     currentRow(0),
-    p2d(new int*[m]),
-    recursionDepth(0)
+    p2d(new int*[m])
 {
     for (int i = 0; i < m; i++)
         p2d[i] = new int [n];   // allocate every i-th row.a
@@ -44,7 +43,6 @@ SJT::SJT (int nin) try
         pi[i] = i;
     }
     permutate(1);
-    cout << "recursionDepth = " << recursionDepth << ".\n";
 }
 catch (...)
 {
@@ -74,33 +72,8 @@ SJT::~SJT (void)
     }
 }
 
-SJT::SJT (const SJT& copy) :
-        n(copy.n),
-        m(copy.m),
-        currentRow(copy.currentRow),
-        p2d(copy.p2d)
-        // p(copy.p),
-        // pi(copy.pi),
-        // dir(copy.dir)
-{
-    // FIXME
-}
-
-SJT&
-SJT::operator = (const SJT t)
-{
-    //n = t.n;  /* FIXME */
-    //m = t.m;
-    currentRow = t.currentRow;
-    p2d = t.p2d;
-    //p = t.p;
-    //pi = t.pi;
-    //dir = t.dir;
-    return *this;
-}
-
 void
-SJT::permutate (int a)
+SJT::permutate (const int &a)
 {
     if (a > n)
     {
@@ -108,12 +81,10 @@ SJT::permutate (int a)
     }
     else
     {
-        recursionDepth += 1;
         permutate(a + 1);
         for (int i = 1; i <= a - 1; ++i)
         {
             exchange(a, dir[a]);
-            recursionDepth += 1;
             permutate(a + 1);
         }
         dir[a] = -dir[a];
@@ -131,7 +102,7 @@ SJT::storeRow (void)
 }
 
 void
-SJT::exchange (int x, int d)
+SJT::exchange (const int &x, int &d)
 {
     int z;
     z = p[pi[x] + d];
@@ -142,7 +113,7 @@ SJT::exchange (int x, int d)
 }
 
 int
-SJT::factorial (int x)
+SJT::factorial (const int &x)
 {
     if ((SJT_MAX < x) || ( 1 > x ))
     {

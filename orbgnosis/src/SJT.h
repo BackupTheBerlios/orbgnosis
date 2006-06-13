@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: SJT.h,v 1.6 2006/06/12 21:22:17 trs137 Exp $
+* $Id: SJT.h,v 1.7 2006/06/13 23:19:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -53,9 +53,6 @@ class SJT
         SJT (int);              // constructor
         virtual ~SJT (void);            // destructor
 
-        SJT (const SJT&);       // copy constructor
-        SJT& operator = (const SJT); // copy assignment operator
-
         void print (void);         // print the matrix to stdout.
 
         int getElement(int, int);   // returns p2d[int][int]
@@ -63,20 +60,18 @@ class SJT
         int getCols();              // returns n;
 
     private:
-        int factorial (int);       // returns factorial
-        void permutate (int);       // this is called recursively
-        void storeRow (void);      // store 1 tour-order in matrix
-        void exchange (int, int);  // exchange 2 elements
+        int factorial (const int&);       // returns factorial
+        void permutate (const int&);       // this is called recursively
+        void storeRow (void);
+        void exchange (const int&, int&);
 
         const int n;          //!< The number of targets.
         const int m;          //!< Holds value of n-factorial.a
         int currentRow; //!< counter
         int** p2d;        //!< matrix of ints, m rows by n cols
-        int p[SJT_MAX + 1];      //!< a permutation.
-        int pi[SJT_MAX + 1];     //!< the permutation's inverse.
-        int dir[SJT_MAX + 1];    //!< direction for each element.
-        int recursionDepth;
-
+        int p[SJT_MAX];      //!< a permutation.
+        int pi[SJT_MAX];     //!< the permutation's inverse.
+        int dir[SJT_MAX];    //!< direction for each element.
 };
 
 #endif /* _SJT_H_ */
