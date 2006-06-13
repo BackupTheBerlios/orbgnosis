@@ -8,12 +8,12 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.2 2006/06/12 20:37:24 trs137 Exp $
+# $Id: Makefile,v 1.3 2006/06/13 21:10:50 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
 VERSION     := 0.2
-BUILDDATE   := $(shell date +%b_%d_%Y)
+BUILDDATE   := $(shell date +%m%d%Y)
 BUILD_TYPE  := CVS
 
 # output directories
@@ -21,7 +21,7 @@ BUILD_TYPE  := CVS
 OBJDIR  := obj
 DEPDIR  := dep
 SRCDIR  := src
-DATADIR := data
+DOCDIR  := doc
 
 TEMPDEPFILE := /tmp/orbgnosis_temp_deps
 
@@ -37,7 +37,7 @@ else
     CFLAGS += -O2
 endif
 
-CFLAGS := -DVERSION_STRING=\"$(VERSION)\"
+CFLAGS := -DVERSION_STRING=\"$(BUILDDATE)\"
 CFLAGS += -march=pentium4 -mtune=pentium4
 CFLAGS += -Wredundant-decls -Winline -Weffc++ -Wstrict-null-sentinel
 CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
@@ -54,13 +54,17 @@ DEP := g++42 -MM
 # create the dep dir.
 MAKEDEP := $(shell mkdir -p $(DEPDIR))
 
+# external commands
+TAR := tar -cjvf
+MAKE:= gmake
+
 ################################################
 
 # the engine
 
 MAKEFILE := Makefile
 
-FULLNAME := $(subst \ ,_,$(BINARY))-$(VERSION)
+FULLNAME := $(subst \ ,_,$(BINARY))-$(BUILDDATE)
 
 BASESOURCES := $(shell cd $(SRCDIR) && ls -1 *.cpp)
 SOURCES := $(addprefix $(SRCDIR)/,$(BASESOURCES))
@@ -70,7 +74,7 @@ DEPENDS := $(addprefix $(DEPDIR)/,$(addsuffix .d,$(basename $(BASESOURCES))))
 BASEHEADERS := $(shell cd $(SRCDIR) && ls -1 *.h)
 HEADERS := $(addprefix $(SRCDIR)/,$(BASEHEADERS))
 
-.PHONY : default release clean all
+.PHONY : default release sourcearchive clean all
 
 .DELETE_ON_ERROR : $(BINARY)
 
@@ -84,9 +88,11 @@ $(OBJDIR)::
 
 clean :
 	@echo cleaning
-	@rm -rf $(BINARY) $(OBJDIR) $(DEPDIR) $(filter-out data.zip,$(wildcard *.zip)) *.zip~
+	@rm -rf $(BINARY) $(OBJDIR) $(DEPDIR) $(filter-out data.tbz,$(wildcard *.tbz)) *.tbz~
 
-all : build
+all : build sourcearchive doxygen pdfmanual
+
+sourcearchive: $(FULLNAME)-src.tbz
 
 cvsup:
 	@echo CVS up -d
@@ -106,10 +112,37 @@ $(DEPDIR)/%.d : $(SRCDIR)/%.cpp
 	@/bin/echo $@ $(OBJDIR)/$(shell $(DEP) $<) > $(TEMPDEPFILE)
 	@/bin/echo $(OBJDIR)/$(basename $(@F))".o : $(MAKEFILE)" | /bin/cat - $(TEMPDEPFILE) > $@
 
+$(FULLNAME)-src.tbz : $(SOURCES) $(HEADERS) $(MAKEFILE)
+	@rm -rf $@~
+	@mkdir -p $@~/$(FULLNAME)-src/
+	@cp -r $(SRCDIR) $(MAKEFILE) $@~/$(FULLNAME)-src/
+	@cp LICENSE.orbgnosis LICENSE.Makefile $@~/$(FULLNAME)-src/
+	@rm -rf $@~/$(FULLNAME)-src/src/CVS
+	@cd $@~ && $(TAR) $@ $(FULLNAME)-src
+	@mv -f $@~/$@ .
+	@rm -rf $@~
+
+doxygen: Doxyfile
+	@echo generating documentation with Doxygen
+	@doxygen Doxyfile
+
+pdfmanual: Doxyfile $(DOCDIR)/latex/Makefile
+	@echo generating documentation with Doxygen
+	@doxygen Doxyfile
+	@echo running pdflatex...
+	@cd $(DOCDIR)/latex && $(MAKE)
+	@mv -f $(DOCDIR)/latex/refman.pdf .
+	@mv refman.pdf refman-$(BUILDDATE).pdf
+	@cd $(DOCDIR)/latex && $(MAKE) clean
+
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),depend)
 ifneq ($(MAKECMDGOALS),sourcearchive)
+ifneq ($(MAKECMDGOALS),doxygen)
+ifneq ($(MAKECMDGOALS),pdfmanual)
 -include $(DEPENDS)
+endif
+endif
 endif
 endif
 endif

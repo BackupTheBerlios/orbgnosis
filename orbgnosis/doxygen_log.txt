@@ -1,0 +1,18 @@
+/usr/home/trs137/orbgnosis/src/Orbgnosis.h:41: Warning: Member INF of file Orbgnosis.h is not documented.
+/usr/home/trs137/orbgnosis/src/Orbgnosis.h:43: Warning: Member EPS of file Orbgnosis.h is not documented.
+/usr/home/trs137/orbgnosis/src/Orbgnosis.h:44: Warning: Member E of file Orbgnosis.h is not documented.
+/usr/home/trs137/orbgnosis/src/Orbgnosis.h:46: Warning: Member GNUPLOT_COMMAND of file Orbgnosis.h is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:56: Warning: Member SJT(const SJT &) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:57: Warning: Member operator=(const SJT) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:59: Warning: Member print(void) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:61: Warning: Member getElement(int, int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:62: Warning: Member getRows() of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:63: Warning: Member getCols() of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:66: Warning: Member factorial(int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:67: Warning: Member permutate(int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:68: Warning: Member storeRow(void) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:69: Warning: Member exchange(int, int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:78: Warning: Member recursionDepth of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:58: Warning: Member getfoo(void) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:59: Warning: Member setFoo(double) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
