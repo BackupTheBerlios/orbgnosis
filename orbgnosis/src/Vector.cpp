@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vector.cpp,v 1.22 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Vector.cpp,v 1.23 2006/06/13 21:17:37 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -132,16 +132,16 @@ operator / (const Vector& q, const double& s)
 }
 
 /**
- * Multiplies scalar of type double by a Vector and returns a Vector.
+ * Divides scalar of type double by a Vector and returns a Vector.
  * @param s is a scalar (type must be double).
  * @param q is a vector (type must be Vector).
  */
 Vector
 operator / (const double& s, const Vector& q)
 {
-    return Vector (q.x / s,
-                   q.y / s,
-                   q.z / s);
+    return Vector (s / q.x,
+                   s / q.y,
+                   s / q.z);
 }
 
 /**
