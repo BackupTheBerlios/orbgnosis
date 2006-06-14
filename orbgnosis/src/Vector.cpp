@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vector.cpp,v 1.23 2006/06/13 21:17:37 trs137 Exp $
+* $Id: Vector.cpp,v 1.24 2006/06/14 15:27:45 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -76,7 +76,7 @@ Vector::Vector (const Vector& copy)
         y(copy.y),
         z(copy.z)
 {
-    //cout << "Vector coppy constructor called\n";
+    //cout << "Vector copy constructor called\n";
 }
 
 /**

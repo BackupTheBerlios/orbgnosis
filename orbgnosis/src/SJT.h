@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: SJT.h,v 1.7 2006/06/13 23:19:18 trs137 Exp $
+* $Id: SJT.h,v 1.8 2006/06/14 15:27:45 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -51,7 +51,10 @@ class SJT
 {
     public:
         SJT (int);              // constructor
-        virtual ~SJT (void);            // destructor
+        virtual ~SJT (void);    // destructor
+
+        SJT (const SJT&);             // copy ctor
+        SJT& operator = (SJT&);       // copy assignment operator
 
         void print (void);         // print the matrix to stdout.
 
@@ -67,11 +70,11 @@ class SJT
 
         const int n;          //!< The number of targets.
         const int m;          //!< Holds value of n-factorial.a
-        int currentRow; //!< counter
-        int** p2d;        //!< matrix of ints, m rows by n cols
-        int p[SJT_MAX];      //!< a permutation.
-        int pi[SJT_MAX];     //!< the permutation's inverse.
-        int dir[SJT_MAX];    //!< direction for each element.
+        int currentRow;       //!< counter
+        int** p2d;            //!< matrix of ints, m rows by n cols
+        int p[SJT_MAX+1];     //!< a permutation.
+        int pi[SJT_MAX+1];    //!< the permutation's inverse.
+        int dir[SJT_MAX+1];   //!< direction for each element.
 };
 
 #endif /* _SJT_H_ */

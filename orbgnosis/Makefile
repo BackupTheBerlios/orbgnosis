@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.4 2006/06/14 01:13:37 trs137 Exp $
+# $Id: Makefile,v 1.5 2006/06/14 15:27:45 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -90,9 +90,11 @@ clean :
 	@echo cleaning
 	@rm -rf $(BINARY) $(OBJDIR) $(DEPDIR) $(filter-out data.tbz,$(wildcard *.tbz)) *.tbz~
 
-all : build sourcearchive doxygen pdfmanual
+all : build sourcearchive doxygen pdfmanual pdfsource
 
 sourcearchive: $(FULLNAME)-src.tbz
+
+pdfsource: $(FULLNAME)-listing.pdf
 
 cvsup:
 	@echo CVS up -d
@@ -122,7 +124,7 @@ $(FULLNAME)-src.tbz : $(SOURCES) $(HEADERS) $(MAKEFILE)
 	@mv -f $@~/$@ .
 	@rm -rf $@~
 
-doxygen: Doxyfile
+doxygen: Doxyfile $(SOURCES) $(HEADERS)
 	@echo generating documentation with Doxygen
 	@doxygen Doxyfile
 
@@ -135,12 +137,20 @@ pdfmanual: Doxyfile $(DOCDIR)/latex/Makefile
 	@mv refman.pdf refman-$(BUILDDATE).pdf
 	@cd $(DOCDIR)/latex && $(MAKE) clean > /dev/null 2>&1
 
+$(FULLNAME)-listing.pdf: $(SOURCES) $(HEADERS) $(MAKEFILE)
+	@echo generating formatted postscript from source
+	@a2ps --header="$(FULLNAME)" -g -2 --toc $(SRCDIR)/* > $(FULLNAME)-listing.ps
+	@ps2pdf $(FULLNAME)-listing.ps
+	@rm -f $(FULLNAME)-listing.ps
+
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),depend)
 ifneq ($(MAKECMDGOALS),sourcearchive)
 ifneq ($(MAKECMDGOALS),doxygen)
 ifneq ($(MAKECMDGOALS),pdfmanual)
+ifneq ($(MAKECMDGOALS),pdfsource)
 -include $(DEPENDS)
+endif
 endif
 endif
 endif
