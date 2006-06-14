@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.3 2006/06/13 21:10:50 trs137 Exp $
+# $Id: Makefile,v 1.4 2006/06/14 01:13:37 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -130,10 +130,10 @@ pdfmanual: Doxyfile $(DOCDIR)/latex/Makefile
 	@echo generating documentation with Doxygen
 	@doxygen Doxyfile
 	@echo running pdflatex...
-	@cd $(DOCDIR)/latex && $(MAKE)
+	@cd $(DOCDIR)/latex && $(MAKE) > /dev/null 2>&1
 	@mv -f $(DOCDIR)/latex/refman.pdf .
 	@mv refman.pdf refman-$(BUILDDATE).pdf
-	@cd $(DOCDIR)/latex && $(MAKE) clean
+	@cd $(DOCDIR)/latex && $(MAKE) clean > /dev/null 2>&1
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),depend)
