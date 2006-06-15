@@ -1,3 +1,11 @@
+/usr/home/trs137/orbgnosis/src/SJT.h:59: Warning: Member print(void) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:61: Warning: Member getElement(int, int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:62: Warning: Member getRows() of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:63: Warning: Member getCols() of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:65: Warning: Member permutate(const int) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:68: Warning: Member factorial(const int &) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:70: Warning: Member storeRow(void) of class SJT is not documented.
+/usr/home/trs137/orbgnosis/src/SJT.h:71: Warning: Member exchange(const int &, int &) of class SJT is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:58: Warning: Member getfoo(void) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:59: Warning: Member setFoo(double) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
