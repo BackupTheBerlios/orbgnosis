@@ -23,13 +23,15 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.h,v 1.2 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Tour.h,v 1.3 2006/06/15 23:48:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #ifndef _TOUR_H_
 #define _TOUR_H_
+#include <vector>
+using namespace std;
 
 /**
  * A sequence of trajectories that visits each target once.
@@ -37,13 +39,32 @@
 class Tour
 {
     public:
-        Tour (void);    // Default ctor
+        Tour (int, int);          // constructor
         Tour (const Tour&);       // copy constructor
         Tour& operator = (Tour);  // copy assignment operator
-        virtual ~Tour (void);             // destructor
+        virtual ~Tour (void);     // destructor
+
+        void printOrder(void);
 
     private:
+        const int cols;            // # of targets, or # of columns
+        const int rows;            // # of tours, or # of rows
+        vector< vector<int> > order;  // all possible tour orders
+        vector<int> p;
+        vector<int> pi;
+        vector<int> dir;
+        int rowCtr;                // row counter
+        int temp;
 
+        int factorial(const int);  // returns factorial of an int.
+
+        // Steinhaus-Johnson-Trotter permutation
+        void permSJT(int);
+        void storeRowSJT(void);
+        void exchangeSJT(int, int);
+
+        // Lexicologicl permutation order
+        void permLex(void);       // Lexicogical permutation
 };
 
-#endif /* _BODY_H_ */
+#endif /* _TOUR_H_ */

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.1 2006/06/15 20:50:33 trs137 Exp $
+* $Id: Vec3.cpp,v 1.2 2006/06/15 23:48:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -52,9 +52,9 @@ Vec3::Vec3 (void)
  * @param zin is the third element.
  */
 Vec3::Vec3 (double xin, double yin, double zin)
-        : x(xin),
-        y(yin),
-        z(zin)
+    : x(xin),
+      y(yin),
+      z(zin)
 {
     // cout << "3-arg Vec3 constructor called.\n";
 }
@@ -72,9 +72,9 @@ Vec3::~Vec3 (void)
  * @param copy is a reference to the Vec3 to be copied.
  */
 Vec3::Vec3 (const Vec3& copy)
-        : x(copy.x),
-        y(copy.y),
-        z(copy.z)
+    : x(copy.x),
+      y(copy.y),
+      z(copy.z)
 {
     //cout << "Vec3 copy constructor called\n";
 }
