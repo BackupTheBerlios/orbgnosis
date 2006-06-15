@@ -10,10 +10,19 @@
 * 2. Redistributions in binary form must reproduce the above copyright
 *    notice, this list of conditions and the following disclaimer in the
 *    documentation and/or other materials provided with the distribution.
-* * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND 
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE 
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY 
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: SJT.cpp,v 1.8 2006/06/14 15:27:45 trs137 Exp $
+* $Id: SJT.cpp,v 1.9 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -42,7 +51,7 @@ SJT::SJT (int nin) try
         p[i] = i;
         pi[i] = i;
     }
-    permutate(1);
+    //permutate(1);
 }
 catch (...)
 {
@@ -76,10 +85,10 @@ SJT::~SJT (void)
  * The SJT copy constructor
  */
 SJT::SJT (const SJT& copy)
-    : n(copy.n),
-      m(copy.m),
-      currentRow(0),
-      p2d(new int*[m])
+        : n(copy.n),
+        m(copy.m),
+        currentRow(0),
+        p2d(new int*[m])
 {
     for (int i = 0; i < m; i++)
         p2d[i] = new int [n];   // allocate every i-th row.
@@ -89,7 +98,7 @@ SJT::SJT (const SJT& copy)
         p[i] = i;
         pi[i] = i;
     }
-    permutate(1);
+    //permutate(1);
 }
 
 /**
@@ -98,14 +107,12 @@ SJT::SJT (const SJT& copy)
 SJT&
 SJT::operator = (SJT&)
 {
-    return *this;
+    return * this;
 }
 
-/**
- * Recursive Steinhaus-Johnson-Trotter algorithm.
- */
+
 void
-SJT::permutate (const int &a)
+SJT::permutate (const int a)
 {
     if (a > n)
     {
@@ -123,23 +130,16 @@ SJT::permutate (const int &a)
     }
 }
 
-/**
- * Puts current row into the good array of solutions.
- */
 void
 SJT::storeRow (void)
 {
     for (int i = 0; i < n; ++i)
     {
-        /* XXX SJT algorithm is off by one, this fixes. */
-        p2d[currentRow][i] = p[i + 1] - 1;
+        p2d[currentRow][i] = p[i + 1] - 1; // XXX SJT algorithm is off by one, this fixes.
     }
     currentRow += 1;
 }
 
-/**
- * Flips two adjacent elements.
- */
 void
 SJT::exchange (const int &x, int &d)
 {
@@ -151,9 +151,6 @@ SJT::exchange (const int &x, int &d)
     pi[x] = pi[x] + d;
 }
 
-/**
- * Calculates the factorial of an integer.
- */
 int
 SJT::factorial (const int &x)
 {
@@ -170,9 +167,6 @@ SJT::factorial (const int &x)
     return f;
 }
 
-/**
- * Prints out the entire array.
- */
 void
 SJT::print (void)
 {
@@ -186,27 +180,18 @@ SJT::print (void)
     }
 }
 
-/**
- * A public method to return p2d[row][col].
- */
 int
 SJT::getElement (int row, int col)
 {
     return p2d[row][col];
 }
 
-/**
- * Returns number of rows.
- */
 int
 SJT::getRows (void)
 {
     return m;
 }
 
-/**
- * Returns number of columns.
- */
 int
 SJT::getCols (void)
 {

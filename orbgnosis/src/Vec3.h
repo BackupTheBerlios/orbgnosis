@@ -23,58 +23,58 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vector.h,v 1.19 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Vec3.h,v 1.1 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef _VEC3_H_
+#define _VEC3_H_
 #include <iostream>
 using namespace std;
 
 /**
- * A Vector of exactly three doubles, with operators and common functions.
- * The Vector class overloads vector addition and subtraction,
+ * A Vec3 of exactly three doubles, with operators and common functions.
+ * The Vec3 class overloads vector addition and subtraction,
  * as well as vector-scalar multiplication and division.  Member functions
  * include Euclidean norm, dot product and cross product.  For nicer I/O
  * the >> and << operators are overloaded as well.
  */
 
-class Vector
+class Vec3
 {
     public:
-        Vector (void);          // defaults to (0,0,0).
+        Vec3 (void);          // defaults to (0,0,0).
 
-        Vector (double xin,
+        Vec3 (double xin,
                 double yin,
                 double zin);
 
-        virtual ~Vector (void);
+        virtual ~Vec3 (void);
 
-        Vector (const Vector&); // copy constructor
+        Vec3 (const Vec3&); // copy constructor
 
-        Vector& operator = (Vector);
+        Vec3& operator = (Vec3);
 
         // Multiplcation and division with scalar doubles
         // The order of args can be either way.
-        friend Vector operator * (const Vector&, const double&);
-        friend Vector operator * (const double&, const Vector&);
-        friend Vector operator / (const Vector&, const double&);
-        friend Vector operator / (const double&, const Vector&);
+        friend Vec3 operator * (const Vec3&, const double&);
+        friend Vec3 operator * (const double&, const Vec3&);
+        friend Vec3 operator / (const Vec3&, const double&);
+        friend Vec3 operator / (const double&, const Vec3&);
 
-        // Vector æddition and subtraction
-        friend Vector operator + (const Vector&, const Vector&);
-        friend Vector operator - (const Vector&, const Vector&);
+        // Vec3 æddition and subtraction
+        friend Vec3 operator + (const Vec3&, const Vec3&);
+        friend Vec3 operator - (const Vec3&, const Vec3&);
 
         // Cross- and dot-products
-        friend Vector cross (const Vector&, const Vector&);
-        friend double dot (const Vector&, const Vector&);
-        friend double norm (const Vector&);
+        friend Vec3 cross (const Vec3&, const Vec3&);
+        friend double dot (const Vec3&, const Vec3&);
+        friend double norm (const Vec3&);
 
         // Formatted input and output by overloading >> and <<
-        friend ostream& operator << (ostream&, Vector);
-        friend istream& operator >> (istream&, Vector);
+        friend ostream& operator << (ostream&, Vec3);
+        friend istream& operator >> (istream&, Vec3);
 
         // Standard get-n-set methods.
         double getX (void);
@@ -93,4 +93,4 @@ class Vector
         double z; //!< third vector element
 };
 
-#endif /* _VECTOR_H_ */
+#endif /* _VEC3_H_ */

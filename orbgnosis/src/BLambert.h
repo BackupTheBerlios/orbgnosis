@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: BLambert.h,v 1.7 2006/06/12 21:22:17 trs137 Exp $
+* $Id: BLambert.h,v 1.8 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -43,8 +43,8 @@ class BLambert
 
         BLambert (void);         // just zeros
 
-        BLambert (Vector r1in,
-                  Vector r2in,
+        BLambert (Vec3 r1in,
+                  Vec3 r2in,
                   double tin);
 
         virtual ~BLambert (void);
@@ -54,24 +54,24 @@ class BLambert
         double bat_SEE(double);
         double bat_K(double);
 
-        void setRo (Vector);
-        void setR (Vector);
+        void setRo (Vec3);
+        void setR (Vec3);
         void sett (double);
 
-        Vector getVo (void);
-        Vector getV (void);
+        Vec3 getVo (void);
+        Vec3 getV (void);
         double gett (void);
 
         bool isFailure(void);
 
     private:
         double t;   //!< specified time of flight from Ro to R.
-        Vector Ro;  //!< initial position vector.
-        Vector R;   //!< final position vector.
+        Vec3 Ro;  //!< initial position vector.
+        Vec3 R;   //!< final position vector.
 
         // Results:
-        Vector Vo;  //!< initial velocity of at start of the transfer arc.
-        Vector V;   //!< final velocity at the end of transfer arc.
+        Vec3 Vo;  //!< initial velocity of at start of the transfer arc.
+        Vec3 V;   //!< final velocity at the end of transfer arc.
 
         bool failure;   //!< is true if the solution fails to converge.
 };

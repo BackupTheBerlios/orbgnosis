@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.cpp,v 1.9 2006/06/12 21:22:17 trs137 Exp $
+* $Id: ULambert.cpp,v 1.10 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -31,7 +31,7 @@
 */
 
 #include <math.h>
-#include "Vector.h"
+#include "Vec3.h"
 #include "Orbgnosis.h"
 #include "Stumpff.h"
 #include "ULambert.h"
@@ -59,7 +59,7 @@ ULambert::ULambert(void) :
  * @param r2in is the final position.
  * @param tin is the specified time of flight.
  */
-ULambert::ULambert(Vector r1in, Vector r2in, double tin) :
+ULambert::ULambert(Vec3 r1in, Vec3 r2in, double tin) :
         t(tin),
         Ro(r1in),
         R(r2in),
@@ -82,7 +82,7 @@ ULambert::~ULambert (void)
  * Sets the initial position vector, Ro.
  */
 void
-ULambert::setRo (Vector vin)
+ULambert::setRo (Vec3 vin)
 {
     Ro = vin;
 }
@@ -91,7 +91,7 @@ ULambert::setRo (Vector vin)
  * Sets the final position vector, R.
  */
 void
-ULambert::setR (Vector vin)
+ULambert::setR (Vec3 vin)
 {
     R = vin;
 }
@@ -109,7 +109,7 @@ ULambert::sett (double tin)
  * Gets the initial velocity vector, Vo.
  * This is the velocity at the point Ro which satisfies the Lamberts problem.
  */
-Vector
+Vec3
 ULambert::getVo (void)
 {
     return Vo;
@@ -119,7 +119,7 @@ ULambert::getVo (void)
  * Gets the final velocity vector, V.
  * This is the velocity at the point R which satisfies the Lamberts problem.
  */
-Vector
+Vec3
 ULambert::getV (void)
 {
     return V;
@@ -185,8 +185,8 @@ ULambert::universal (const bool Lin, const int multirev)
     double dtNew;   //<! delta-T from Algoritm #55.
 
 
-    double Ro4; //<! magnitude of the Vector Ro.  The naming convention traces back to Vallado's Ada version which used the 4th element of an array to hold the vector norm of the first 3 elements.
-    double R4;  //<! magnitude of the Vector R.
+    double Ro4; //<! magnitude of the Vec3 Ro.  The naming convention traces back to Vallado's Ada version which used the 4th element of an array to hold the vector norm of the first 3 elements.
+    double R4;  //<! magnitude of the Vec3 R.
 
     const int revs = multirev; //<! is only roughly related to the number of multiple revolutions when attempting to find multi-rev solutions.
 
@@ -345,7 +345,7 @@ ULambert::universal (const bool Lin, const int multirev)
     }
     else
     {
-        // cout << "Vectors are 180 degrees apart.\n";
+        // cout << "Vec3s are 180 degrees apart.\n";
         Vo.toInf();
         V.toInf();
         failure = true;

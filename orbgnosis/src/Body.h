@@ -23,14 +23,14 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Body.h,v 1.11 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Body.h,v 1.12 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #ifndef _BODY_H_
 #define _BODY_H_
-#include "Vector.h"
+#include "Vec3.h"
 
 /**
  * The intrinsic properties of a rigid body.
@@ -41,10 +41,10 @@ class Body
 {
     protected:
         double mass;           //!< mass of the body
-        Vector position;       //!< geocentric position vector
-        Vector velocity;       //!< velocity vector
-        Vector ang_vel;        //!< angular velocity, rad/s
-        Vector moments;        //!< principle moments of inertia
+        Vec3 position;       //!< geocentric position vector
+        Vec3 velocity;       //!< velocity vector
+        Vec3 ang_vel;        //!< angular velocity, rad/s
+        Vec3 moments;        //!< principle moments of inertia
 
     public:
         Body (void);    // Default ctor
@@ -54,11 +54,11 @@ class Body
 
         double kineticEnergy (void);     // kinetic energy of body
         double transMomentum (void);     // translational momentum
-        Vector angMomentum (void);       // angular momentum
+        Vec3 angMomentum (void);       // angular momentum
 
-        void move (Vector);
-        void accelerate (Vector);
-        Vector findForce (void);         // sum of all forces on Body
+        void move (Vec3);
+        void accelerate (Vec3);
+        Vec3 findForce (void);         // sum of all forces on Body
 };
 
 #endif /* _BODY_H_ */

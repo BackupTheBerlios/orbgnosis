@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: BLambert.cpp,v 1.11 2006/06/12 21:22:17 trs137 Exp $
+* $Id: BLambert.cpp,v 1.12 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -31,7 +31,7 @@
 */
 
 #include <math.h>
-#include "Vector.h"
+#include "Vec3.h"
 #include "Orbgnosis.h"
 #include "Stumpff.h"
 #include "BLambert.h"
@@ -59,7 +59,7 @@ BLambert::BLambert(void) :
  * @param r2in is the final position.
  * @param tin is the specified time of flight.
  */
-BLambert::BLambert(Vector r1in, Vector r2in, double tin) :
+BLambert::BLambert(Vec3 r1in, Vec3 r2in, double tin) :
         t(tin),
         Ro(r1in),
         R(r2in),
@@ -82,7 +82,7 @@ BLambert::~BLambert (void)
  * Sets the initial position vector, Ro.
  */
 void
-BLambert::setRo (Vector vin)
+BLambert::setRo (Vec3 vin)
 {
     Ro = vin;
 }
@@ -91,7 +91,7 @@ BLambert::setRo (Vector vin)
  * Sets the final position vector, R.
  */
 void
-BLambert::setR (Vector vin)
+BLambert::setR (Vec3 vin)
 {
     R = vin;
 }
@@ -110,7 +110,7 @@ BLambert::sett (double tin)
  * Gets the initial velocity vector, Vo.
  * This is the velocity at the point Ro which satisfies the Lamberts problem.
  */
-Vector
+Vec3
 BLambert::getVo (void)
 {
     return Vo;
@@ -121,7 +121,7 @@ BLambert::getVo (void)
  * Gets the final velocity vector, V.
  * This is the velocity at the point R which satisfies the Lamberts problem.
  */
-Vector
+Vec3
 BLambert::getV (void)
 {
     return V;
@@ -163,7 +163,7 @@ BLambert::battin (void)
 {
     // Local variables
     int Loops;
-    Vector RCrossR;
+    Vec3 RCrossR;
     double u, b, Sinv, Cosv, rp, x, xn, y, L, m, CosDeltaNu,
     SinDeltaNu, DNu, a, tan2w, RoR, h1, h2, tempx, eps,
     denom, chord, k2, s, f, g, fDot, am, ae, be, tm, gDot,

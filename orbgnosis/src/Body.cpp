@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Body.cpp,v 1.11 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Body.cpp,v 1.12 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -100,9 +100,9 @@ Body::transMomentum (void)
 }
 
 /**
- * Returns the angular momentum Vector of the Body.
+ * Returns the angular momentum Vec3 of the Body.
  */
-Vector
+Vec3
 Body::angMomentum (void)
 {
     return (cross(ang_vel, moments));
@@ -110,20 +110,20 @@ Body::angMomentum (void)
 
 /**
  * Moves the Body by vector addition.
- * @param vin is the Vector to be added to the Body's position.
+ * @param vin is the Vec3 to be added to the Body's position.
  */
 void
-Body::move (Vector vin)
+Body::move (Vec3 vin)
 {
     position = position + vin;
 }
 
 /**
  * Accelerates the Body by vector addition.
- * @param vin is the Vector to be added to the Body's velocity.
+ * @param vin is the Vec3 to be added to the Body's velocity.
  */
 void
-Body::accelerate (Vector vin)
+Body::accelerate (Vec3 vin)
 {
     velocity = velocity + vin;
 }
@@ -131,8 +131,8 @@ Body::accelerate (Vector vin)
 /**
  * Returns the sum of all forces acting upon the Body.
  */
-Vector
+Vec3
 Body::findForce (void)
 {
-    return Vector(0, 0, 0); //TODO not really necessary yet
+    return Vec3(0, 0, 0); //TODO not really necessary yet
 }

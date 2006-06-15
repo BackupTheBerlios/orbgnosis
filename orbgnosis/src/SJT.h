@@ -23,13 +23,13 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: SJT.h,v 1.8 2006/06/14 15:27:45 trs137 Exp $
+* $Id: SJT.h,v 1.9 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
-#ifndef _TOUR_H_
-#define _TOUR_H_
+#ifndef _SJT_H_
+#define _SJT_H_
 
 #define SJT_MAX 20
 
@@ -62,9 +62,11 @@ class SJT
         int getRows();              // returns m;
         int getCols();              // returns n;
 
+        void permutate (const int);
+
     private:
         int factorial (const int&);       // returns factorial
-        void permutate (const int&);       // this is called recursively
+        //void permutate (const int&);       // this is called recursively
         void storeRow (void);
         void exchange (const int&, int&);
 
@@ -72,9 +74,9 @@ class SJT
         const int m;          //!< Holds value of n-factorial.a
         int currentRow;       //!< counter
         int** p2d;            //!< matrix of ints, m rows by n cols
-        int p[SJT_MAX+1];     //!< a permutation.
-        int pi[SJT_MAX+1];    //!< the permutation's inverse.
-        int dir[SJT_MAX+1];   //!< direction for each element.
+        int p[SJT_MAX + 1];     //!< a permutation.
+        int pi[SJT_MAX + 1];    //!< the permutation's inverse.
+        int dir[SJT_MAX + 1];   //!< direction for each element.
 };
 
 #endif /* _SJT_H_ */

@@ -23,13 +23,13 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.17 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.18 2006/06/15 20:50:33 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
 */
 
-#include "Vector.h"
+#include "Vec3.h"
 #include "ULambert.h"
 #include "Orbgnosis.h"
 #include <math.h>
@@ -44,7 +44,7 @@ main(void)
 {
     const int problems = 500;
     double t;
-    Vector q1, q2;
+    Vec3 q1, q2;
     srand(time(NULL));
 
     ULambert* testcase = new ULambert[problems];
@@ -150,8 +150,8 @@ main(void)
     const double r2 = 1.2;
 
 
-    Vector vc1 (0, sqrt (1 / r1), 0);
-    Vector vc2;
+    Vec3 vc1 (0, sqrt (1 / r1), 0);
+    Vec3 vc2;
 
     double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
     bool L;
