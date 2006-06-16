@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.4 2006/06/15 23:48:13 trs137 Exp $
+* $Id: Tour.cpp,v 1.5 2006/06/16 20:30:07 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
@@ -42,9 +42,13 @@ using namespace std;
  * permStyle = 0: Steinhaus-Johnson-Trotter order
  * permStyle = 1: Lexicological order
  */
-Tour::Tour (int numTargets, int permStyle)
+Tour::Tour (int numTargets, int permStyle) try
     : cols(numTargets),
       rows(factorial(cols)),
+      order(rows),
+      p(cols+1),
+      pi(cols+1),
+      dir(cols+1),
       rowCtr(0),
       temp(0)
 {
@@ -60,9 +64,9 @@ Tour::Tour (int numTargets, int permStyle)
     switch (permStyle)
     {
         case 0: // Steinhaus-Johnson-Trotter permutations
-            p.resize(cols+1);
-            pi.resize(cols+1);
-            dir.resize(cols+1);
+            // p.resize(cols+1);
+            // pi.resize(cols+1);
+            // dir.resize(cols+1);
             for (int i = 1; i <= cols; i++)
             {
                 dir[i] = -1;
@@ -81,7 +85,15 @@ Tour::Tour (int numTargets, int permStyle)
             cerr << "bad permStyle = " << permStyle << ".\n";
             exit(1);
         }
-} 
+}
+catch (...) // std::length_error
+{
+    cout << "Tour constructor failed.\n";
+    exit(1);
+}
+
+
+ 
 /**
  * The Tour destructor.
  */
@@ -95,7 +107,13 @@ Tour::~Tour (void)
  */
 Tour::Tour (const Tour& copy)
     : cols(copy.cols),
-      rows(copy.rows)
+      rows(copy.rows),
+      order(rows),
+      p(cols+1),
+      pi(cols+1),
+      dir(cols+1),
+      rowCtr(0),
+      temp(0)
 {
     cout << "Tour copy constructor called.\n";
 }
