@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: BLambert.cpp,v 1.12 2006/06/15 20:50:33 trs137 Exp $
+* $Id: BLambert.cpp,v 1.13 2006/06/17 21:04:27 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -273,7 +273,7 @@ BLambert::bat_SEE(double v)
     c[0] = 0.2;
     for (int j = 1; j < 21; j++)
     {
-        temp = (double)(j) + 2.0;
+        temp = j + 2.0;
         c[j] = (temp * temp) / ((4 * temp * temp) - 1);
     }
     SQRTopv = sqrt(1.0 + v);

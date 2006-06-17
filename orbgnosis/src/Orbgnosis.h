@@ -23,13 +23,13 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.7 2006/06/14 15:27:45 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.8 2006/06/17 21:04:27 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 /** @file
- * This header file defines constants, limits and tolerances.
+ * This header file defines constants and has some utitlity functions.
  */
 
 #ifndef _ORBGNOSIS_H_
@@ -51,7 +51,5 @@
 #define ROOTMU 631.3481     //!< the square root of Mu.
 #define TU_SEC 806.81112382429    //!< canonical time units (s)
 #define TU_MIN 13.44685206374     //!< canonical time units (m)
-
-
 
 #endif /* _ORBGNOSIS_H_ */

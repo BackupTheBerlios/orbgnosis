@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.h,v 1.3 2006/06/15 23:48:13 trs137 Exp $
+* $Id: Tour.h,v 1.4 2006/06/17 21:04:27 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -56,8 +56,6 @@ class Tour
         int rowCtr;                // row counter
         int temp;
 
-        int factorial(const int);  // returns factorial of an int.
-
         // Steinhaus-Johnson-Trotter permutation
         void permSJT(int);
         void storeRowSJT(void);
@@ -65,6 +63,8 @@ class Tour
 
         // Lexicologicl permutation order
         void permLex(void);       // Lexicogical permutation
+
+        int factorial (const int k);
 };
 
 #endif /* _TOUR_H_ */

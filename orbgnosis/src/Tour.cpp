@@ -23,13 +23,12 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.5 2006/06/16 20:30:07 trs137 Exp $
+* $Id: Tour.cpp,v 1.6 2006/06/17 21:04:27 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
 */
 
-//#include "Orbgnosis.h"
 #include "Tour.h"
 #include <vector>
 #include <iostream>
@@ -129,19 +128,6 @@ Tour::operator = (Tour b)
 }
 
 /**
- * A private function that returns the factorial of an integer.
- * Only used in Tour member initialization.
- */
-int
-Tour::factorial (const int k)
-{
-    int f = 1;
-    for (int i = 1; i <= k; i++) f = f * i;
-    cout << "The factorial of " << k << " is " << f << ".\n";
-    return f;
-}
-
-/**
  * The recursive Steinhaus-Johnson-Trotter permutation algorithm.
  * Original algoritm (c) 1995, Frank Ruskey.
  * "can be modified, translated to other languages, etc.
@@ -206,4 +192,13 @@ void
 Tour::permLex(void)
 {
     // TODO
+}
+
+int
+Tour::factorial (const int k)
+{
+    int f = 1;
+    for (int i = 1; i <= k; i++) f = f * i;
+    //cout << "The factorial of " << k << " is " << f << ".\n";
+    return f;
 }
