@@ -14,3 +14,4 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:58: Warning: Member getfoo(void) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:59: Warning: Member setFoo(double) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
+/usr/home/trs137/orbgnosis/src/Vec3.h:92: Warning: Member e[3] of class Vec3 is not documented.

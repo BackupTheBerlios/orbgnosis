@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.2 2006/06/18 00:49:02 trs137 Exp $
+* $Id: Vec3.h,v 1.3 2006/06/18 23:47:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -44,10 +44,7 @@ class Vec3
 {
     public:
         Vec3 (void);          // defaults to (0,0,0).
-
-        Vec3 (double xin,
-                double yin,
-                double zin);
+        Vec3 (double, double, double);
 
         virtual ~Vec3 (void);
 
@@ -92,9 +89,7 @@ class Vec3
         void setZ (double);
 
     private:
-        double x; //!< first vector element
-        double y; //!< second vector element
-        double z; //!< third vector element
+        double e[3];
 };
 
 #endif /* _VEC3_H_ */
