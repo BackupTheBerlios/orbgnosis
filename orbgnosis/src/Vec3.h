@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.1 2006/06/15 20:50:33 trs137 Exp $
+* $Id: Vec3.h,v 1.2 2006/06/18 00:49:02 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -40,7 +40,6 @@ using namespace std;
  * include Euclidean norm, dot product and cross product.  For nicer I/O
  * the >> and << operators are overloaded as well.
  */
-
 class Vec3
 {
     public:
@@ -52,22 +51,27 @@ class Vec3
 
         virtual ~Vec3 (void);
 
-        Vec3 (const Vec3&); // copy constructor
+        Vec3 (const Vec3&);   // copy constructor
 
-        Vec3& operator = (Vec3);
+        Vec3& operator = (const Vec3&);
 
-        // Multiplcation and division with scalar doubles
+        Vec3& operator += (const Vec3&); // add-assign
+        Vec3& operator -= (const Vec3&); // subtract-assign
+
+        // Scalar Multiplcation and division.
         // The order of args can be either way.
         friend Vec3 operator * (const Vec3&, const double&);
         friend Vec3 operator * (const double&, const Vec3&);
         friend Vec3 operator / (const Vec3&, const double&);
         friend Vec3 operator / (const double&, const Vec3&);
 
-        // Vec3 æddition and subtraction
-        friend Vec3 operator + (const Vec3&, const Vec3&);
-        friend Vec3 operator - (const Vec3&, const Vec3&);
+        // Vec3 addition and subtraction.
+        friend Vec3 operator + (const Vec3&, const Vec3&); // binary
+        friend Vec3 operator + (const Vec3&);              // unary
+        friend Vec3 operator - (const Vec3&, const Vec3&); // binary
+        friend Vec3 operator - (const Vec3&);              // unary
 
-        // Cross- and dot-products
+        // Cross- and dot-products.
         friend Vec3 cross (const Vec3&, const Vec3&);
         friend double dot (const Vec3&, const Vec3&);
         friend double norm (const Vec3&);

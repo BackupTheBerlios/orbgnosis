@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.2 2006/06/15 23:48:13 trs137 Exp $
+* $Id: Vec3.cpp,v 1.3 2006/06/18 00:49:01 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -81,16 +81,43 @@ Vec3::Vec3 (const Vec3& copy)
 
 /**
  * The Vec3 copy assignment operator.
- * @param q is the Vec3 on the right hand side of the equality.
  */
 Vec3&
-Vec3::operator = (Vec3 q)
+Vec3::operator = (const Vec3& q)
 {
-    x = q.x;
-    y = q.y;
-    z = q.z;
+    if (this != &q) // avoid pointless self-assignment
+    {
+        x = q.x;
+        y = q.y;
+        z = q.z;
+    }
     return *this;
 }
+
+/**
+ * The Vec3 addition-assignment operator.
+ */
+Vec3&
+Vec3::operator += (const Vec3& q)
+{
+    x += q.x;
+    y += q.y;
+    z += q.z;
+    return *this;
+}
+
+/**
+ * The Vec3 addition-assignment operator.
+ */
+Vec3&
+Vec3::operator -= (const Vec3& q)
+{   
+    x -= q.x;
+    y -= q.y;
+    z -= q.z;
+    return *this;
+}
+    
 
 /**
  * Multiplies a Vec3 with a scalar of type double and returns a Vec3.
@@ -158,6 +185,16 @@ operator + (const Vec3& a, const Vec3& b)
 }
 
 /**
+ * Vec3 unary addition.
+ * example: a = + b; 
+ */
+Vec3
+operator + (const Vec3& a)
+{
+    return a;
+}
+
+/**
  * Vec3 subtraction.
  * @param a is a constant reference to the first Vec3.
  * @param b is a constant reference to the second Vec3.
@@ -168,6 +205,15 @@ operator - (const Vec3& a, const Vec3& b)
     return Vec3 (a.x - b.x,
                    a.y - b.y,
                    a.z - b.z);
+}
+
+/**
+ * Vec3 unary subtraction.
+ */
+Vec3
+operator - (const Vec3& a)
+{
+    return Vec3() - a;  // 0 - a = -a
 }
 
 /**
