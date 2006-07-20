@@ -1,17 +1,17 @@
-/usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:61: Warning: Member storeRowSJT(void) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:62: Warning: Member exchangeSJT(int, int) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:65: Warning: Member permLex(void) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:67: Warning: Member factorial(const int k) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:50: Warning: Member cols of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:51: Warning: Member rows of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:52: Warning: Member order of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member p of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member pi of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member dir of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member rowCtr of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member temp of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:58: Warning: Member getfoo(void) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:59: Warning: Member setFoo(double) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:61: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:62: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:65: Warning: Member permLex(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:67: Warning: Member factorial(const int k) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:50: Warning: Member cols (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:51: Warning: Member rows (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:52: Warning: Member order (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member p (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member pi (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member dir (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member rowCtr (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member temp (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:58: Warning: Member getfoo(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:59: Warning: Member setFoo(double) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
-/usr/home/trs137/orbgnosis/src/Vec3.h:92: Warning: Member e[3] of class Vec3 is not documented.
+/usr/home/trs137/orbgnosis/src/Vec3.h:92: Warning: Member e[3] (variable) of class Vec3 is not documented.
