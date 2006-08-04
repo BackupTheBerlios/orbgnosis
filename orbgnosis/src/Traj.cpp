@@ -23,13 +23,15 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.7 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Traj.cpp,v 1.8 2006/08/04 02:49:11 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
+#include <iostream>
 #include "Orbgnosis.h"
 #include "Traj.h"
+using namespace std;
 
 /**
  * The Traj constructor.
@@ -42,7 +44,7 @@ Traj::Traj (void) :
         w(0.0),
         f(0.0)
 {
-    //cout << "Traj constructor called with zero args.\n";
+    //std::cout << "Traj constructor called with zero args.\n";
 }
 
 /**
@@ -65,7 +67,7 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
         w(win),
         f(fin)
 {
-    //cout << "Traj constructor called with 6 args.\n";
+    //std::cout << "Traj constructor called with 6 args.\n";
 }
 
 /**
@@ -80,7 +82,7 @@ Traj::Traj (const Traj& copy) :
         w(copy.w),
         f(copy.f)
 {
-    //cout << "Traj copy constructor called.\n";
+    //std::cout << "Traj copy constructor called.\n";
 }
 
 /**
@@ -106,3 +108,33 @@ Traj::~Traj (void)
 {
     // cout << "Traj destructor called.\n";
 }
+
+/**
+ * Prints classic orbital elements nicely.
+ */
+void
+Traj::print (void)
+{
+    cout << "semimajor axis:        " << a << endl;
+    cout << "eccentricity:          " << e << endl;
+    cout << "inclination:           " << i << endl;
+    cout << "RA of ascending node:  " << raan << endl;
+    cout << "argument of periapsis: " << w << endl;
+    cout << "true anomaly:          " << f << endl;
+}
+
+/*
+ *  Accessor & Mutator methods for classic orbital elements.
+ */
+double Traj::get_a (void) { return a; }
+double Traj::get_e (void) { return e; }
+double Traj::get_i (void) { return i; }
+double Traj::get_raan (void) { return raan; }
+double Traj::get_w (void) { return w; }
+double Traj::get_f (void) { return f; }
+void Traj::set_a (double ain) { a = ain; }
+void Traj::set_e (double ein) { a = ein; }
+void Traj::set_i (double iin) { a = iin; }
+void Traj::set_raan (double raanin) { a = raanin; }
+void Traj::set_w (double win) { a = win; }
+void Traj::set_f (double fin) { a = fin; }

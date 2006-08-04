@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.7 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Traj.h,v 1.8 2006/08/04 02:49:11 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -55,8 +55,21 @@ class Traj
 
         Traj& operator = (Traj); // copy assignment operator
 
-        double getfoo (void);
-        void setFoo (double);
+        void print (void);
+
+        double get_a (void);
+        double get_e (void);
+        double get_i (void);
+        double get_raan (void);
+        double get_w (void);
+        double get_f (void);
+
+        void set_a (double);
+        void set_e (double);
+        void set_i (double);
+        void set_raan (double);
+        void set_w (double);
+        void set_f (double);
 
     protected:
         double a;       //!< Semimajor Axis (length).

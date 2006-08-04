@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.6 2006/07/20 14:12:15 trs137 Exp $
+# $Id: Makefile,v 1.7 2006/08/04 02:49:10 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -31,20 +31,20 @@ CC := g++42 -c -pipe
 
 # These can be set from the shell to change the build type
 ifeq ($(BUILD_DEBUG),true)
-    CFLAGS += -g -O0
+    CFLAGS += -g -O0 
     BUILD_TYPE = Debug
 else
-    CFLAGS += -O2
+# These are aggressive optimizations for arl1426 only.
+    CFLAGS += -O3
+    CFLAGS += -march=native -mtune=native
+    CFLAGS += -Wdisabled-optimization
 endif
 
-CFLAGS := -DVERSION_STRING=\"$(BUILDDATE)\"
-CFLAGS += -march=pentium4 -mtune=pentium4
+CFLAGS += -DVERSION_STRING=\"$(BUILDDATE)\"
 CFLAGS += -Wredundant-decls -Winline -Weffc++ -Wstrict-null-sentinel
 CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
 CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
-CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
-
-CFLAGS += -ffast-math -fno-math-errno -ffinite-math-only 
+CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder -Wunsafe-loop-optimizations
 
 # be able to add flags from the env at will without chaging the makefile
 CFLAGS += $(ORBGNOSIS_ADDL_BUILD_FLAGS)
