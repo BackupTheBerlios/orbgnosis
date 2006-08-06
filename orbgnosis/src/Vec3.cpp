@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.8 2006/08/06 22:36:13 trs137 Exp $
+* $Id: Vec3.cpp,v 1.9 2006/08/06 23:32:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -271,44 +271,71 @@ operator >> (istream& s, Vec3 q)
 }
 
 /**
- * Rotate a vector about first axis by a radians.
+ * Rotate a vector about first axis by some angle.
  */
 Vec3
 rotX (const Vec3& v, const double& a)
 {
     const double c = cos(a);
     const double s = sin(a);
-    const double x = 1 * v.e[0] + 0 * v.e[1] + 0 * v.e[2];
-    const double y = 0 * v.e[0] + c * v.e[1] - s * v.e[2];
-    const double z = 0 * v.e[0] + s * v.e[1] + c * v.e[2];
+    // It's just a rotation matrix,
+    //       [  1  0  0 ]
+    //  Rx = [  0  c -s ]
+    //       [  0  s  c ]
+    // Written out the long way...
+    // const double x = 1 * v.e[0] + 0 * v.e[1] + 0 * v.e[2];
+    // const double y = 0 * v.e[0] + c * v.e[1] - s * v.e[2];
+    // const double z = 0 * v.e[0] + s * v.e[1] + c * v.e[2];
+    // or more concisely...
+    const double x = v.e[0];
+    const double y = c * v.e[1] - s * v.e[2];
+    const double z = s * v.e[1] + c * v.e[2];
     return Vec3(x, y, z);
 }
 
 /**
- * Rotate a vector about second axis by a radians.
+ * Rotate a vector about second axis by some angle.
  */
 Vec3
 rotY (const Vec3& v, const double& a)
 {
     const double c = cos(a);
     const double s = sin(a);
-    const double x =  c * v.e[0] + 0 * v.e[1] + s * v.e[2];
-    const double y =  0 * v.e[0] + 1 * v.e[1] - 0 * v.e[2];
-    const double z = -s * v.e[0] + 0 * v.e[1] + c * v.e[2];
+    // It's just a rotation matrix,
+    //       [  c  0  s ]
+    //  Ry = [  0  1  0 ]
+    //       [ -s  0  c ]
+    // Written out the long way...
+    // const double x =  c * v.e[0] + 0 * v.e[1] + s * v.e[2];
+    // const double y =  0 * v.e[0] + 1 * v.e[1] - 0 * v.e[2];
+    // const double z = -s * v.e[0] + 0 * v.e[1] + c * v.e[2];
+    // or more concisely...
+    const double x =  c * v.e[0] + s * v.e[2];
+    const double y =  v.e[1];
+    const double z = -s * v.e[0] + c * v.e[2];
     return Vec3(x, y, z);
 }
 
 /**
- * Rotate a vector about third axis by a radians.
+ * Rotate a vector about third axis by some angle.
  */
 Vec3
 rotZ (const Vec3& v, const double& a)
 {
     const double c = cos(a);
     const double s = sin(a);
-    const double x = c * v.e[0] - s * v.e[1] + 0 * v.e[2];
-    const double y = s * v.e[0] + c * v.e[1] + 0 * v.e[2];
-    const double z = 0 * v.e[0] + 0 * v.e[1] + 1 * v.e[2];
+    // It's just a rotation matrix,
+    //       [  c -s  0 ]
+    //  Rz = [  s  c  0 ]
+    //       [  0  s  1 ]
+    // Written out the long way...
+    // const double x = c * v.e[0] - s * v.e[1] + 0 * v.e[2];
+    // const double y = s * v.e[0] + c * v.e[1] + 0 * v.e[2];
+    // const double z = 0 * v.e[0] + 0 * v.e[1] + 1 * v.e[2];
+    // or more concisely...
+    const double x = c * v.e[0] - s * v.e[1];
+    const double y = s * v.e[0] + c * v.e[1];
+    const double z = v.e[2];
     return Vec3(x, y, z);
 }
 

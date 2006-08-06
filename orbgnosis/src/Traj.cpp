@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.12 2006/08/06 22:36:13 trs137 Exp $
+* $Id: Traj.cpp,v 1.13 2006/08/06 23:32:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -212,21 +212,17 @@ Traj::randv()
     double sin_f = sin(f);
     double temp  = p / (1.0 + e * cos_f);
 
-    Vec3 rPQW((temp*cos_f), (temp*sin_f), (0.0));
+    // Calculate position and velocity in PQW frame.
+    Vec3 r_pqw((temp*cos_f), (temp*sin_f), (0.0));
     if (fabs(p) < SMALL) p = SMALL;
-    Vec3 vPQW((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0 );
+    Vec3 v_pqw((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0);
 
     // Transform PQW to Geocentric Equitorial
+    // r = r_pqw;
+    // v = v_pqw;
 
-    Vec3 TempVec;
-
-    TempVec = rotZ(rPQW, -w);
-    TempVec = rotX(TempVec, -i);
-    r = rotZ(TempVec, -raan);
-
-    TempVec = rotZ(vPQW, -w);
-    TempVec = rotX(TempVec, -i);
-    v = rotZ(TempVec, -raan);
+    r = rotZ(rotX(rotZ(r_pqw, w), i), raan);
+    v = rotZ(rotX(rotZ(v_pqw, w), i), raan);
 }
 
 

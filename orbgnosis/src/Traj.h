@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.12 2006/08/06 22:36:13 trs137 Exp $
+* $Id: Traj.h,v 1.13 2006/08/06 23:32:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -44,15 +44,15 @@ class Traj
     public:
         Traj (void); // defaults to all zeroes
 
-        // This version of the constructor will call randv();
+        // This version of the constructor will call randv() to fill in the missing vectors.
         Traj (double,    // a
               double,    // e
               double,    // i
               double,    // raan
               double,    // w
-              double);  // f
+              double);   // f
 
-        // This version of the constructor will call elorb().
+        // This version of the constructor will call elorb() to fill in the missing elements.
         Traj (Vec3,   // r
               Vec3);  // v
 
