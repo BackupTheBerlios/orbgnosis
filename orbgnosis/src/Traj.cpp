@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.11 2006/08/06 21:37:20 trs137 Exp $
+* $Id: Traj.cpp,v 1.12 2006/08/06 22:36:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -188,15 +188,18 @@ Traj::randv()
         {
             w    = 0.0; 
             raan = 0.0;
+            cout << "ERROR: circular equatorial orbit." << endl;
             // f    = FIXME;  // set to True Longitude
         } else {
         // CIRCULAR INCLINED ORBIT
             w = 0.0;
+            cout << "ERROR: circular inclined orbit." << endl;
             // f = FIXME; // set to Argument of Latitude
         }
         else if (( i < SMALL) || (fabs(i-M_PI)) < SMALL)
         {
         // ELLIPTICAL EQUATORIAL
+            cout << "ERROR: elliptical equatorial orbit." << endl;
             // w = FIXME; // set to Longitude of Periapsis
             raan = 0.0;
         }
@@ -214,8 +217,16 @@ Traj::randv()
     Vec3 vPQW((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0 );
 
     // Transform PQW to Geocentric Equitorial
-    r = rPQW;
-    v = vPQW;
+
+    Vec3 TempVec;
+
+    TempVec = rotZ(rPQW, -w);
+    TempVec = rotX(TempVec, -i);
+    r = rotZ(TempVec, -raan);
+
+    TempVec = rotZ(vPQW, -w);
+    TempVec = rotX(TempVec, -i);
+    v = rotZ(TempVec, -raan);
 }
 
 

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.7 2006/08/06 21:37:20 trs137 Exp $
+* $Id: Vec3.cpp,v 1.8 2006/08/06 22:36:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -273,52 +273,43 @@ operator >> (istream& s, Vec3 q)
 /**
  * Rotate a vector about first axis by a radians.
  */
-void
-Vec3::rot_x(double a)
+Vec3
+rotX (const Vec3& v, const double& a)
 {
-    double c, s, v1, v2;
-    c = cos(a);
-    s = sin(a);
-    if (c < SMALL) c = 0.0;
-    if (s < SMALL) s = 0.0;
-    v1 = c*e[1] - s*e[2];
-    v2 = c*e[2] + s*e[1];
-    e[1] = v1;
-    e[2] = v2;
+    const double c = cos(a);
+    const double s = sin(a);
+    const double x = 1 * v.e[0] + 0 * v.e[1] + 0 * v.e[2];
+    const double y = 0 * v.e[0] + c * v.e[1] - s * v.e[2];
+    const double z = 0 * v.e[0] + s * v.e[1] + c * v.e[2];
+    return Vec3(x, y, z);
 }
 
 /**
  * Rotate a vector about second axis by a radians.
  */
-void
-Vec3::rot_y(double a)
+Vec3
+rotY (const Vec3& v, const double& a)
 {
-    double c, s, v0, v2;
-    c = cos(a);
-    s = sin(a);
-    if (c < SMALL) c = 0.0;
-    if (s < SMALL) s = 0.0;
-    v0 = c*e[0] + s*e[2];
-    v2 = c*e[2] - s*e[0];
-    e[0] = v0;
-    e[2] = v2;
+    const double c = cos(a);
+    const double s = sin(a);
+    const double x =  c * v.e[0] + 0 * v.e[1] + s * v.e[2];
+    const double y =  0 * v.e[0] + 1 * v.e[1] - 0 * v.e[2];
+    const double z = -s * v.e[0] + 0 * v.e[1] + c * v.e[2];
+    return Vec3(x, y, z);
 }
 
 /**
  * Rotate a vector about third axis by a radians.
  */
-void
-Vec3::rot_z(double a)
+Vec3
+rotZ (const Vec3& v, const double& a)
 {
-    double c, s, v0, v1;
-    c = cos(a);
-    s = sin(a);
-    if (c < SMALL) c = 0.0;
-    if (s < SMALL) s = 0.0;
-    v0 = c*e[0] + s*e[1];
-    v1 = c*e[1] - s*e[0];
-    e[0] = v0;
-    e[1] = v1;
+    const double c = cos(a);
+    const double s = sin(a);
+    const double x = c * v.e[0] - s * v.e[1] + 0 * v.e[2];
+    const double y = s * v.e[0] + c * v.e[1] + 0 * v.e[2];
+    const double z = 0 * v.e[0] + 0 * v.e[1] + 1 * v.e[2];
+    return Vec3(x, y, z);
 }
 
 /**

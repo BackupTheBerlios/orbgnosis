@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.5 2006/08/06 21:37:20 trs137 Exp $
+* $Id: Vec3.h,v 1.6 2006/08/06 22:36:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -73,14 +73,14 @@ class Vec3
         friend double dot (const Vec3&, const Vec3&);
         friend double norm (const Vec3&);
 
+        // Rotate a vector about an axis by some amount.
+        friend Vec3 rotX(const Vec3&, const double&);
+        friend Vec3 rotY(const Vec3&, const double&);
+        friend Vec3 rotZ(const Vec3&, const double&);
+
         // Formatted input and output by overloading >> and <<
         friend ostream& operator << (ostream&, Vec3);
         friend istream& operator >> (istream&, Vec3);
-
-        // Rotate the vector about an axis by some amount.
-        void rot_x(double);
-        void rot_y(double);
-        void rot_z(double);
 
         // Standard get-n-set methods.
         double getX (void);
@@ -96,5 +96,4 @@ class Vec3
     private:
         double e[3];
 };
-
 #endif /* _VEC3_H_ */
