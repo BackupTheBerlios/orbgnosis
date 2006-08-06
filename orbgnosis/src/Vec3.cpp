@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.4 2006/06/18 23:47:18 trs137 Exp $
+* $Id: Vec3.cpp,v 1.5 2006/08/06 00:33:49 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -219,10 +219,10 @@ operator - (const Vec3& a)
 Vec3
 cross (const Vec3& a, const Vec3& b)
 {
-    const double nx = a.e[1] * b.e[2] - b.e[1] * a.e[2];
-    const double ny = a.e[2] * b.e[0] - b.e[2] * a.e[0];
-    const double nz = a.e[0] * b.e[1] - b.e[0] * a.e[1];
-    return Vec3(nx, ny, nz);
+    const double x = a.e[1] * b.e[2] - a.e[2] * b.e[1];
+    const double y = a.e[2] * b.e[0] - a.e[0] * b.e[2];
+    const double z = a.e[0] * b.e[1] - a.e[1] * b.e[0];
+    return Vec3(x, y, z);
 }
 
 /**

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Elements.h,v 1.1 2006/08/05 21:38:31 trs137 Exp $
+* $Id: Elements.h,v 1.2 2006/08/06 00:33:48 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */

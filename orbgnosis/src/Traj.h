@@ -23,13 +23,14 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.8 2006/08/04 02:49:11 trs137 Exp $
+* $Id: Traj.h,v 1.9 2006/08/06 00:33:49 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #ifndef _TRAJ_H_
 #define _TRAJ_H_
+#include "Vec3.h"
 
 /**
  * The extrinsic properties of a body: its orbit or trajectory through space.
@@ -41,13 +42,19 @@
 class Traj
 {
     public:
-        Traj (void);
+        Traj (void); // defaults to all zeroes
+
+        // This version of the constructor will call randv();
         Traj (double,    // a
               double,    // e
               double,    // i
               double,    // raan
               double,    // w
               double);  // f
+
+        // This version of the constructor will call elorb().
+        Traj (Vec3,   // r
+              Vec3);  // v
 
         virtual ~Traj (void);
 
@@ -63,6 +70,8 @@ class Traj
         double get_raan (void);
         double get_w (void);
         double get_f (void);
+        Vec3 get_r (void);
+        Vec3 get_v (void);
 
         void set_a (double);
         void set_e (double);
@@ -70,14 +79,21 @@ class Traj
         void set_raan (double);
         void set_w (double);
         void set_f (double);
+        void set_r (Vec3);
+        void set_v (Vec3);
 
-    protected:
+        void randv (void); // Calculates r and v vectors from classical elements.
+        void elorb (void); // Calculates classical elements from 2 vectors.
+
+    private:
         double a;       //!< Semimajor Axis (length).
         double e;       //!< Eccentricity (dimensionless).
         double i;       //!< Inclination  (radians).
         double raan;    //!< Right Ascension of the Ascending Node (radians).
         double w;       //!< Argument of Perigee (radians).
         double f;       //!< True Anomaly (radians).
+        Vec3 r;         //!< Radius (ER).
+        Vec3 v;         //!< Velocity (ER/TU).
 };
 
 #endif /* _TRAJ_H_ */
