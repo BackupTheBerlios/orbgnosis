@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.5 2006/08/06 00:33:49 trs137 Exp $
+* $Id: Vec3.cpp,v 1.6 2006/08/06 04:42:12 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -268,6 +268,66 @@ operator >> (istream& s, Vec3 q)
 {
     s >> q.e[0] >> q.e[1] >> q.e[2];
     return s;
+}
+
+/**
+ * Rotate a vector about axis 1 (x-axis) by v radians.
+ */
+Vec3&
+Vec3::rot1(double v)
+{
+    double c, s;
+    Vec3 * result;
+
+    c = cos(v);
+    s = sin(v);
+
+    result->toZero();
+    result->e[2] = c * e[2] - s * e[1];
+    result->e[1] = c * e[1] + s * e[2];
+    result->e[0] = e[0];
+
+  return *result;
+}
+
+/**
+ * Rotate a vector abot axis 2 (y-axis) by v radians.
+ */
+Vec3&
+Vec3::rot2(double v)
+{
+    double c, s;
+    Vec3 * result;
+
+    c = cos(v);
+    s = sin(v);
+
+    result->toZero();
+    result->e[2] = c * e[2] - s * e[0];
+    result->e[0] = c * e[0] + s * e[2];
+    result->e[1] = e[0];
+
+  return *result;
+}
+
+/**
+ * Rotate a vector about axis 3 (z-axis) by v radians.
+ */
+Vec3&
+Vec3::rot3(double v)
+{
+    double c, s;
+    Vec3 * result;
+
+    c = cos(v);
+    s = sin(v);
+
+    result->toZero();
+    result->e[1] = c * e[1] - s * e[0];
+    result->e[0] = c * e[0] + s * e[2];
+    result->e[2] = e[0];
+
+  return *result;
 }
 
 /**

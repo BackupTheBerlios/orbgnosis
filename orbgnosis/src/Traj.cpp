@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.9 2006/08/06 00:33:49 trs137 Exp $
+* $Id: Traj.cpp,v 1.10 2006/08/06 04:42:12 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -73,6 +73,7 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
         v(0.0, 0.0, 0.0)
 {
     std::cout << "Traj constructor called with classical elements.\n";
+    randv();
 }
 
 /**
@@ -173,6 +174,59 @@ void Traj::set_r (Vec3 rin) { r = rin; }
 void Traj::set_v (Vec3 vin) { v = vin; }
 
 /**
+ * Calculates position and velocity vectors, given
+ * classical orbital elements in canonical units.
+ */
+void
+Traj::randv()
+{
+    // Set up angles for certain special case orbits.
+    //
+    if (e < SMALL)
+        if ((i < SMALL) || (fabs(i-M_PI)) < SMALL)
+        // CIRCULAR EQUATORIAL ORBIT
+        {
+            w    = 0.0; 
+            raan = 0.0;
+            // f    = FIXME;  // set to True Longitude
+        } else {
+        // CIRCULAR INCLINED ORBIT
+            w = 0.0;
+            // f = FIXME; // set to Argument of Latitude
+        }
+        else if (( i < SMALL) || (fabs(i-M_PI)) < SMALL)
+        {
+        // ELLIPTICAL EQUATORIAL
+            // w = FIXME; // set to Longitude of Periapsis
+            raan = 0.0;
+        }
+
+    // Calculate semilatus rectum or semiparameter
+    double p = a * (1 - e*e);
+
+    // Calculate some temporary values
+    double cos_f = cos(f);
+    double sin_f = sin(f);
+    double temp  = p / (1.0 + e * cos_f);
+
+    Vec3 rPQW((temp*cos_f), (temp*sin_f), (0.0));
+    if (fabs(p) < SMALL) p = SMALL;
+    Vec3 vPQW((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0 );
+
+    // Transform PQW to Geocentric Equitorial
+    Vec3 tempvec = rPQW.rot3(-w);
+         tempvec = tempvec.rot1(-i);
+         r       = tempvec.rot3(-raan);
+
+    tempvec = vPQW.rot3(-w);
+    tempvec = tempvec.rot1(-i);
+    v       = tempvec.rot3(-w);
+}
+
+
+
+
+/**
  * Calculates classical orbital elements, given radius and velocity
  * in canonical units.
  */
@@ -193,7 +247,6 @@ Traj::elorb(void)
     // Semimajor axis.  Units: ER
     a = -1.0 / (2.0 * ksi);
     // a = -MU / (2.0 * ksi); // general for non-canonical
-
 
     // Eccentricity.  Unitless.
     Vec3 eccVector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
