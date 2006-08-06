@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.6 2006/08/06 04:42:12 trs137 Exp $
+* $Id: Vec3.cpp,v 1.7 2006/08/06 21:37:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -271,63 +271,54 @@ operator >> (istream& s, Vec3 q)
 }
 
 /**
- * Rotate a vector about axis 1 (x-axis) by v radians.
+ * Rotate a vector about first axis by a radians.
  */
-Vec3&
-Vec3::rot1(double v)
+void
+Vec3::rot_x(double a)
 {
-    double c, s;
-    Vec3 * result;
-
-    c = cos(v);
-    s = sin(v);
-
-    result->toZero();
-    result->e[2] = c * e[2] - s * e[1];
-    result->e[1] = c * e[1] + s * e[2];
-    result->e[0] = e[0];
-
-  return *result;
+    double c, s, v1, v2;
+    c = cos(a);
+    s = sin(a);
+    if (c < SMALL) c = 0.0;
+    if (s < SMALL) s = 0.0;
+    v1 = c*e[1] - s*e[2];
+    v2 = c*e[2] + s*e[1];
+    e[1] = v1;
+    e[2] = v2;
 }
 
 /**
- * Rotate a vector abot axis 2 (y-axis) by v radians.
+ * Rotate a vector about second axis by a radians.
  */
-Vec3&
-Vec3::rot2(double v)
+void
+Vec3::rot_y(double a)
 {
-    double c, s;
-    Vec3 * result;
-
-    c = cos(v);
-    s = sin(v);
-
-    result->toZero();
-    result->e[2] = c * e[2] - s * e[0];
-    result->e[0] = c * e[0] + s * e[2];
-    result->e[1] = e[0];
-
-  return *result;
+    double c, s, v0, v2;
+    c = cos(a);
+    s = sin(a);
+    if (c < SMALL) c = 0.0;
+    if (s < SMALL) s = 0.0;
+    v0 = c*e[0] + s*e[2];
+    v2 = c*e[2] - s*e[0];
+    e[0] = v0;
+    e[2] = v2;
 }
 
 /**
- * Rotate a vector about axis 3 (z-axis) by v radians.
+ * Rotate a vector about third axis by a radians.
  */
-Vec3&
-Vec3::rot3(double v)
+void
+Vec3::rot_z(double a)
 {
-    double c, s;
-    Vec3 * result;
-
-    c = cos(v);
-    s = sin(v);
-
-    result->toZero();
-    result->e[1] = c * e[1] - s * e[0];
-    result->e[0] = c * e[0] + s * e[2];
-    result->e[2] = e[0];
-
-  return *result;
+    double c, s, v0, v1;
+    c = cos(a);
+    s = sin(a);
+    if (c < SMALL) c = 0.0;
+    if (s < SMALL) s = 0.0;
+    v0 = c*e[0] + s*e[1];
+    v1 = c*e[1] - s*e[0];
+    e[0] = v0;
+    e[1] = v1;
 }
 
 /**

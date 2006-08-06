@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.10 2006/08/06 04:42:12 trs137 Exp $
+* $Id: Traj.cpp,v 1.11 2006/08/06 21:37:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -149,8 +149,8 @@ Traj::print (void)
     cout << "RA of ascending node:  " << raan << endl;
     cout << "argument of periapsis: " << w << endl;
     cout << "true anomaly:          " << f << endl;
-    cout << "radius vector:         " << r << endl;
-    cout << "velocity vector:       " << v << endl;
+    cout << "radius vector:         " << r << ", " << norm(r) << endl;
+    cout << "velocity vector:       " << v << ", " << norm(v) << endl;
 }
 
 /*
@@ -214,13 +214,8 @@ Traj::randv()
     Vec3 vPQW((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0 );
 
     // Transform PQW to Geocentric Equitorial
-    Vec3 tempvec = rPQW.rot3(-w);
-         tempvec = tempvec.rot1(-i);
-         r       = tempvec.rot3(-raan);
-
-    tempvec = vPQW.rot3(-w);
-    tempvec = tempvec.rot1(-i);
-    v       = tempvec.rot3(-w);
+    r = rPQW;
+    v = vPQW;
 }
 
 

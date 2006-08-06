@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.4 2006/08/06 04:42:12 trs137 Exp $
+* $Id: Vec3.h,v 1.5 2006/08/06 21:37:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -78,9 +78,9 @@ class Vec3
         friend istream& operator >> (istream&, Vec3);
 
         // Rotate the vector about an axis by some amount.
-        Vec3& rot1(double);
-        Vec3& rot2(double);
-        Vec3& rot3(double);
+        void rot_x(double);
+        void rot_y(double);
+        void rot_z(double);
 
         // Standard get-n-set methods.
         double getX (void);

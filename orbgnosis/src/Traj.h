@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.10 2006/08/06 04:42:12 trs137 Exp $
+* $Id: Traj.h,v 1.11 2006/08/06 21:37:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -82,8 +82,6 @@ class Traj
         void set_r (Vec3);
         void set_v (Vec3);
 
-        void randv (void); // Calculates r and v vectors from classical elements.
-        void elorb (void); // Calculates classical elements from 2 vectors.
 
     private:
         double a;       //!< Semimajor Axis (length).
@@ -94,6 +92,9 @@ class Traj
         double f;       //!< True Anomaly (radians).
         Vec3 r;         //!< Radius (ER).
         Vec3 v;         //!< Velocity (ER/TU).
+
+        void randv (void); // Calculates r and v vectors from classical elements.
+        void elorb (void); // Calculates classical elements from 2 vectors.
 };
 
 #endif /* _TRAJ_H_ */

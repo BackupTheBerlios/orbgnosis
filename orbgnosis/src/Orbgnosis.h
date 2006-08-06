@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.10 2006/08/06 04:42:12 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.11 2006/08/06 21:37:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
