@@ -1,3 +1,5 @@
+/usr/home/trs137/orbgnosis/src/Orbgnosis.cpp:44: Warning: Member main(void) (function) of file Orbgnosis.cpp is not documented.
+/usr/home/trs137/orbgnosis/src/problemdef.h:42: Warning: Member test_problem(double *xreal, double *xbin, int **gene, double *obj, double *constr) (function) of file problemdef.h is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:61: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:62: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
@@ -28,4 +30,4 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member set_r(Vec3) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:83: Warning: Member set_v(Vec3) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
-/usr/home/trs137/orbgnosis/src/Vec3.h:97: Warning: Member e[3] (variable) of class Vec3 is not documented.
+/usr/home/trs137/orbgnosis/src/Vec3.h:106: Warning: Member e[3] (variable) of class Vec3 is not documented.

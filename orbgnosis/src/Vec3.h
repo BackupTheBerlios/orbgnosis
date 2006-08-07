@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.7 2006/08/06 23:32:39 trs137 Exp $
+* $Id: Vec3.h,v 1.8 2006/08/07 02:32:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -34,11 +34,20 @@
 using namespace std;
 
 /**
- * A Vec3 of exactly three doubles, with operators and common functions.
- * The Vec3 class overloads vector addition and subtraction,
+ * A Vec3 is a vector of exactly three doubles, with operators and common functions.
+ * The Vec3 class overloads most common operators: vector addition and subtraction,
  * as well as vector-scalar multiplication and division.  Member functions
- * include Euclidean norm, dot product and cross product.  For nicer I/O
- * the >> and << operators are overloaded as well.
+ * include Euclidean norm, dot product, cross product, and arbitrary rotation about
+ * any of the three principle axes.  For simplified I/O the >> and << operators
+ * are overloaded as well.
+ *
+ * This is a purpose-built class just for orbgnosis which should not be used
+ * in place of STL Vectors or other general purpose types.  I needed support
+ * for vectors of *only* length 3 and *only* of type double.
+ * Suggeted future work for broader application:
+ *      - Template the class to handle other real types.
+ *      - Template the class even more to handle complex and quaternions.
+ *      - Benchmark performance vs. STL, Boost or other general purpose classes.
  */
 class Vec3
 {

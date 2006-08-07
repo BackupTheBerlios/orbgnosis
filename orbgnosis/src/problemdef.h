@@ -23,21 +23,31 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: problemdef.h,v 1.3 2006/06/15 20:50:33 trs137 Exp $
+* $Id: problemdef.h,v 1.4 2006/08/07 02:32:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
+/**
+ * @file
+ * This header file defines the test_problem() function used by NSGA-2.
+ * Please see NSGA-2 docs for more examples.
+ */
+
+#ifndef _PROBLEMDEF_H_
+#define _PROBLEMDEF_H_
 #include "Orbgnosis.h"
 
 void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
-    obj[0] =  // TODO
-    obj[1] =  // TODO
-    obj[2] =  // TODO
-    constr[0] =  // TODO
-    constr[1] =  // TODO
-    constr[2] =  // TODO
-    constr[3] =  // TODO
+    obj[0] =  /* TODO */
+    obj[1] =  /* TODO */
+    obj[2] =  /* TODO */
+    constr[0] =  /* TODO */
+    constr[1] =  /* TODO */
+    constr[2] =  /* TODO */
+    constr[3] =  /* TODO */
     return ;
 }
+
+#endif /* _PROBLEMDEF_H_ */

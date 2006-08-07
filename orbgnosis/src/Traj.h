@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.13 2006/08/06 23:32:39 trs137 Exp $
+* $Id: Traj.h,v 1.14 2006/08/07 02:32:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -84,6 +84,9 @@ class Traj
 
 
     private:
+/*
+ * TODO: Add true longitude, argument of latitude, and longitude of periapsis.
+ */
         double a;       //!< Semimajor Axis (length).
         double e;       //!< Eccentricity (dimensionless).
         double i;       //!< Inclination  (radians).

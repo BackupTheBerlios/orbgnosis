@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.13 2006/08/06 23:32:39 trs137 Exp $
+* $Id: Traj.cpp,v 1.14 2006/08/07 02:32:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -47,7 +47,7 @@ Traj::Traj (void) :
         r(0.0, 0.0, 0.0),
         v(0.0, 0.0, 0.0)
 {
-    std::cout << "Traj constructor called with zero args.\n";
+    // std::cout << "Traj constructor called with zero args.\n";
 }
 
 /**
@@ -72,7 +72,7 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
         r(0.0, 0.0, 0.0),
         v(0.0, 0.0, 0.0)
 {
-    std::cout << "Traj constructor called with classical elements.\n";
+    // std::cout << "Traj constructor called with classical elements.\n";
     randv();
 }
 
@@ -90,7 +90,7 @@ Traj::Traj (Vec3 rin, Vec3 vin) :
         r(rin),
         v(vin)
 {
-    std::cout << "Traj constructor called with state vector.\n";
+    // std::cout << "Traj constructor called with state vector.\n";
     elorb();
 }
 

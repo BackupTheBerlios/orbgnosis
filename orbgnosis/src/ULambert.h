@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.h,v 1.6 2006/06/15 20:50:33 trs137 Exp $
+* $Id: ULambert.h,v 1.7 2006/08/07 02:32:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -48,9 +48,9 @@ class ULambert
 
         ULambert (void);         // just zeros
 
-        ULambert (Vec3 r1in,
-                  Vec3 r2in,
-                  double tin);
+        ULambert (Vec3 r1in,   //!< initial position.
+                  Vec3 r2in,   //!< final position
+                  double tin); //!< time of flight.
 
         virtual ~ULambert (void);
 
