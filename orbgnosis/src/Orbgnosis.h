@@ -23,14 +23,13 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.14 2006/08/07 02:32:26 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.15 2006/08/07 23:41:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 /** @file
- * This header file defines global constants and macros.
- * Any constants not defined in standard headers should be defined here.
+ * This header file defines constants and has some utitlity functions.
  */
 
 #ifndef _ORBGNOSIS_H_
@@ -38,20 +37,21 @@
 
 #ifdef INF
 #undef INF
-#endif // ifdef INF
-#define INF 1.0e14    //!< A big number.
+#endif
+#define INF 1.0e14    //!< A very big number
 
 #define EPS 1.0e-14   //!< A very small number, used in NSGA2
 //#define E  2.71828182845905  //!< The natural number e
 //#define PI 3.14159265358979   use M_PI from <math.h> instead
-#define GNUPLOT_COMMAND "gnuplot -persist" //!<  Command for drawing with gnuplot
+#define GNUPLOT_COMMAND "gnuplot -persist" //!<  Used for drawing with gnuplot
 
-#define SMALL 1.0e-8   //!< Tolerance and general-purpose "small number".
-#define VERY_SMALL 1.0e-16 //!< Tolerance and general-purpse "very small number".
-#define ER 6378.137    //!< One canonical length unit.  Earth radius in km.
-#define MU 398600.4418 //!< The NON-CANONICAL gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>.  Note that MU = 1 in canonical units.
-#define ROOTMU 631.3481     //!< the square root of Mu in SI units..
-#define TU_SEC 806.81112382429    //!< One canonical time unit in seconds.
-#define TU_MIN 13.44685206374     //!< One canonical time unit in minutes.
+#define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"
+#define ER 6378.137    //!< Earth radius in km.
+#define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
+#define ROOTMU 631.3481     //!< the square root of Mu.
+#define TU_SEC 806.81112382429    //!< canonical time units (s)
+#define TU_MIN 13.44685206374     //!< canonical time units (m)
+
+#define UNDEFINED -999  //!< Abe used to do this back in the day.
 
 #endif /* _ORBGNOSIS_H_ */

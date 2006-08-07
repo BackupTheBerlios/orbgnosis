@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.14 2006/08/07 02:32:26 trs137 Exp $
+* $Id: Traj.h,v 1.15 2006/08/07 23:41:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -62,7 +62,7 @@ class Traj
 
         Traj& operator = (Traj); // copy assignment operator
 
-        void print (void);
+        void print (void);  // Prints trajectory parameters to stdout.
 
         double get_a (void);
         double get_e (void);
@@ -70,6 +70,10 @@ class Traj
         double get_raan (void);
         double get_w (void);
         double get_f (void);
+        double get_M (void);
+        double get_argLat (void);
+        double get_lonTrue (void);
+        double get_lonPer (void);
         Vec3 get_r (void);
         Vec3 get_v (void);
 
@@ -79,13 +83,20 @@ class Traj
         void set_raan (double);
         void set_w (double);
         void set_f (double);
+
+        // Setting non-classical elements is forbidden.
+        // void set_M (double);
+        // void set_argLat (double);
+        // void set_lamTrue (double);
+        // void set_lonPer (double);
+
         void set_r (Vec3);
         void set_v (Vec3);
 
 
     private:
 /*
- * TODO: Add true longitude, argument of latitude, and longitude of periapsis.
+ * SIX CLASSICAL ORBITAL ELEMENTS:
  */
         double a;       //!< Semimajor Axis (length).
         double e;       //!< Eccentricity (dimensionless).
@@ -93,6 +104,17 @@ class Traj
         double raan;    //!< Right Ascension of the Ascending Node (radians).
         double w;       //!< Argument of Perigee (radians).
         double f;       //!< True Anomaly (radians).
+/*
+ *  OTHER ORBITAL ELEMENTS:
+ */
+        double M;        //!< Mean Anomaly (radians).
+        double argLat;   //!< Argument of Latitude (radians).
+        double lonTrue;  //!< True Longitude (radians).
+        double lonPer;   //!< Longitude of Periapsis (radians).
+
+/*
+ *  GEOCENTRIC EQUATORIAL STATE VECTOR:
+ */
         Vec3 r;         //!< Radius (ER).
         Vec3 v;         //!< Velocity (ER/TU).
 

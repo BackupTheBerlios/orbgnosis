@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.14 2006/08/07 02:32:26 trs137 Exp $
+* $Id: Traj.cpp,v 1.15 2006/08/07 23:41:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -44,6 +44,10 @@ Traj::Traj (void) :
         raan(0.0),
         w(0.0),
         f(0.0),
+        M(UNDEFINED),
+        argLat(UNDEFINED),
+        lonTrue(UNDEFINED),
+        lonPer(UNDEFINED),
         r(0.0, 0.0, 0.0),
         v(0.0, 0.0, 0.0)
 {
@@ -69,11 +73,15 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
         raan(raanin),
         w(win),
         f(fin),
+        M(UNDEFINED),
+        argLat(UNDEFINED),
+        lonTrue(UNDEFINED),
+        lonPer(UNDEFINED),
         r(0.0, 0.0, 0.0),
         v(0.0, 0.0, 0.0)
 {
     // std::cout << "Traj constructor called with classical elements.\n";
-    randv();
+    randv(); // Calculate r and v vectors from the classical elements.
 }
 
 /**
@@ -87,11 +95,15 @@ Traj::Traj (Vec3 rin, Vec3 vin) :
         raan(0.0),
         w(0.0),
         f(0.0),
+        M(UNDEFINED),
+        argLat(UNDEFINED),
+        lonTrue(UNDEFINED),
+        lonPer(UNDEFINED),
         r(rin),
         v(vin)
 {
     // std::cout << "Traj constructor called with state vector.\n";
-    elorb();
+    elorb();  // Calculate classical elements from the state vector.
 }
 
 /**
@@ -105,6 +117,10 @@ Traj::Traj (const Traj& copy) :
         raan(copy.raan),
         w(copy.w),
         f(copy.f),
+        M(copy.M),
+        argLat(copy.argLat),
+        lonTrue(copy.lonTrue),
+        lonPer(copy.lonPer),
         r(copy.r),
         v(copy.v)
 {
@@ -124,6 +140,10 @@ Traj::operator = (Traj t)
     raan = t.raan;
     w = t.w;
     f = t.f;
+    M = t.M;
+    argLat = t.argLat;
+    lonTrue = t.lonTrue;
+    lonPer = t.lonPer;
     r = t.r;
     v = t.v;
     return *this;
@@ -143,18 +163,23 @@ Traj::~Traj (void)
 void
 Traj::print (void)
 {
+    cout << "TRAJECTORY PRINTOUT: " << endl;
     cout << "semimajor axis:        " << a << endl;
     cout << "eccentricity:          " << e << endl;
     cout << "inclination:           " << i << endl;
     cout << "RA of ascending node:  " << raan << endl;
     cout << "argument of periapsis: " << w << endl;
     cout << "true anomaly:          " << f << endl;
-    cout << "radius vector:         " << r << ", " << norm(r) << endl;
-    cout << "velocity vector:       " << v << ", " << norm(v) << endl;
+    cout << "mean anomaly:          " << M << endl;
+    cout << "Argument of latitude   " << argLat << endl;
+    cout << "True longitude         " << lonTrue << endl;
+    cout << "Longitude of periapsis " << lonPer << endl;
+    cout << "radius vector:         " << r << ", magnitude = " << norm(r) << endl;
+    cout << "velocity vector:       " << v << ", magnitude = " << norm(v) << endl;
 }
 
 /*
- *  Accessor & Mutator methods for classic orbital elements.
+ *  Accessor methods for classic orbital elements.
  */
 double Traj::get_a (void) { return a; }
 double Traj::get_e (void) { return e; }
@@ -162,16 +187,140 @@ double Traj::get_i (void) { return i; }
 double Traj::get_raan (void) { return raan; }
 double Traj::get_w (void) { return w; }
 double Traj::get_f (void) { return f; }
+double Traj::get_M (void) { return M; }
+double Traj::get_argLat (void) { return argLat; }
+double Traj::get_lonTrue (void) { return lonTrue; }
+double Traj::get_lonPer (void) { return lonPer; }
 Vec3 Traj::get_r (void) { return r; }
 Vec3 Traj::get_v (void) { return v; }
-void Traj::set_a (double ain) { a = ain; }
-void Traj::set_e (double ein) { a = ein; }
-void Traj::set_i (double iin) { a = iin; }
-void Traj::set_raan (double raanin) { a = raanin; }
-void Traj::set_w (double win) { a = win; }
-void Traj::set_f (double fin) { a = fin; }
-void Traj::set_r (Vec3 rin) { r = rin; }
-void Traj::set_v (Vec3 vin) { v = vin; }
+
+/**
+ * Mutator method for semimajor axis.
+ * Constraints: [a < 0 : e > 1]
+ *              [a = 0 : e = 1]
+ *              [a > 0 : e < 1]
+ */
+void
+Traj::set_a (double ain)
+{
+    if (    ((ain < 0) && (e <= 1))
+         || ((fabs(ain) < SMALL) && (fabs(e-1.0) < SMALL))
+         || ((ain > 0)  && (e >= 1)) )
+    {
+        cerr << "ERROR: Traj::set_a can't change semimajor axis to a value incompatible with eccentricity." << endl;
+        exit(1);
+    }
+    a = ain;
+}
+
+/**
+ * Mutator method for eccentricity.
+ * Constraints: [a < 0 : e > 1]
+ *              [a = 0 : e = 1]
+ *              [a > 0 : e < 1]
+ */
+void
+Traj::set_e (double ein)
+{
+    if (    ((a < 0) && (ein <= 1))
+         || ((fabs(a) < SMALL) && (fabs(ein-1.0) < SMALL))
+         || ((a > 0)  && (ein >= 1)) )
+    {
+        cerr << "ERROR: Traj::set_e can't change eccentricity to a value incompatible with semimajor axis." << endl;
+        exit(1);
+    }
+    e = ein;
+}
+/**
+ * Mutator method for inclination.
+ * Constraints: [ 0 <= i <= 2*pi ]
+ */
+void
+Traj::set_i (double iin)
+{
+    if ( (iin < 0) || (iin > 2*M_PI) )
+    {
+        cerr << "ERROR: Traj::set_i can't set bad inclination value." << endl;
+        exit(1);
+    }
+    i = iin;
+}
+
+/**
+ * Mutator method for RAAN.
+ * Constraints: [ 0 <= RAAN <= 2*pi ]
+ */
+void
+Traj::set_raan (double raanin)
+{
+    if ( (raanin < 0) || (raanin > 2*M_PI) )
+    {
+        cerr << "ERROR: Traj::set_raan can't set bad RAAN value." << endl;
+        exit(1);
+    }
+    raan = raanin;
+}
+
+/**
+ * Mutator method for argument of periapsis.
+ * Constraints: [ 0 <= w <= 2*pi ]
+ */
+void
+Traj::set_w (double win)
+{
+    if ( (win < 0) || (win > 2*M_PI) )
+    {
+        cerr << "ERROR: Traj::set_w can't set bad argument of periapsis value." << endl;
+        exit(1);
+    }
+    w = win;
+}
+
+/**
+ * Mutator method for true anomaly.
+ * Constraints: [ 0 <= f <= 2*pi ]
+ */
+void
+Traj::set_f (double fin)
+{
+    if ( (fin < 0) || (fin > 2*M_PI) )
+    {
+        cerr << "ERROR: Traj::set_f can't set bad true anomaly value." << endl;
+        exit(1);
+    }
+    f = fin;
+}
+
+/**
+ * Mutator method for geocentric position vector.
+ * Constraints: [ norm(r) > 1.0 ] (units of earth radii)
+ */
+void
+Traj::set_r (Vec3 rin)
+{
+    if ( norm(rin) < 1.0 )
+    {
+        cerr << "ERROR: Traj::set_r can't set position vector inside the Earth." << endl;
+        exit(1);
+    }
+    r = rin;
+}
+
+/**
+ * Mutator method for geocentric velocity vector.
+ * Constraints: [ norm(v) < speed of light ] (units of ER/TU)
+ */
+void
+Traj::set_v (Vec3 vin)
+{
+    if ( norm(vin) > 37922.655 )
+    {
+        cerr << "ERROR: I'm givin' it all she's got, Captain!" << endl;
+        cerr << "ERROR: Traj::set_v can't set velocity vector faster than the speed of light." << endl;
+        exit(1);
+    }
+    v = vin;
+}
 
 /**
  * Calculates position and velocity vectors, given
@@ -188,19 +337,19 @@ Traj::randv()
         {
             w    = 0.0; 
             raan = 0.0;
-            cout << "ERROR: circular equatorial orbit." << endl;
-            // f    = FIXME;  // set to True Longitude
+            cout << "NOTICE: circular equatorial orbit." << endl;
+            f    = lonTrue; // set to True Longitude
         } else {
         // CIRCULAR INCLINED ORBIT
             w = 0.0;
-            cout << "ERROR: circular inclined orbit." << endl;
-            // f = FIXME; // set to Argument of Latitude
+            cout << "NOTICE: circular inclined orbit." << endl;
+            f = argLat; // set to Argument of Latitude
         }
         else if (( i < SMALL) || (fabs(i-M_PI)) < SMALL)
         {
         // ELLIPTICAL EQUATORIAL
-            cout << "ERROR: elliptical equatorial orbit." << endl;
-            // w = FIXME; // set to Longitude of Periapsis
+            cout << "NOTICE: noncircular equatorial traj." << endl;
+            w = lonPer; // set to Longitude of Periapsis
             raan = 0.0;
         }
 
@@ -224,9 +373,6 @@ Traj::randv()
     r = rotZ(rotX(rotZ(r_pqw, w), i), raan);
     v = rotZ(rotX(rotZ(v_pqw, w), i), raan);
 }
-
-
-
 
 /**
  * Calculates classical orbital elements, given radius and velocity
@@ -274,5 +420,38 @@ Traj::elorb(void)
     f = acos( dot(eccVector, r) / (e * rr));
     // Quadrant check!
     if (dot(r,v) < 0) f = 2*M_PI - f;
+
+    //--------------------------------------------------//
+    // non-classical elements for special orbits        //
+    //--------------------------------------------------//
+
+    // Argument of Latitude (for circular inclined orbits)
+    if (e < SMALL)
+    {
+        argLat = acos(dot(nodeVector, r) / (nn * rr));
+        // Quadrant check!
+        if (r.getZ() < 0) argLat = 2*M_PI - argLat;
+    }else{
+        argLat = UNDEFINED; 
+    }
+
+    // True Longitude (for circular equatorial orbits)
+    if ((e < SMALL) && (i < SMALL))
+    {
+        lonTrue = acos(r.getX() / rr );
+        // Quadrant check!
+        if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
+    } else {
+        lonTrue = UNDEFINED; 
+    }
+
+    // Longitude of Periapsis (for non-circular equatorial trajs)
+    if (i < SMALL)
+    {
+        lonPer = acos( eccVector.getX() / e );
+        if (eccVector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
+    } else {
+        lonPer = UNDEFINED; 
+    }
 }
 

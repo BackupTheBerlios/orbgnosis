@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.10 2006/08/07 02:32:26 trs137 Exp $
+* $Id: Vec3.cpp,v 1.11 2006/08/07 23:41:18 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -39,7 +39,8 @@ using namespace std;
  */
 Vec3::Vec3 (void)
 {
-    for (int i = 0; i < 3; i++) e[i] = 0.0;
+    for (int i = 0; i < 3; i++)
+        e[i] = 0.0;
     // cout << "Default Vec3 constructor called.\n";
 }
 
@@ -275,8 +276,6 @@ operator >> (istream& s, Vec3 q)
  *       [  1  0  0 ]
  *  Rx = [  0  c -s ]
  *       [  0  s  c ]
- * @param v is a vector to be rotated.
- * @param a is an angle in radians.
  */
 Vec3
 rotX (const Vec3& v, const double& a)
@@ -300,8 +299,6 @@ rotX (const Vec3& v, const double& a)
  *        [  c  0  s ]
  *   Ry = [  0  1  0 ]
  *        [ -s  0  c ]
- * @param v is a vector to be rotated.
- * @param a is an angle in radians.
  */
 Vec3
 rotY (const Vec3& v, const double& a)
@@ -325,8 +322,6 @@ rotY (const Vec3& v, const double& a)
  *        [  c -s  0 ]
  *   Rz = [  s  c  0 ]
  *        [  0  s  1 ]
- * @param v is a vector to be rotated.
- * @param a is an angle in radians.
  */
 Vec3
 rotZ (const Vec3& v, const double& a)
@@ -381,8 +376,7 @@ Vec3::toZero (void)
 }
 
 /**
- * Sets all three elements of a Vec3 to DBL_MAX.
- * gcc 4.0 on Mac OS X has issues with this, YMMV.
+ * Sets all three elements of a Vec3 to DBL_MAX (may cause problems).
  */
 void
 Vec3::toInf (void)
