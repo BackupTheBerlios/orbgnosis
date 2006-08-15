@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.12 2006/08/15 00:21:38 trs137 Exp $
+* $Id: Vec3.cpp,v 1.13 2006/08/15 22:41:36 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -112,7 +112,6 @@ Vec3::operator -= (const Vec3& q)
         e[i] -= q.e[i];
     return *this;
 }
-    
 
 /**
  * Multiplies a Vec3 with a scalar of type double and returns a Vec3.

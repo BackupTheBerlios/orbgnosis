@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.16 2006/08/15 00:21:38 trs137 Exp $
+* $Id: Traj.cpp,v 1.17 2006/08/15 22:41:36 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -37,20 +37,12 @@ using namespace std;
 /**
  * The Traj constructor.
  */
-Traj::Traj (void) :
-        a(0.0),
-        e(0.0),
-        i(0.0),
-        raan(0.0),
-        w(0.0),
-        f(0.0),
-        E(UNDEFINED),
-        M(UNDEFINED),
-        argLat(UNDEFINED),
-        lonTrue(UNDEFINED),
-        lonPer(UNDEFINED),
-        r(0.0, 0.0, 0.0),
-        v(0.0, 0.0, 0.0)
+Traj::Traj (void) : a(0.0), e(0.0), i(0.0), raan(0.0), w(0.0), f(0.0),
+    r(0.0, 0.0, 0.0), v(0.0, 0.0, 0.0),
+    E(NAN), M(NAN), argLat(NAN), lonTrue(NAN), lonPer(NAN),
+    e_vector(0.0, 0.0, 0.0),
+    h_vector(0.0, 0.0, 0.0),
+    n_vector(0.0, 0.0, 0.0)
 {
     // std::cout << "Traj constructor called with zero args.\n";
 }
@@ -66,21 +58,14 @@ Traj::Traj (void) :
  * @param win the argument of periapsis (radians).
  * @param fin the true anomaly (radians).
  */
-Traj::Traj (double ain, double ein, double iin, double raanin,
-            double win, double fin) :
-        a(ain),
-        e(ein),
-        i(iin),
-        raan(raanin),
-        w(win),
-        f(fin),
-        E(UNDEFINED),
-        M(UNDEFINED),
-        argLat(UNDEFINED),
-        lonTrue(UNDEFINED),
-        lonPer(UNDEFINED),
-        r(0.0, 0.0, 0.0),
-        v(0.0, 0.0, 0.0)
+Traj::Traj (double ain, double ein, double iin, double raanin, double win,
+    double fin) :
+    a(ain), e(ein), i(iin), raan(raanin), w(win), f(fin),
+    r(0.0, 0.0, 0.0), v(0.0, 0.0, 0.0),
+    E(NAN), M(NAN), argLat(NAN), lonTrue(NAN), lonPer(NAN),
+    e_vector(0.0, 0.0, 0.0),
+    h_vector(0.0, 0.0, 0.0),
+    n_vector(0.0, 0.0, 0.0)
 {
     // std::cout << "Traj constructor called with classical elements.\n";
     randv(); // Calculate r and v vectors from the classical elements.
@@ -90,20 +75,14 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
  * Traj constructor.
  * State vector in canonical units used.
  */
-Traj::Traj (Vec3 rin, Vec3 vin) :
-        a(0.0),
-        e(0.0),
-        i(0.0),
-        raan(0.0),
-        w(0.0),
-        f(0.0),
-        E(UNDEFINED),
-        M(UNDEFINED),
-        argLat(UNDEFINED),
-        lonTrue(UNDEFINED),
-        lonPer(UNDEFINED),
-        r(rin),
-        v(vin)
+Traj::Traj (Vec3 rin, Vec3 vin) : 
+    a(0.0), e(0.0), i(0.0), raan(0.0), w(0.0), f(0.0),
+    r(rin), v(vin),
+    E(NAN), M(NAN), argLat(NAN), lonTrue(NAN), lonPer(NAN),
+    e_vector(0.0, 0.0, 0.0),
+    h_vector(0.0, 0.0, 0.0),
+    n_vector(0.0, 0.0, 0.0)
+
 {
     // std::cout << "Traj constructor called with state vector.\n";
     elorb();  // Calculate classical elements from the state vector.
@@ -120,13 +99,16 @@ Traj::Traj (const Traj& copy) :
         raan(copy.raan),
         w(copy.w),
         f(copy.f),
+        r(copy.r),
+        v(copy.v),
         E(copy.E),
         M(copy.M),
         argLat(copy.argLat),
         lonTrue(copy.lonTrue),
         lonPer(copy.lonPer),
-        r(copy.r),
-        v(copy.v)
+        e_vector(copy.e_vector),
+        h_vector(copy.h_vector),
+        n_vector(copy.n_vector)
 {
     //std::cout << "Traj copy constructor called.\n";
 }
@@ -138,19 +120,25 @@ Traj::Traj (const Traj& copy) :
 Traj&
 Traj::operator = (Traj t)
 {
-    a = t.a;
-    e = t.e;
-    i = t.i;
-    raan = t.raan;
-    w = t.w;
-    f = t.f;
-    E = t.E;
-    M = t.M;
-    argLat = t.argLat;
-    lonTrue = t.lonTrue;
-    lonPer = t.lonPer;
-    r = t.r;
-    v = t.v;
+    if (this != &t) // avoid pointless self-assignment
+    {
+        a = t.a;
+        e = t.e;
+        i = t.i;
+        raan = t.raan;
+        w = t.w;
+        f = t.f;
+        r = t.r;
+        v = t.v;
+        E = t.E;
+        M = t.M;
+        argLat = t.argLat;
+        lonTrue = t.lonTrue;
+        lonPer = t.lonPer;
+        e_vector = t.e_vector;
+        h_vector = t.h_vector;
+        n_vector = t.n_vector;
+    }
     return *this;
 }
 
@@ -170,22 +158,24 @@ Traj::print (void)
 {
     cout << "TRAJECTORY PRINTOUT: " << endl;
     cout << "semimajor axis:               " << a << endl;
-    cout << "eccentricity:                 " << e << endl;
+    cout << "eccentricity:                 " << e_vector << ", " << e << endl;
     cout << "inclination:                  " << i << endl;
     cout << "RA of ascending node:         " << raan << endl;
     cout << "argument of periapsis:        " << w << endl;
     cout << "true anomaly:                 " << f << endl;
+    cout << "radius vector:                " << r << ", norm = " << norm(r) << endl;
+    cout << "velocity vector:              " << v << ", norm = " << norm(v) << endl;
     cout << "eccentric/hyperbolic anomaly: " << E << endl;
     cout << "mean anomaly:                 " << M << endl;
     cout << "Argument of latitude          " << argLat << endl;
     cout << "True longitude                " << lonTrue << endl;
     cout << "Longitude of periapsis        " << lonPer << endl;
-    cout << "radius vector:                " << r << ", magnitude = " << norm(r) << endl;
-    cout << "velocity vector:              " << v << ", magnitude = " << norm(v) << endl;
+    cout << "spec angular momentum:        " << h_vector << ", norm = " << norm(h_vector) << endl;
+    cout << "node vector:                  " << n_vector << ", norm = " << norm(n_vector) << endl;
 }
 
 /*
- *  Accessor methods for classic orbital elements.
+ *  Accessors.
  */
 double Traj::get_a (void) { return a; }
 double Traj::get_e (void) { return e; }
@@ -193,13 +183,16 @@ double Traj::get_i (void) { return i; }
 double Traj::get_raan (void) { return raan; }
 double Traj::get_w (void) { return w; }
 double Traj::get_f (void) { return f; }
+Vec3 Traj::get_r (void) { return r; }
+Vec3 Traj::get_v (void) { return v; }
 double Traj::get_E (void) { return E; }
 double Traj::get_M (void) { return M; }
 double Traj::get_argLat (void) { return argLat; }
 double Traj::get_lonTrue (void) { return lonTrue; }
 double Traj::get_lonPer (void) { return lonPer; }
-Vec3 Traj::get_r (void) { return r; }
-Vec3 Traj::get_v (void) { return v; }
+Vec3 Traj::get_e_vector (void) { return e_vector; }
+Vec3 Traj::get_h_vector (void) { return h_vector; }
+Vec3 Traj::get_n_vector (void) { return n_vector; }
 
 /**
  * Mutator method for semimajor axis.
@@ -337,7 +330,9 @@ void
 Traj::randv()
 {
     // Set up angles for certain special case orbits.
-    //
+    // This assumes that if special non-classical orbital
+    // Elements are needed to specify the orbit they will
+    // have already been defined.
     if (e < SMALL)
         if ((i < SMALL) || (fabs(i-M_PI)) < SMALL)
         // CIRCULAR EQUATORIAL ORBIT
@@ -368,63 +363,26 @@ Traj::randv()
     double sin_f = sin(f);
     double temp  = p / (1.0 + e * cos_f);
 
-    // Calculate position and velocity in PQW frame.
+    // Calculate position and velocity in PQW frame of reference.
     Vec3 r_pqw((temp*cos_f), (temp*sin_f), (0.0));
     if (fabs(p) < SMALL) p = SMALL;
     Vec3 v_pqw((-sin_f/sqrt(p)), ((e+cos_f)/sqrt(p)), 0.0);
 
-    // Transform PQW to Geocentric Equitorial
-    // r = r_pqw;
-    // v = v_pqw;
-
+    // Transform orbital frame of reference to geocentric equitorial
     r = rotZ(rotX(rotZ(r_pqw, w), i), raan);
     v = rotZ(rotX(rotZ(v_pqw, w), i), raan);
 
-    // Now calculte the miscellaneous stuff.
-    double vv = norm(v);
+    // Fill in e_ h_ and n_vectors.
     double rr = norm(r);
-    Vec3 h = cross(r, v);
-    Vec3 nodeVector = cross(Vec3(0,0,1), h);  // nodeVector = the node vector
-    double nn = norm(nodeVector);
+    double vv = norm(v);
+    e_vector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
+    h_vector = cross(r, v);
+    n_vector = cross(Vec3(0,0,1), h_vector);
 
-    // Argument of Latitude (for circular inclined orbits)
-    if (e < SMALL)
-    {
-        argLat = acos(dot(nodeVector, r) / (nn * rr));
-        // Quadrant check!
-        if (r.getZ() < 0) argLat = 2*M_PI - argLat;
-    }else{
-        argLat = UNDEFINED;
-    }
-
-    // True Longitude (for circular equatorial orbits)
-    if ((e < SMALL) && (i < SMALL))
-    {
-        lonTrue = acos(r.getX() / rr );
-        // Quadrant check!
-        if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
-    } else {
-        lonTrue = UNDEFINED;
-    }
-
-    // Longitude of Periapsis (for non-circular equatorial trajs)
-    Vec3 eccVector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
-    if (i < SMALL)
-    {
-        lonPer = acos( eccVector.getX() / e );
-        if (eccVector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
-    } else {
-        lonPer = UNDEFINED;
-    }
-
-    // Eccentric Anomaly
-    double num = tan(f/2);
-    double denom = sqrt( (1+e)/(1-e) );
-    E = 2 * atan2 (num, denom);
-
-    // Mean Anomaly
-    M = E - e * sin(E);
-}
+    // Everything is solved except for the other anomalies.
+    // randv and elorb share this stuff, so it has its own function.
+    anomalies();
+} // end randv
 
 /**
  * Calculates classical orbital elements, given radius and velocity
@@ -433,12 +391,12 @@ Traj::randv()
 void
 Traj::elorb(void)
 {
+    h_vector = cross(r, v);
+    n_vector = cross(Vec3(0,0,1), h_vector);
     double vv = norm(v);
     double rr = norm(r);
-    Vec3 h = cross(r, v);
-    double hh = norm(h);   // h = specific angular momentum.  Units ER^2 / TU
-    Vec3 nodeVector = cross(Vec3(0,0,1), h);  // nodeVector = the node vector
-    double nn = norm(nodeVector);
+    double hh = norm(h_vector);
+    double nn = norm(n_vector);
 
     // Specific Mechanical Energy, greek letter ksi.  Units: ER^2 / TU^2
     double ksi = vv*vv/2.0 - 1.0/rr; // CANONICAL UNITS ONLY
@@ -449,64 +407,72 @@ Traj::elorb(void)
     // a = -MU / (2.0 * ksi); // general for non-canonical
 
     // Eccentricity.  Unitless.
-    Vec3 eccVector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
+    e_vector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
     // Otherwise (S.I. units, MU = 398600 km^3 / s^2)
     // eVector = (1/MU) * ((vv*vv - MU/rr)*r - dot(r,v)*v);
-    e = norm(eccVector);
+    e = norm(e_vector);
 
     // Inclination.  Units: Radians
     // Quadrant check is not necessary.
-    i = acos(h.getZ() / hh);
+    i = acos(h_vector.getZ() / hh);
 
     // RA of ascending node.  Units: Radians.
-    raan = acos(nodeVector.getX() / nn);
+    raan = acos(n_vector.getX() / nn);
     // Quadrant check!
-    if (nodeVector.getY() < 0 ) raan = 2*M_PI - raan;
+    if (n_vector.getY() < 0 ) raan = 2*M_PI - raan;
 
     // Argument of Perigee. Units: Radians.
-    w = acos( dot(nodeVector, eccVector) / (nn * e));
+    w = acos( dot(n_vector, e_vector) / (nn * e));
     // Quadrant check!
-    if (eccVector.getZ() < 0) w = 2*M_PI - w;
+    if (e_vector.getZ() < 0) w = 2*M_PI - w;
 
     // True Anomaly.  Units: Radians.
-    f = acos( dot(eccVector, r) / (e * rr));
+    f = acos( dot(e_vector, r) / (e * rr));
     // Quadrant check!
     if (dot(r,v) < 0) f = 2*M_PI - f;
 
-    // Argument of Latitude (for circular inclined orbits)
+    // Argument of Latitude (only for circular inclined orbits)
     if (e < SMALL)
     {
-        argLat = acos(dot(nodeVector, r) / (nn * rr));
+        argLat = acos(dot(n_vector, r) / (nn * rr));
         // Quadrant check!
         if (r.getZ() < 0) argLat = 2*M_PI - argLat;
-    }else{
-        argLat = UNDEFINED;
     }
 
-    // True Longitude (for circular equatorial orbits)
+    // True Longitude (only for circular equatorial orbits)
     if ((e < SMALL) && (i < SMALL))
     {
         lonTrue = acos(r.getX() / rr );
         // Quadrant check!
         if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
-    } else {
-        lonTrue = UNDEFINED;
     }
 
-    // Longitude of Periapsis (for non-circular equatorial trajs)
+    // Longitude of Periapsis (only for non-circular equatorial trajs)
     if (i < SMALL)
     {
-        lonPer = acos( eccVector.getX() / e );
-        if (eccVector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
-    } else {
-        lonPer = UNDEFINED;
+        lonPer = acos( e_vector.getX() / e );
+        if (e_vector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
     }
 
-    // Eccentric Anomaly
-    double num = tan(f/2);
-    double denom = sqrt( (1+e)/(1-e) );
-    E = 2 * atan2 (num, denom);
+    // Everything is solved except for the other anomalies.
+    // randv and elorb share this stuff, so it has its own function.
+    anomalies();
+}
 
-    // Mean Anomaly
-    M = E - e * sin(E);
+void
+Traj::anomalies()
+{
+    if ( e < 1.0 ) // elliptical
+    {
+        double num = tan(f/2);
+        double denom = sqrt( (1+e)/(1-e) );
+        E = 2 * atan2 (num, denom);
+        if (E < 0.0) E = 2*M_PI + E;
+        M = E - e * sin(E);
+    } else if (fabs(e - 1.0) < SMALL) { // parabolic
+        E = tan(f/2); // hyperbolic anomaly is simple
+    } else { // hyperbolic 
+        E = 2 * atanh ( sqrt( (e-1)/(e+1) ) * tan(f/2)) ;
+        M = e * sinh(E) - E;
+    }
 }

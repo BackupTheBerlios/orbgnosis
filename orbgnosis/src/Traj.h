@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.16 2006/08/15 00:21:38 trs137 Exp $
+* $Id: Traj.h,v 1.17 2006/08/15 22:41:36 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -44,7 +44,7 @@ class Traj
     public:
         Traj (void); // defaults to all zeroes
 
-        // This version of the constructor will call randv() to fill in the missing vectors.
+        // This ctor calls randv() to fill in the missing data.
         Traj (double,    // a
               double,    // e
               double,    // i
@@ -52,76 +52,76 @@ class Traj
               double,    // w
               double);   // f
 
-        // This version of the constructor will call elorb() to fill in the missing elements.
+        // This ctor call elorb() to fill in the missing elements.
         Traj (Vec3,   // r
               Vec3);  // v
 
-        virtual ~Traj (void);
-
-        Traj (const Traj&); // copy constructor
-
-        Traj& operator = (Traj); // copy assignment operator
+        virtual ~Traj (void);       // dtor
+        Traj (const Traj&);         // copy constructor
+        Traj& operator = (Traj);    // copy assignment
 
         void print (void);  // Prints trajectory parameters to stdout.
 
+        // Accessors
         double get_a (void);
         double get_e (void);
         double get_i (void);
         double get_raan (void);
         double get_w (void);
         double get_f (void);
+        Vec3 get_r (void);
+        Vec3 get_v (void);
         double get_E (void);
         double get_M (void);
         double get_argLat (void);
         double get_lonTrue (void);
         double get_lonPer (void);
-        Vec3 get_r (void);
-        Vec3 get_v (void);
+        Vec3 get_e_vector (void);
+        Vec3 get_h_vector (void);
+        Vec3 get_n_vector (void);
 
+        // Mutators
         void set_a (double);
         void set_e (double);
         void set_i (double);
         void set_raan (double);
         void set_w (double);
         void set_f (double);
-
-        // Setting non-classical elements is forbidden.
-        // void set_M (double);
-        // void set_argLat (double);
-        // void set_lamTrue (double);
-        // void set_lonPer (double);
-
         void set_r (Vec3);
         void set_v (Vec3);
 
+        // Setting non-classical elements is forbidden.
+        // Setting miscellaneous private members is forbidden.
 
     private:
-/*
- * SIX CLASSICAL ORBITAL ELEMENTS:
- */
+        // SIX CLASSICAL ORBITAL ELEMENTS:
         double a;       //!< Semimajor Axis (length).
         double e;       //!< Eccentricity (dimensionless).
         double i;       //!< Inclination  (radians).
         double raan;    //!< Right Ascension of the Ascending Node (radians).
         double w;       //!< Argument of Perigee (radians).
         double f;       //!< True Anomaly (radians).
-/*
- *  OTHER ORBITAL ELEMENTS:
- */
-        double E;        //!< Eccentric Anomaly (radians).
+
+        // GEOCENTRIC EQUATORIAL STATE VECTOR:
+        Vec3 r;         //!< Radius (ER).
+        Vec3 v;         //!< Velocity (ER/TU).
+ 
+        // OTHER ORBITAL ELEMENTS:
+        double E;        //!< Eccentric, Parabolic, or Hyperbolic anomaly (radians).
         double M;        //!< Mean Anomaly (radians).
         double argLat;   //!< Argument of Latitude (radians).
         double lonTrue;  //!< True Longitude (radians).
         double lonPer;   //!< Longitude of Periapsis (radians).
 
-/*
- *  GEOCENTRIC EQUATORIAL STATE VECTOR:
- */
-        Vec3 r;         //!< Radius (ER).
-        Vec3 v;         //!< Velocity (ER/TU).
+        // OTHER VECTORS:
+        Vec3 e_vector;  //!< Eccentricity
+        Vec3 h_vector;  //!< Specific angular momentum
+        Vec3 n_vector;  //!< Node vector
 
+        // Private methods.
         void randv (void); // Calculates r and v vectors from classical elements.
         void elorb (void); // Calculates classical elements from 2 vectors.
+        void anomalies (void); // Routines common to randv() and elorb().
 };
 
 #endif /* _TRAJ_H_ */
