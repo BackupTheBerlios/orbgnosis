@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.15 2006/08/07 23:41:18 trs137 Exp $
+* $Id: Traj.h,v 1.16 2006/08/15 00:21:38 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -70,6 +70,7 @@ class Traj
         double get_raan (void);
         double get_w (void);
         double get_f (void);
+        double get_E (void);
         double get_M (void);
         double get_argLat (void);
         double get_lonTrue (void);
@@ -107,6 +108,7 @@ class Traj
 /*
  *  OTHER ORBITAL ELEMENTS:
  */
+        double E;        //!< Eccentric Anomaly (radians).
         double M;        //!< Mean Anomaly (radians).
         double argLat;   //!< Argument of Latitude (radians).
         double lonTrue;  //!< True Longitude (radians).

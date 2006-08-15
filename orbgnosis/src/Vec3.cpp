@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.11 2006/08/07 23:41:18 trs137 Exp $
+* $Id: Vec3.cpp,v 1.12 2006/08/15 00:21:38 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -273,9 +273,6 @@ operator >> (istream& s, Vec3 q)
 /**
  * Rotate a vector about first (x) axis by some angle.
  * It's just a rotation matrix,
- *       [  1  0  0 ]
- *  Rx = [  0  c -s ]
- *       [  0  s  c ]
  */
 Vec3
 rotX (const Vec3& v, const double& a)
@@ -296,9 +293,6 @@ rotX (const Vec3& v, const double& a)
 /**
  * Rotate a vector about second (y) axis by some angle.
  *  It's just a rotation matrix,
- *        [  c  0  s ]
- *   Ry = [  0  1  0 ]
- *        [ -s  0  c ]
  */
 Vec3
 rotY (const Vec3& v, const double& a)
@@ -319,9 +313,6 @@ rotY (const Vec3& v, const double& a)
 /**
  * Rotate a vector about third (z) axis by some angle.
  * It's just a rotation matrix,
- *        [  c -s  0 ]
- *   Rz = [  s  c  0 ]
- *        [  0  s  1 ]
  */
 Vec3
 rotZ (const Vec3& v, const double& a)

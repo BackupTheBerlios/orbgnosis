@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.15 2006/08/07 23:41:18 trs137 Exp $
+* $Id: Traj.cpp,v 1.16 2006/08/15 00:21:38 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -44,6 +44,7 @@ Traj::Traj (void) :
         raan(0.0),
         w(0.0),
         f(0.0),
+        E(UNDEFINED),
         M(UNDEFINED),
         argLat(UNDEFINED),
         lonTrue(UNDEFINED),
@@ -73,6 +74,7 @@ Traj::Traj (double ain, double ein, double iin, double raanin,
         raan(raanin),
         w(win),
         f(fin),
+        E(UNDEFINED),
         M(UNDEFINED),
         argLat(UNDEFINED),
         lonTrue(UNDEFINED),
@@ -95,6 +97,7 @@ Traj::Traj (Vec3 rin, Vec3 vin) :
         raan(0.0),
         w(0.0),
         f(0.0),
+        E(UNDEFINED),
         M(UNDEFINED),
         argLat(UNDEFINED),
         lonTrue(UNDEFINED),
@@ -117,6 +120,7 @@ Traj::Traj (const Traj& copy) :
         raan(copy.raan),
         w(copy.w),
         f(copy.f),
+        E(copy.E),
         M(copy.M),
         argLat(copy.argLat),
         lonTrue(copy.lonTrue),
@@ -140,6 +144,7 @@ Traj::operator = (Traj t)
     raan = t.raan;
     w = t.w;
     f = t.f;
+    E = t.E;
     M = t.M;
     argLat = t.argLat;
     lonTrue = t.lonTrue;
@@ -164,18 +169,19 @@ void
 Traj::print (void)
 {
     cout << "TRAJECTORY PRINTOUT: " << endl;
-    cout << "semimajor axis:        " << a << endl;
-    cout << "eccentricity:          " << e << endl;
-    cout << "inclination:           " << i << endl;
-    cout << "RA of ascending node:  " << raan << endl;
-    cout << "argument of periapsis: " << w << endl;
-    cout << "true anomaly:          " << f << endl;
-    cout << "mean anomaly:          " << M << endl;
-    cout << "Argument of latitude   " << argLat << endl;
-    cout << "True longitude         " << lonTrue << endl;
-    cout << "Longitude of periapsis " << lonPer << endl;
-    cout << "radius vector:         " << r << ", magnitude = " << norm(r) << endl;
-    cout << "velocity vector:       " << v << ", magnitude = " << norm(v) << endl;
+    cout << "semimajor axis:               " << a << endl;
+    cout << "eccentricity:                 " << e << endl;
+    cout << "inclination:                  " << i << endl;
+    cout << "RA of ascending node:         " << raan << endl;
+    cout << "argument of periapsis:        " << w << endl;
+    cout << "true anomaly:                 " << f << endl;
+    cout << "eccentric/hyperbolic anomaly: " << E << endl;
+    cout << "mean anomaly:                 " << M << endl;
+    cout << "Argument of latitude          " << argLat << endl;
+    cout << "True longitude                " << lonTrue << endl;
+    cout << "Longitude of periapsis        " << lonPer << endl;
+    cout << "radius vector:                " << r << ", magnitude = " << norm(r) << endl;
+    cout << "velocity vector:              " << v << ", magnitude = " << norm(v) << endl;
 }
 
 /*
@@ -187,6 +193,7 @@ double Traj::get_i (void) { return i; }
 double Traj::get_raan (void) { return raan; }
 double Traj::get_w (void) { return w; }
 double Traj::get_f (void) { return f; }
+double Traj::get_E (void) { return E; }
 double Traj::get_M (void) { return M; }
 double Traj::get_argLat (void) { return argLat; }
 double Traj::get_lonTrue (void) { return lonTrue; }
@@ -372,6 +379,51 @@ Traj::randv()
 
     r = rotZ(rotX(rotZ(r_pqw, w), i), raan);
     v = rotZ(rotX(rotZ(v_pqw, w), i), raan);
+
+    // Now calculte the miscellaneous stuff.
+    double vv = norm(v);
+    double rr = norm(r);
+    Vec3 h = cross(r, v);
+    Vec3 nodeVector = cross(Vec3(0,0,1), h);  // nodeVector = the node vector
+    double nn = norm(nodeVector);
+
+    // Argument of Latitude (for circular inclined orbits)
+    if (e < SMALL)
+    {
+        argLat = acos(dot(nodeVector, r) / (nn * rr));
+        // Quadrant check!
+        if (r.getZ() < 0) argLat = 2*M_PI - argLat;
+    }else{
+        argLat = UNDEFINED;
+    }
+
+    // True Longitude (for circular equatorial orbits)
+    if ((e < SMALL) && (i < SMALL))
+    {
+        lonTrue = acos(r.getX() / rr );
+        // Quadrant check!
+        if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
+    } else {
+        lonTrue = UNDEFINED;
+    }
+
+    // Longitude of Periapsis (for non-circular equatorial trajs)
+    Vec3 eccVector = ((vv*vv - 1.0/rr)*r - dot(r,v)*v); // CANONICAL UNITS ONLY
+    if (i < SMALL)
+    {
+        lonPer = acos( eccVector.getX() / e );
+        if (eccVector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
+    } else {
+        lonPer = UNDEFINED;
+    }
+
+    // Eccentric Anomaly
+    double num = tan(f/2);
+    double denom = sqrt( (1+e)/(1-e) );
+    E = 2 * atan2 (num, denom);
+
+    // Mean Anomaly
+    M = E - e * sin(E);
 }
 
 /**
@@ -421,10 +473,6 @@ Traj::elorb(void)
     // Quadrant check!
     if (dot(r,v) < 0) f = 2*M_PI - f;
 
-    //--------------------------------------------------//
-    // non-classical elements for special orbits        //
-    //--------------------------------------------------//
-
     // Argument of Latitude (for circular inclined orbits)
     if (e < SMALL)
     {
@@ -432,7 +480,7 @@ Traj::elorb(void)
         // Quadrant check!
         if (r.getZ() < 0) argLat = 2*M_PI - argLat;
     }else{
-        argLat = UNDEFINED; 
+        argLat = UNDEFINED;
     }
 
     // True Longitude (for circular equatorial orbits)
@@ -442,7 +490,7 @@ Traj::elorb(void)
         // Quadrant check!
         if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
     } else {
-        lonTrue = UNDEFINED; 
+        lonTrue = UNDEFINED;
     }
 
     // Longitude of Periapsis (for non-circular equatorial trajs)
@@ -451,7 +499,14 @@ Traj::elorb(void)
         lonPer = acos( eccVector.getX() / e );
         if (eccVector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
     } else {
-        lonPer = UNDEFINED; 
+        lonPer = UNDEFINED;
     }
-}
 
+    // Eccentric Anomaly
+    double num = tan(f/2);
+    double denom = sqrt( (1+e)/(1-e) );
+    E = 2 * atan2 (num, denom);
+
+    // Mean Anomaly
+    M = E - e * sin(E);
+}

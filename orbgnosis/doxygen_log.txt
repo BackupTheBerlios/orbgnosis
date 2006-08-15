@@ -19,11 +19,12 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_raan(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_w(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:72: Warning: Member get_f(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:73: Warning: Member get_M(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:74: Warning: Member get_argLat(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:75: Warning: Member get_lonTrue(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:76: Warning: Member get_lonPer(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:77: Warning: Member get_r(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:78: Warning: Member get_v(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:73: Warning: Member get_E(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:74: Warning: Member get_M(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:75: Warning: Member get_argLat(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:76: Warning: Member get_lonTrue(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:77: Warning: Member get_lonPer(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:78: Warning: Member get_r(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:79: Warning: Member get_v(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
 /usr/home/trs137/orbgnosis/src/Vec3.h:97: Warning: Member e[3] (variable) of class Vec3 is not documented.
