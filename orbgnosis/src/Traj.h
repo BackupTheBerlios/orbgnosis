@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.17 2006/08/15 22:41:36 trs137 Exp $
+* $Id: Traj.h,v 1.18 2006/08/16 23:36:42 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -79,6 +79,7 @@ class Traj
         Vec3 get_e_vector (void);
         Vec3 get_h_vector (void);
         Vec3 get_n_vector (void);
+        unsigned int get_orbitType (void);
 
         // Mutators
         void set_a (double);
@@ -119,9 +120,10 @@ class Traj
         Vec3 n_vector;  //!< Node vector
 
         // Private methods.
-        void randv (void); // Calculates r and v vectors from classical elements.
-        void elorb (void); // Calculates classical elements from 2 vectors.
+        void randv (void);     // Calculates r and v vectors from classical elements.
+        void elorb (void);     // Calculates classical elements from 2 vectors.
         void anomalies (void); // Routines common to randv() and elorb().
+        void special (void);   // Calculates orb elements for special case orbits.
 };
 
 #endif /* _TRAJ_H_ */

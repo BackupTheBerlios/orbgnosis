@@ -23,15 +23,16 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.17 2006/08/15 22:41:36 trs137 Exp $
+* $Id: Traj.cpp,v 1.18 2006/08/16 23:36:42 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
-#include <math.h>
 #include "Orbgnosis.h"
 #include "Traj.h"
+#include "Vec3.h"
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 /**
@@ -82,7 +83,6 @@ Traj::Traj (Vec3 rin, Vec3 vin) :
     e_vector(0.0, 0.0, 0.0),
     h_vector(0.0, 0.0, 0.0),
     n_vector(0.0, 0.0, 0.0)
-
 {
     // std::cout << "Traj constructor called with state vector.\n";
     elorb();  // Calculate classical elements from the state vector.
@@ -211,6 +211,7 @@ Traj::set_a (double ain)
         exit(1);
     }
     a = ain;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 
 /**
@@ -230,6 +231,7 @@ Traj::set_e (double ein)
         exit(1);
     }
     e = ein;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 /**
  * Mutator method for inclination.
@@ -244,6 +246,7 @@ Traj::set_i (double iin)
         exit(1);
     }
     i = iin;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 
 /**
@@ -259,6 +262,7 @@ Traj::set_raan (double raanin)
         exit(1);
     }
     raan = raanin;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 
 /**
@@ -274,6 +278,7 @@ Traj::set_w (double win)
         exit(1);
     }
     w = win;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 
 /**
@@ -289,6 +294,7 @@ Traj::set_f (double fin)
         exit(1);
     }
     f = fin;
+    randv(); // changing classical orbital element requires re-running randv()
 }
 
 /**
@@ -304,6 +310,7 @@ Traj::set_r (Vec3 rin)
         exit(1);
     }
     r = rin;
+    elorb();  // changing state vector requires re-running elorb()
 }
 
 /**
@@ -320,6 +327,7 @@ Traj::set_v (Vec3 vin)
         exit(1);
     }
     v = vin;
+    elorb();  // changing state vector requires re-running elorb()
 }
 
 /**
@@ -333,27 +341,6 @@ Traj::randv()
     // This assumes that if special non-classical orbital
     // Elements are needed to specify the orbit they will
     // have already been defined.
-    if (e < SMALL)
-        if ((i < SMALL) || (fabs(i-M_PI)) < SMALL)
-        // CIRCULAR EQUATORIAL ORBIT
-        {
-            w    = 0.0; 
-            raan = 0.0;
-            cout << "NOTICE: circular equatorial orbit." << endl;
-            f    = lonTrue; // set to True Longitude
-        } else {
-        // CIRCULAR INCLINED ORBIT
-            w = 0.0;
-            cout << "NOTICE: circular inclined orbit." << endl;
-            f = argLat; // set to Argument of Latitude
-        }
-        else if (( i < SMALL) || (fabs(i-M_PI)) < SMALL)
-        {
-        // ELLIPTICAL EQUATORIAL
-            cout << "NOTICE: noncircular equatorial traj." << endl;
-            w = lonPer; // set to Longitude of Periapsis
-            raan = 0.0;
-        }
 
     // Calculate semilatus rectum or semiparameter
     double p = a * (1 - e*e);
@@ -379,9 +366,11 @@ Traj::randv()
     h_vector = cross(r, v);
     n_vector = cross(Vec3(0,0,1), h_vector);
 
-    // Everything is solved except for the other anomalies.
+    // Everything is solved except for the other anomalies
+    // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
+    special();
 } // end randv
 
 /**
@@ -431,32 +420,10 @@ Traj::elorb(void)
     // Quadrant check!
     if (dot(r,v) < 0) f = 2*M_PI - f;
 
-    // Argument of Latitude (only for circular inclined orbits)
-    if (e < SMALL)
-    {
-        argLat = acos(dot(n_vector, r) / (nn * rr));
-        // Quadrant check!
-        if (r.getZ() < 0) argLat = 2*M_PI - argLat;
-    }
-
-    // True Longitude (only for circular equatorial orbits)
-    if ((e < SMALL) && (i < SMALL))
-    {
-        lonTrue = acos(r.getX() / rr );
-        // Quadrant check!
-        if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
-    }
-
-    // Longitude of Periapsis (only for non-circular equatorial trajs)
-    if (i < SMALL)
-    {
-        lonPer = acos( e_vector.getX() / e );
-        if (e_vector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
-    }
-
-    // Everything is solved except for the other anomalies.
-    // randv and elorb share this stuff, so it has its own function.
+    // Everything is solved except for the other anomalies
+    // and special-case orbital elements.
     anomalies();
+    special();
 }
 
 void
@@ -474,5 +441,34 @@ Traj::anomalies()
     } else { // hyperbolic 
         E = 2 * atanh ( sqrt( (e-1)/(e+1) ) * tan(f/2)) ;
         M = e * sinh(E) - E;
+    }
+    argLat = w + f;
+}
+
+void
+Traj::special()
+{
+    double rr = norm(r);
+    // Argument of Latitude (only for circular inclined orbits)
+    if (e < SMALL)
+    {
+        argLat = acos(dot(n_vector, r) / (norm(n_vector) * rr));
+        // Quadrant check!
+        if (r.getZ() < 0) argLat = 2*M_PI - argLat;
+    }
+
+    // True Longitude (only for circular equatorial orbits)
+    if ((e < SMALL) && (i < SMALL))
+    {
+        lonTrue = acos(r.getX() / rr );
+        // Quadrant check!
+        if (r.getY() < 0 ) lonTrue = 2*M_PI - lonTrue;
+    }
+
+    // Longitude of Periapsis (only for non-circular equatorial trajs)
+    if (i < SMALL)
+    {
+        lonPer = acos( e_vector.getX() / e );
+        if (e_vector.getY() < 0 ) lonPer = 2*M_PI - lonPer;
     }
 }

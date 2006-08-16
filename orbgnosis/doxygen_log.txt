@@ -30,6 +30,8 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:79: Warning: Member get_e_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:80: Warning: Member get_h_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:81: Warning: Member get_n_vector(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:124: Warning: Member anomalies(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member get_orbitType(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:125: Warning: Member anomalies(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:126: Warning: Member special(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
 /usr/home/trs137/orbgnosis/src/Vec3.h:97: Warning: Member e[3] (variable) of class Vec3 is not documented.
