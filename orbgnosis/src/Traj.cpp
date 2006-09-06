@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.20 2006/09/06 17:34:26 trs137 Exp $
+* $Id: Traj.cpp,v 1.21 2006/09/06 18:20:56 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -202,6 +202,9 @@ kepler (Traj traj_0, double t)
     double ksi;     // specific mechanicak energy
     double period;  // orbital period
     double S, W;    // variables for parabolic special case
+    double Rval;
+    int counter = 0;
+    const int limit = 40;  // iteration limit
         
     r0 = norm(traj_0.get_r()); // current radius
     v0 = norm(traj_0.get_v()); // current velocity
@@ -238,6 +241,35 @@ kepler (Traj traj_0, double t)
                 (a * (rdotv + sqrt(-a) * (1.0 - r0 * alpha)));
             Xold = sqrt(-a) * log(temp);
         }
+    }
+
+    while (1)  // XXX fugly
+    {
+        Xold2 = Xold * Xold;
+        Znew = Xold2 * alpha;
+        C2new = stumpff_C2(Znew);
+        C3new = stumpff_C3(Znew);
+
+        tnew = Xold2 * Xold * C3new + rdotv * Xold2 * C2new +
+               r0 * Xold * (1.0 - Znew * C3new);
+
+        Rval  = Xold2 * C2new + rdotv * Xold * (1.0 - Znew * C3new) +
+                r0 * (1.0 - Znew * C2new);
+
+        XNew = Xold + (t - tnew) / Rval;
+
+        counter++;
+        Xold = Xnew;
+        if ((fabs(tnew - t) < SMALL) || (counter >= limit)) break;
+    }
+
+    if (counter >= limit)
+    {
+        cerr << "Kepler failed to converge!" << endl; // oh noes
+        cerr << "Time interval was " << t << endl;
+        cerr << "Trajectory was... " << endl;
+        traj_0.print();
+        exit(1);
     }
 
     return traj_t; }

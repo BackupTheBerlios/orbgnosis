@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Stumpff.h,v 1.9 2006/06/17 21:04:27 trs137 Exp $
+* $Id: Stumpff.h,v 1.10 2006/09/06 18:20:56 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -46,7 +46,6 @@
 
 #include <math.h>
 #include "Orbgnosis.h"
-
 
 /**
  * The zeroth Stumpff c function
