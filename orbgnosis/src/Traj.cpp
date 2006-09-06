@@ -23,12 +23,13 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.21 2006/09/06 18:20:56 trs137 Exp $
+* $Id: Traj.cpp,v 1.22 2006/09/06 20:19:52 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #include "Orbgnosis.h"
+#include "Stumpff.h"
 #include "Traj.h"
 #include "Vec3.h"
 #include <iostream>
@@ -181,11 +182,11 @@ Traj::print (void)
 Traj
 kepler (Traj traj_0, double t)
 {
-    if (fabs(t) <= SMALL) return traj_0;
+    if (fabs(t) <= SMALL) return traj_0; // Zero time, so no movement.
     else {
     // set up local variables
-    double r0;      // initial radius
-    double v0;      // initial velocity
+    double r0, v0;  // initial radius and velocity (magnitudes only)
+    Vec3 rfinal, vfinal;      // final radius and velocity (vectors)
     double F, G;    // universal variable f and g expressions
     double Fdot, Gdot; // F and G's rates of change
     double Xold;    // universal variable
@@ -193,8 +194,8 @@ kepler (Traj traj_0, double t)
     double Xold2;   // Xold squared
     double Xnew2;   // Xnew squared
     double Znew;    // new value of Z
-    double C2new;   // Stumpff C2
-    double C3new;   // Stumpff C3
+    double C2new;   // Stumpff C2 value
+    double C3new;   // Stumpff C3 value
     double tnew;    // new time
     double rdotv;   // r0 dot v0;
     double a;       // semimajor axis;
@@ -203,6 +204,7 @@ kepler (Traj traj_0, double t)
     double period;  // orbital period
     double S, W;    // variables for parabolic special case
     double Rval;
+    double temp;
     int counter = 0;
     const int limit = 40;  // iteration limit
         
@@ -235,9 +237,9 @@ kepler (Traj traj_0, double t)
             Xold = sqrt(p) * (2.0 * (1.0/tan(2.0 * W)) );
             alpha = 0.0;
         } else {
-            // Hyperbola TODO
+            // Hyperbola XXX TESTME
             // This only works correctly for positive t.
-            double temp = -2.0 * t / 
+            temp = -2.0 * t / 
                 (a * (rdotv + sqrt(-a) * (1.0 - r0 * alpha)));
             Xold = sqrt(-a) * log(temp);
         }
@@ -256,12 +258,12 @@ kepler (Traj traj_0, double t)
         Rval  = Xold2 * C2new + rdotv * Xold * (1.0 - Znew * C3new) +
                 r0 * (1.0 - Znew * C2new);
 
-        XNew = Xold + (t - tnew) / Rval;
+        Xnew = Xold + (t - tnew) / Rval;
 
         counter++;
         Xold = Xnew;
         if ((fabs(tnew - t) < SMALL) || (counter >= limit)) break;
-    }
+    }  // end while
 
     if (counter >= limit)
     {
@@ -272,7 +274,22 @@ kepler (Traj traj_0, double t)
         exit(1);
     }
 
-    return traj_t; }
+    // Calculate position and velocity vectors at new time
+    Xnew2 = Xnew * Xnew;
+    F = 1.0 - (Xnew2 * C2new / r0);
+    G = t - Xnew2 * Xnew * C3new;
+    rfinal = F * traj_0.get_r() + G * traj_0.get_v();
+    Gdot = 1.0 - (Xnew2 * C2new / norm(rfinal));
+    Fdot = (Xnew / (r0 * norm(rfinal) )) * (Znew * C3new - 1.0);
+    vfinal = Fdot * traj_0.get_r() + Gdot * traj_0.get_v();
+    temp = F * Gdot - Fdot * G;
+    if (fabs(temp - 1.0) > 0.00001)
+    {
+        cerr << "Kepler had an error with f and g." << endl;
+        exit(1);
+    }
+
+    return Traj(rfinal, vfinal); }
 }
 
 /*
