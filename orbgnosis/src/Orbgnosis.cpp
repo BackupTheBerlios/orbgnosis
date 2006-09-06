@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.19 2006/08/07 02:32:26 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.20 2006/09/06 14:32:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -38,6 +38,10 @@ using namespace std;
 
 /** @file
  * The main program.
+ */
+
+/**
+ * The main program.  Currently runs some unit tests.
  */
 int
 main(void)

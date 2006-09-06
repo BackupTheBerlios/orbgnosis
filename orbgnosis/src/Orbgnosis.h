@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.18 2006/08/16 23:36:42 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.19 2006/09/06 14:32:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -52,6 +52,6 @@
 #define TU_SEC 806.81112382429    //!< canonical time units (s)
 #define TU_MIN 13.44685206374     //!< canonical time units (m)
 
-#define NaN std::numeric_limits<double>::quiet_nan();
+#define NaN std::numeric_limits<double>::quiet_nan(); //!< ifndef NAN...
 
 #endif /* _ORBGNOSIS_H_ */

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.12 2006/08/16 23:36:42 trs137 Exp $
+* $Id: Vec3.h,v 1.13 2006/09/06 14:32:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -94,6 +94,6 @@ class Vec3
         void setZ (double);
 
     private:
-        double e[3];
+        double e[3];  // elements of the vector.
 };
 #endif /* _VEC3_H_ */

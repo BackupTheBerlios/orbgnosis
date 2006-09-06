@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.18 2006/08/16 23:36:42 trs137 Exp $
+* $Id: Traj.h,v 1.19 2006/09/06 14:32:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -52,7 +52,7 @@ class Traj
               double,    // w
               double);   // f
 
-        // This ctor call elorb() to fill in the missing elements.
+        // This ctor calls elorb() to fill in the missing elements.
         Traj (Vec3,   // r
               Vec3);  // v
 
@@ -61,6 +61,8 @@ class Traj
         Traj& operator = (Traj);    // copy assignment
 
         void print (void);  // Prints trajectory parameters to stdout.
+
+		Traj kepler (Traj, double); // solve kepler's problem
 
         // Accessors
         double get_a (void);

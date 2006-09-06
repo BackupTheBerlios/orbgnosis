@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.18 2006/08/16 23:36:42 trs137 Exp $
+* $Id: Traj.cpp,v 1.19 2006/09/06 14:32:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -172,6 +172,32 @@ Traj::print (void)
     cout << "Longitude of periapsis        " << lonPer << endl;
     cout << "spec angular momentum:        " << h_vector << ", norm = " << norm(h_vector) << endl;
     cout << "node vector:                  " << n_vector << ", norm = " << norm(n_vector) << endl;
+}
+
+/**
+ * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
+ * find the state vector after the time interval has elapsed.
+ */
+Traj
+kepler (Traj traj_0, double t)
+{
+    double r0, v0;
+    r0 = norm(traj_0.get_r()); // current radius
+    v0 = norm(traj_0.get_v()); // current velocity
+
+    double ksi;     // specific mechanical energy (Greek letter ksi)
+    double alpha, chi0;
+
+    ksi = 0.5 * v0 * v0 - ( 1 / r0);     // canonical
+    //ksi = 0.5 * v0 * v0 - ( MU / r0);  // non-canonical
+
+    alpha = -v0 * v0 + ( 2 / r0);        // canonical
+    //alpha = -v0 * v0 / MU + ( 2 / r0); // non-canonical
+
+    if (alpha > 0.000001) chi0 = t * alpha;
+    //if (alpha > 0.000001) chi0 = sqrt(MU) * t * alpha;
+
+    return traj_t;
 }
 
 /*
