@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.19 2006/09/06 14:32:09 trs137 Exp $
+* $Id: Traj.cpp,v 1.20 2006/09/06 17:34:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -181,23 +181,66 @@ Traj::print (void)
 Traj
 kepler (Traj traj_0, double t)
 {
-    double r0, v0;
+    if (fabs(t) <= SMALL) return traj_0;
+    else {
+    // set up local variables
+    double r0;      // initial radius
+    double v0;      // initial velocity
+    double F, G;    // universal variable f and g expressions
+    double Fdot, Gdot; // F and G's rates of change
+    double Xold;    // universal variable
+    double Xnew;    // universal variable
+    double Xold2;   // Xold squared
+    double Xnew2;   // Xnew squared
+    double Znew;    // new value of Z
+    double C2new;   // Stumpff C2
+    double C3new;   // Stumpff C3
+    double tnew;    // new time
+    double rdotv;   // r0 dot v0;
+    double a;       // semimajor axis;
+    double alpha;   // 1 / (semimajor axis)
+    double ksi;     // specific mechanicak energy
+    double period;  // orbital period
+    double S, W;    // variables for parabolic special case
+        
     r0 = norm(traj_0.get_r()); // current radius
     v0 = norm(traj_0.get_v()); // current velocity
+    Xold = 0.0;
+    Znew = 0.0;
+    rdotv = dot(traj_0.get_r(), traj_0.get_v());
 
-    double ksi;     // specific mechanical energy (Greek letter ksi)
-    double alpha, chi0;
+    ksi = (0.5 * v0 * v0) - (1 / r0);     // canonical!
+    alpha = -2.0 * ksi;
 
-    ksi = 0.5 * v0 * v0 - ( 1 / r0);     // canonical
-    //ksi = 0.5 * v0 * v0 - ( MU / r0);  // non-canonical
+    a = traj_0.get_a();
 
-    alpha = -v0 * v0 + ( 2 / r0);        // canonical
-    //alpha = -v0 * v0 / MU + ( 2 / r0); // non-canonical
+    if (alpha >= SMALL)
+    {
+        period = 2*M_PI * sqrt(pow(fabs(a), 3.0));
+        if (fabs(t) > fabs(period)) t = fmod (t, period); // multirev
+        if (fabs(alpha - 1.0) > SMALL) Xold = t * alpha;
+        else
+             Xold = t * alpha * 0.97;
+    } else {
+        if (fabs(alpha) < SMALL)
+        {
+            // Parabola XXX TESTME
+            double h = norm(traj_0.get_h_vector());
+            double p = h * h;
+            S = 0.5 * (M_PI/2.0 - atan(3.0 * sqrt(1.0 / (p * p * p)) * t));
+            W = atan(pow(tan(S), 1.0 / 3.0));
+            Xold = sqrt(p) * (2.0 * (1.0/tan(2.0 * W)) );
+            alpha = 0.0;
+        } else {
+            // Hyperbola TODO
+            // This only works correctly for positive t.
+            double temp = -2.0 * t / 
+                (a * (rdotv + sqrt(-a) * (1.0 - r0 * alpha)));
+            Xold = sqrt(-a) * log(temp);
+        }
+    }
 
-    if (alpha > 0.000001) chi0 = t * alpha;
-    //if (alpha > 0.000001) chi0 = sqrt(MU) * t * alpha;
-
-    return traj_t;
+    return traj_t; }
 }
 
 /*
