@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.12 2006/09/11 18:28:15 trs137 Exp $
+# $Id: Makefile,v 1.13 2006/09/11 18:32:23 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -22,7 +22,7 @@
 # TARGET := "hammer"      # Intel compiler, Opteron (hammer.aset.psu.edu)
 # TARGET := "power"       # IBM VisualAge, Power5 (power.ics.psu.edu)
 #
-TARGET := "power"
+TARGET := "icc_p4"
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -68,7 +68,7 @@ else
         CFLAGS += -opt_report_file=icc_opt_report
     endif
     ifeq ($(TARGET), "hammer")
-        CFLAGS += -Wall -Wcheck -w2 -Wp64
+        CFLAGS += -Wall -Wcheck -w1 -Wp64
         CFLAGS += -align -ip
         CFLAGS += -opt_report -opt_report_level=max
         CFLAGS += -opt_report_phase all
