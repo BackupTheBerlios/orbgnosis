@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.9 2006/09/11 01:10:49 trs137 Exp $
+# $Id: Makefile,v 1.10 2006/09/11 15:16:12 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -27,7 +27,8 @@ TEMPDEPFILE := /tmp/orbgnosis_temp_deps
 
 # compiler, linker, ...
 
-CC := g++ -c -pipe
+#CC := g++ -c -pipe
+CC := icpc -c -pipe
 
 # These can be set from the shell to change the build type
 ifeq ($(BUILD_DEBUG),true)
@@ -38,23 +39,31 @@ else
     CFLAGS += -O2
 	#CFLAGS += -march=native -mtune=native
     #CFLAGS += -mtune=G4
-    CFLAGS += -Wdisabled-optimization
+    #CFLAGS += -Wdisabled-optimization
 endif
 
 CFLAGS += -DVERSION_STRING=\"$(BUILDDATE)\"
-CFLAGS += -Wredundant-decls -Winline -Weffc++
-CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
-CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
-CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
+#CFLAGS += -Wredundant-decls -Winline -Weffc++
+#CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
+#CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
+#CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
 # The following are not supported in gcc < 4.0
 #CFLAGS += -Wstrict-null-sentinel
 # The following are not supported gcc < 4.2.
 #CFLAGS += -Wunsafe-loop-optimizations
 
+# These are for icc only
+CFLAGS += -Wall -Wcheck -w2 -Wp64
+CFLAGS += -align -ip -march=pentium4
+CFLAGS += -opt_report -opt_report_level=max
+CFLAGS += -opt_report_phase all
+CFLAGS += -opt_report_file=icc_opt_report
+
 # be able to add flags from the env at will without chaging the makefile
 CFLAGS += $(ORBGNOSIS_ADDL_BUILD_FLAGS)
 
-LD := g++
+#LD := g++
+LD := icpc
 
 DEP := g++ -MM
 

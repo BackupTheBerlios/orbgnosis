@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.h,v 1.13 2006/09/06 14:32:09 trs137 Exp $
+* $Id: Vec3.h,v 1.14 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -31,6 +31,7 @@
 #ifndef _VEC3_H_
 #define _VEC3_H_
 #include <iostream>
+
 using namespace std;
 
 /**
@@ -40,60 +41,63 @@ using namespace std;
  * include Euclidean norm, dot product and cross product.  For nicer I/O
  * the >> and << operators are overloaded as well.
  */
+
 class Vec3
 {
+
     public:
-        Vec3 (void);          // defaults to (0,0,0).
-        Vec3 (double, double, double);
+        Vec3 ( void );          // defaults to (0,0,0).
+        Vec3 ( double, double, double );
 
-        virtual ~Vec3 (void);
+        virtual ~Vec3 ( void );
 
-        Vec3 (const Vec3&);   // copy constructor
+        Vec3 ( const Vec3& );   // copy constructor
 
-        Vec3& operator = (const Vec3&);
+        Vec3& operator = ( const Vec3& );
 
-        Vec3& operator += (const Vec3&); // add-assign
-        Vec3& operator -= (const Vec3&); // subtract-assign
+        Vec3& operator += ( const Vec3& ); // add-assign
+        Vec3& operator -= ( const Vec3& ); // subtract-assign
 
         // Scalar Multiplcation and division.
         // The order of args can be either way.
-        friend Vec3 operator * (const Vec3&, const double&);
-        friend Vec3 operator * (const double&, const Vec3&);
-        friend Vec3 operator / (const Vec3&, const double&);
-        friend Vec3 operator / (const double&, const Vec3&);
+        friend Vec3 operator * ( const Vec3&, const double& );
+        friend Vec3 operator * ( const double&, const Vec3& );
+        friend Vec3 operator / ( const Vec3&, const double& );
+        friend Vec3 operator / ( const double&, const Vec3& );
 
         // Vec3 addition and subtraction.
-        friend Vec3 operator + (const Vec3&, const Vec3&); // binary
-        friend Vec3 operator + (const Vec3&);              // unary
-        friend Vec3 operator - (const Vec3&, const Vec3&); // binary
-        friend Vec3 operator - (const Vec3&);              // unary
+        friend Vec3 operator + ( const Vec3&, const Vec3& ); // binary
+        friend Vec3 operator + ( const Vec3& );              // unary
+        friend Vec3 operator - ( const Vec3&, const Vec3& ); // binary
+        friend Vec3 operator - ( const Vec3& );              // unary
 
         // Cross- and dot-products.
-        friend Vec3 cross (const Vec3&, const Vec3&);
-        friend double dot (const Vec3&, const Vec3&);
-        friend double norm (const Vec3&);
+        friend Vec3 cross ( const Vec3&, const Vec3& );
+        friend double dot ( const Vec3&, const Vec3& );
+        friend double norm ( const Vec3& );
 
         // Rotate a vector about one of its axes by some angle.
-        friend Vec3 rotX(const Vec3&, const double&);
-        friend Vec3 rotY(const Vec3&, const double&);
-        friend Vec3 rotZ(const Vec3&, const double&);
+        friend Vec3 rotX( const Vec3&, const double& );
+        friend Vec3 rotY( const Vec3&, const double& );
+        friend Vec3 rotZ( const Vec3&, const double& );
 
         // Formatted input and output by overloading >> and <<
-        friend ostream& operator << (ostream&, Vec3);
-        friend istream& operator >> (istream&, Vec3);
+        friend ostream& operator << ( ostream&, Vec3 );
+        friend istream& operator >> ( istream&, Vec3 );
 
         // Standard get-n-set methods.
-        double getX (void);
-        double getY (void);
-        double getZ (void);
-        void toZero (void); // set all elements to zero.
-        void toInf (void); // set all elements to Infinity.
-        void set3 (double, double, double);
-        void setX (double);
-        void setY (double);
-        void setZ (double);
+        double getX ( void );
+        double getY ( void );
+        double getZ ( void );
+        void toZero ( void ); // set all elements to zero.
+        void toInf ( void ); // set all elements to Infinity.
+        void set3 ( double, double, double );
+        void setX ( double );
+        void setY ( double );
+        void setZ ( double );
 
     private:
-        double e[3];  // elements of the vector.
+        double e[ 3 ];  // elements of the vector.
 };
+
 #endif /* _VEC3_H_ */

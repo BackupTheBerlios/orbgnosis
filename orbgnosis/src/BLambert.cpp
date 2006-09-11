@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: BLambert.cpp,v 1.13 2006/06/17 21:04:27 trs137 Exp $
+* $Id: BLambert.cpp,v 1.14 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -36,19 +36,20 @@
 #include "Stumpff.h"
 #include "BLambert.h"
 #include <iostream>
+
 using namespace std;
 
 /**
  * The Battin Lambert constructor with no arguments.
  * All member variables are set to zero.
  */
-BLambert::BLambert(void) :
-        t(0.0),
-        Ro(0.0, 0.0, 0.0),
-        R(0.0, 0.0, 0.0),
-        Vo(0.0, 0.0, 0.0),
-        V(0.0, 0.0, 0.0),
-        failure(false)
+BLambert::BLambert( void ) :
+        t( 0.0 ),
+        Ro( 0.0, 0.0, 0.0 ),
+        R( 0.0, 0.0, 0.0 ),
+        Vo( 0.0, 0.0, 0.0 ),
+        V( 0.0, 0.0, 0.0 ),
+        failure( false )
 {
     //cout << "BLambert constructor called with no args.\n";
 }
@@ -59,13 +60,13 @@ BLambert::BLambert(void) :
  * @param r2in is the final position.
  * @param tin is the specified time of flight.
  */
-BLambert::BLambert(Vec3 r1in, Vec3 r2in, double tin) :
-        t(tin),
-        Ro(r1in),
-        R(r2in),
-        Vo(0.0, 0.0, 0.0),
-        V(0.0, 0.0, 0.0),
-        failure(false)
+BLambert::BLambert( Vec3 r1in, Vec3 r2in, double tin ) :
+        t( tin ),
+        Ro( r1in ),
+        R( r2in ),
+        Vo( 0.0, 0.0, 0.0 ),
+        V( 0.0, 0.0, 0.0 ),
+        failure( false )
 {
     //cout << "BLambert constructor called with 2 vectors and 1 time.\n";
 }
@@ -73,7 +74,7 @@ BLambert::BLambert(Vec3 r1in, Vec3 r2in, double tin) :
 /**
  * The Battin Lambert destructor.
  */
-BLambert::~BLambert (void)
+BLambert::~BLambert ( void )
 {
     // cout << "BLambert destructor called \n";
 }
@@ -82,7 +83,7 @@ BLambert::~BLambert (void)
  * Sets the initial position vector, Ro.
  */
 void
-BLambert::setRo (Vec3 vin)
+BLambert::setRo ( Vec3 vin )
 {
     Ro = vin;
 }
@@ -91,7 +92,7 @@ BLambert::setRo (Vec3 vin)
  * Sets the final position vector, R.
  */
 void
-BLambert::setR (Vec3 vin)
+BLambert::setR ( Vec3 vin )
 {
     R = vin;
 }
@@ -101,7 +102,7 @@ BLambert::setR (Vec3 vin)
  * Sets the time of flight, t.
  */
 void
-BLambert::sett (double tin)
+BLambert::sett ( double tin )
 {
     t = tin;
 }
@@ -111,7 +112,7 @@ BLambert::sett (double tin)
  * This is the velocity at the point Ro which satisfies the Lamberts problem.
  */
 Vec3
-BLambert::getVo (void)
+BLambert::getVo ( void )
 {
     return Vo;
 }
@@ -122,7 +123,7 @@ BLambert::getVo (void)
  * This is the velocity at the point R which satisfies the Lamberts problem.
  */
 Vec3
-BLambert::getV (void)
+BLambert::getV ( void )
 {
     return V;
 }
@@ -131,7 +132,7 @@ BLambert::getV (void)
  * Gets the time of flight, t.
  */
 double
-BLambert::gett (void)
+BLambert::gett ( void )
 {
     return t;
 }
@@ -141,12 +142,13 @@ BLambert::gett (void)
  * This method is necessary because failure is private.
  */
 bool
-BLambert::isFailure(void)
+BLambert::isFailure( void )
 {
-    if (true == failure)
+    if ( true == failure )
     {
         return true;
     }
+
     else
     {
         return false;
@@ -159,7 +161,7 @@ BLambert::isFailure(void)
  * Astrodynamics and Applications"
  */
 void
-BLambert::battin (void)
+BLambert::battin ( void )
 {
     // Local variables
     int Loops;
@@ -172,66 +174,71 @@ BLambert::battin (void)
 
     // initialize values
     // Magnitudes of Ro and R
-    Ro4 = norm(Ro);
-    R4 = norm(R);
+    Ro4 = norm( Ro );
+    R4 = norm( R );
 
-    CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
-    RCrossR = cross(Ro, R);
-    SinDeltaNu = norm(RCrossR) / (Ro4 * R4);
-    DNu = atan2(SinDeltaNu, CosDeltaNu); // quadrant safe
+    CosDeltaNu = dot( Ro, R ) / ( Ro4 * R4 );
+    RCrossR = cross( Ro, R );
+    SinDeltaNu = norm( RCrossR ) / ( Ro4 * R4 );
+    DNu = atan2( SinDeltaNu, CosDeltaNu ); // quadrant safe
 
     RoR = R4 / Ro4;
     eps = RoR / 1.0;
-    tan2w = 0.25 * eps * eps / (sqrt(RoR) + RoR * (2.0 + sqrt (RoR)));
-    rp = sqrt(Ro4 * R4) * ( cos(0.25 * DNu) * cos(0.25 * DNu) + tan2w);
+    tan2w = 0.25 * eps * eps / ( sqrt( RoR ) + RoR * ( 2.0 + sqrt ( RoR ) ) );
+    rp = sqrt( Ro4 * R4 ) * ( cos( 0.25 * DNu ) * cos( 0.25 * DNu ) + tan2w );
 
-    if (DNu < M_PI)
+    if ( DNu < M_PI )
     {
-        sqdnu = sin(0.25 * DNu) * sin (0.25 * DNu);
-        L = (sqdnu + tan2w) / (sqdnu + tan2w + cos (0.5 * DNu));
+        sqdnu = sin( 0.25 * DNu ) * sin ( 0.25 * DNu );
+        L = ( sqdnu + tan2w ) / ( sqdnu + tan2w + cos ( 0.5 * DNu ) );
     }
+
     else
     {
-        sqdnu = cos(0.25 * DNu) * sin (0.25 * DNu);
-        L = (sqdnu + tan2w - cos(0.5 * DNu)) / (sqdnu + tan2w);
+        sqdnu = cos( 0.25 * DNu ) * sin ( 0.25 * DNu );
+        L = ( sqdnu + tan2w - cos( 0.5 * DNu ) ) / ( sqdnu + tan2w );
     }
 
-    m = t * t / (8.0 * rp * rp * rp); // t is time of flight
+    m = t * t / ( 8.0 * rp * rp * rp ); // t is time of flight
     xn = 0.0;                          // 0 for parabolic and hyperbolic
-    chord = sqrt(Ro4 * Ro4 + R4 * R4 - 2.0 * Ro4 * R4 * cos(DNu));
-    s = 0.5 * (Ro4 + R4 + chord);
+    chord = sqrt( Ro4 * Ro4 + R4 * R4 - 2.0 * Ro4 * R4 * cos( DNu ) );
+    s = 0.5 * ( Ro4 + R4 + chord );
 
     Loops = 1;
-    while ( Loops < 30)
+
+    while ( Loops < 30 )
     {
         x = xn;
-        tempx = bat_SEE(x);
-        denom = 1.0 / ((1.0 + 2.0 * x + L)
-                       * (3.0 + x * (1.0 + 4.0 * tempx)));
-        h1 = (L + x) * (L + x) * (1.0 + (1.0 + 3.0 * x) * tempx) * denom;
-        h2 = m * (1.0 + (x - L) * tempx) * denom;
+        tempx = bat_SEE( x );
+        denom = 1.0 / ( ( 1.0 + 2.0 * x + L )
+                        * ( 3.0 + x * ( 1.0 + 4.0 * tempx ) ) );
+        h1 = ( L + x ) * ( L + x ) * ( 1.0 + ( 1.0 + 3.0 * x ) * tempx ) * denom;
+        h2 = m * ( 1.0 + ( x - L ) * tempx ) * denom;
 
         // Evaluate the cubic.
-        b = 0.25 * 27.0 * h2 / ((1.0 + h1) * (1.0 + h1) * (1.0 + h1));
-        u = -0.5 * b / (1.0 + sqrt(1.0 + b));
-        k2 = bat_K(u);
-        y = ((1.0 + h1) / 3.0) * (2.0 + sqrt(1.0 + b) /
-                                  (1.0 - 2.0 * u * k2 * k2 ));
-        xn = sqrt( (0.5 * (1.0 - L)) * (0.5 * (1.0 - L)) + m / (y * y))
-             - 0.5 * (1.0 + L);
+        b = 0.25 * 27.0 * h2 / ( ( 1.0 + h1 ) * ( 1.0 + h1 ) * ( 1.0 + h1 ) );
+        u = -0.5 * b / ( 1.0 + sqrt( 1.0 + b ) );
+        k2 = bat_K( u );
+        y = ( ( 1.0 + h1 ) / 3.0 ) * ( 2.0 + sqrt( 1.0 + b ) /
+                                       ( 1.0 - 2.0 * u * k2 * k2 ) );
+        xn = sqrt( ( 0.5 * ( 1.0 - L ) ) * ( 0.5 * ( 1.0 - L ) ) + m / ( y * y ) )
+             - 0.5 * ( 1.0 + L );
 
-        if (fabs(xn - x) < SMALL)
+        if ( fabs( xn - x ) < SMALL )
             break; // XXX ugly
+
         Loops = Loops + 1;
     } // end while loop
-    a = t * t / (16.0 * rp * rp * xn * y * y);
+
+    a = t * t / ( 16.0 * rp * rp * xn * y * y );
+
     // a = rp * m / (2.0 * xn * y * y);  -- XXX commented out in original
     // Find eccentric anomalies
     // Hyperbolic
-    if (a < -SMALL)
+    if ( a < -SMALL )
     {
-        arg1 = sqrt(s / ( -2.0 * a));
-        arg2 = sqrt((s - chord) / ( -2.0 * a));
+        arg1 = sqrt( s / ( -2.0 * a ) );
+        arg2 = sqrt( ( s - chord ) / ( -2.0 * a ) );
 
         // evaluate f and g functions
 
@@ -253,7 +260,7 @@ BLambert::battin (void)
          *
          * MacOS X: [TODO]
          */
-        AlpH = 2.0 * asinh(arg1);
+        AlpH = 2.0 * asinh( arg1 );
 
     } // end if
 
@@ -263,46 +270,49 @@ BLambert::battin (void)
  * bat_SEE function, ported from Vallado's Ada code.
  */
 double
-BLambert::bat_SEE(double v)
+BLambert::bat_SEE( double v )
 {
     // c: array (0..20) of Real;
-    double c[20];
+    double c[ 20 ];
     double term, termold, del, delold, sum1, temp, eta, SQRTopv;
     int i;
 
-    c[0] = 0.2;
-    for (int j = 1; j < 21; j++)
+    c[ 0 ] = 0.2;
+
+    for ( int j = 1; j < 21; j++ )
     {
         temp = j + 2.0;
-        c[j] = (temp * temp) / ((4 * temp * temp) - 1);
+        c[ j ] = ( temp * temp ) / ( ( 4 * temp * temp ) - 1 );
     }
-    SQRTopv = sqrt(1.0 + v);
-    eta = v / (1.0 + 2 * SQRTopv + SQRTopv * SQRTopv);
+
+    SQRTopv = sqrt( 1.0 + v );
+    eta = v / ( 1.0 + 2 * SQRTopv + SQRTopv * SQRTopv );
 
     // Process Forwards
     delold = 1.0;
-    termold = c[0]; // * eta
+    termold = c[ 0 ]; // * eta
     sum1 = termold;
     i = 1;
-    while ((i <= 20) && (fabs(termold) > 0.000001))
+
+    while ( ( i <= 20 ) && ( fabs( termold ) > 0.000001 ) )
     {
-        del = 1.0 / (1.0 + c[i] * eta * delold);
-        term = termold * (del - 1.0);
+        del = 1.0 / ( 1.0 + c[ i ] * eta * delold );
+        term = termold * ( del - 1.0 );
         sum1 = sum1 + term;
         i = i + 1;
         delold = del;
         termold = term;
     } // end while loop
 
-    return (1.0 / (8.0 * (1.0 + SQRTopv))) *
-           (3.0 + sum1 / (1.0 + eta * sum1));
+    return ( 1.0 / ( 8.0 * ( 1.0 + SQRTopv ) ) ) *
+           ( 3.0 + sum1 / ( 1.0 + eta * sum1 ) );
 } // end BLambert::bat_SEE
 
 /**
  * bat_K function, ported from Vallado's Ada code.
  */
 double
-BLambert::bat_K(double v)
+BLambert::bat_K( double v )
 {
     // d: array (0..20) of Real; -- hardcoded, see astiod.adb
     // Static function variables are initialized once and only one
@@ -311,45 +321,47 @@ BLambert::bat_K(double v)
     static const double d[] =
         {
             0,
-            (1.0 / 3.0 ),
-            (4.0 / 27.0),
-            (8.0 / 27.0),
-            (2.0 / 9.0 ),
-            (22.0 / 81.0),
-            (208.0 / 891.0),
-            (340.0 / 1287.0),
-            (418.0 / 1755.0),
-            (598.0 / 2295.0),
-            (700.0 / 2907.0),
-            (928.0 / 3591.0),
-            (1054.0 / 4347.0),
-            (1330.0 / 5175.0),
-            (1480.0 / 6075.0),
-            (1804.0 / 7047.0),
-            (1978.0 / 8091.0),
-            (2350.0 / 9207.0),
-            (2548.0 / 10395.0),
-            (2968.0 / 11655.0),
-            (3190.0 / 12987.0),
-            (3658.0 / 14391.0)
+            ( 1.0 / 3.0 ),
+            ( 4.0 / 27.0 ),
+            ( 8.0 / 27.0 ),
+            ( 2.0 / 9.0 ),
+            ( 22.0 / 81.0 ),
+            ( 208.0 / 891.0 ),
+            ( 340.0 / 1287.0 ),
+            ( 418.0 / 1755.0 ),
+            ( 598.0 / 2295.0 ),
+            ( 700.0 / 2907.0 ),
+            ( 928.0 / 3591.0 ),
+            ( 1054.0 / 4347.0 ),
+            ( 1330.0 / 5175.0 ),
+            ( 1480.0 / 6075.0 ),
+            ( 1804.0 / 7047.0 ),
+            ( 1978.0 / 8091.0 ),
+            ( 2350.0 / 9207.0 ),
+            ( 2548.0 / 10395.0 ),
+            ( 2968.0 / 11655.0 ),
+            ( 3190.0 / 12987.0 ),
+            ( 3658.0 / 14391.0 )
         };
 
     int i;
     double del, delold, term, termold, sum1;
 
     // process fowards
-    sum1 = d[0]; // XXX check wtf i was thinking
+    sum1 = d[ 0 ]; // XXX check wtf i was thinking
     delold = 1.0;
-    termold = d[0];
+    termold = d[ 0 ];
     i = 1;
-    while ((i <= 20) && ( fabs(termold > 0.000001) ))
+
+    while ( ( i <= 20 ) && ( fabs( termold > 0.000001 ) ) )
     {
-        del = 1.0 / (1.0 - d[i] * v * delold);
-        term = termold * (del - 1.0);
+        del = 1.0 / ( 1.0 - d[ i ] * v * delold );
+        term = termold * ( del - 1.0 );
         sum1 = sum1 + term;
         i = i + 1;
         delold = del;
         termold = term;
     } // end while loop
+
     return sum1;
 } // end BLambert::bat_K

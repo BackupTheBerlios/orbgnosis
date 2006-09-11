@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Body.h,v 1.12 2006/06/15 20:50:33 trs137 Exp $
+* $Id: Body.h,v 1.13 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -37,8 +37,10 @@
  * Includes state vector (position, velocity), rotation, moment
  * and mass properties.
  */
+
 class Body
 {
+
     protected:
         double mass;           //!< mass of the body
         Vec3 position;       //!< geocentric position vector
@@ -47,18 +49,18 @@ class Body
         Vec3 moments;        //!< principle moments of inertia
 
     public:
-        Body (void);    // Default ctor
-        Body (const Body&);       // copy constructor
-        Body& operator = (Body);  // copy assignment operator
-        virtual ~Body (void);             // destructor
+        Body ( void );    // Default ctor
+        Body ( const Body& );       // copy constructor
+        Body& operator = ( Body );  // copy assignment operator
+        virtual ~Body ( void );             // destructor
 
-        double kineticEnergy (void);     // kinetic energy of body
-        double transMomentum (void);     // translational momentum
-        Vec3 angMomentum (void);       // angular momentum
+        double kineticEnergy ( void );     // kinetic energy of body
+        double transMomentum ( void );     // translational momentum
+        Vec3 angMomentum ( void );       // angular momentum
 
-        void move (Vec3);
-        void accelerate (Vec3);
-        Vec3 findForce (void);         // sum of all forces on Body
+        void move ( Vec3 );
+        void accelerate ( Vec3 );
+        Vec3 findForce ( void );         // sum of all forces on Body
 };
 
 #endif /* _BODY_H_ */

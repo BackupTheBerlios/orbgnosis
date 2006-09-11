@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.19 2006/09/06 14:32:09 trs137 Exp $
+* $Id: Traj.h,v 1.20 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -39,59 +39,61 @@
  * trajectory uniquely.  Target satellites are defined in part by their
  * trajectories.  Transfer arcs between targets are also trajectories.
  */
+
 class Traj
 {
+
     public:
-        Traj (void); // defaults to all zeroes
+        Traj ( void ); // defaults to all zeroes
 
         // This ctor calls randv() to fill in the missing data.
-        Traj (double,    // a
-              double,    // e
-              double,    // i
-              double,    // raan
-              double,    // w
-              double);   // f
+        Traj ( double,      // a
+               double,      // e
+               double,      // i
+               double,      // raan
+               double,      // w
+               double );   // f
 
         // This ctor calls elorb() to fill in the missing elements.
-        Traj (Vec3,   // r
-              Vec3);  // v
+        Traj ( Vec3,     // r
+               Vec3 );  // v
 
-        virtual ~Traj (void);       // dtor
-        Traj (const Traj&);         // copy constructor
-        Traj& operator = (Traj);    // copy assignment
+        virtual ~Traj ( void );       // dtor
+        Traj ( const Traj& );         // copy constructor
+        Traj& operator = ( Traj );    // copy assignment
 
-        void print (void);  // Prints trajectory parameters to stdout.
+        void print ( void );  // Prints trajectory parameters to stdout.
 
-		Traj kepler (Traj, double); // solve kepler's problem
+        Traj kepler ( Traj, double ); // solve kepler's problem
 
         // Accessors
-        double get_a (void);
-        double get_e (void);
-        double get_i (void);
-        double get_raan (void);
-        double get_w (void);
-        double get_f (void);
-        Vec3 get_r (void);
-        Vec3 get_v (void);
-        double get_E (void);
-        double get_M (void);
-        double get_argLat (void);
-        double get_lonTrue (void);
-        double get_lonPer (void);
-        Vec3 get_e_vector (void);
-        Vec3 get_h_vector (void);
-        Vec3 get_n_vector (void);
-        unsigned int get_orbitType (void);
+        double get_a ( void );
+        double get_e ( void );
+        double get_i ( void );
+        double get_raan ( void );
+        double get_w ( void );
+        double get_f ( void );
+        Vec3 get_r ( void );
+        Vec3 get_v ( void );
+        double get_E ( void );
+        double get_M ( void );
+        double get_argLat ( void );
+        double get_lonTrue ( void );
+        double get_lonPer ( void );
+        Vec3 get_e_vector ( void );
+        Vec3 get_h_vector ( void );
+        Vec3 get_n_vector ( void );
+        unsigned int get_orbitType ( void );
 
         // Mutators
-        void set_a (double);
-        void set_e (double);
-        void set_i (double);
-        void set_raan (double);
-        void set_w (double);
-        void set_f (double);
-        void set_r (Vec3);
-        void set_v (Vec3);
+        void set_a ( double );
+        void set_e ( double );
+        void set_i ( double );
+        void set_raan ( double );
+        void set_w ( double );
+        void set_f ( double );
+        void set_r ( Vec3 );
+        void set_v ( Vec3 );
 
         // Setting non-classical elements is forbidden.
         // Setting miscellaneous private members is forbidden.
@@ -108,7 +110,7 @@ class Traj
         // GEOCENTRIC EQUATORIAL STATE VECTOR:
         Vec3 r;         //!< Radius (ER).
         Vec3 v;         //!< Velocity (ER/TU).
- 
+
         // OTHER ORBITAL ELEMENTS:
         double E;        //!< Eccentric, Parabolic, or Hyperbolic anomaly (radians).
         double M;        //!< Mean Anomaly (radians).
@@ -122,10 +124,10 @@ class Traj
         Vec3 n_vector;  //!< Node vector
 
         // Private methods.
-        void randv (void);     // Calculates r and v vectors from classical elements.
-        void elorb (void);     // Calculates classical elements from 2 vectors.
-        void anomalies (void); // Routines common to randv() and elorb().
-        void special (void);   // Calculates orb elements for special case orbits.
+        void randv ( void );     // Calculates r and v vectors from classical elements.
+        void elorb ( void );     // Calculates classical elements from 2 vectors.
+        void anomalies ( void ); // Routines common to randv() and elorb().
+        void special ( void );   // Calculates orb elements for special case orbits.
 };
 
 #endif /* _TRAJ_H_ */

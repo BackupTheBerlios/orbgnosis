@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.h,v 1.7 2006/08/07 02:32:26 trs137 Exp $
+* $Id: ULambert.h,v 1.8 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -42,30 +42,32 @@
  * so that the solution converges to the desired solution, but only the
  * zero-revolution case(s) are garuanteed.
  */
+
 class ULambert
 {
+
     public:
 
-        ULambert (void);         // just zeros
+        ULambert ( void );         // just zeros
 
-        ULambert (Vec3 r1in,   //!< initial position.
-                  Vec3 r2in,   //!< final position
-                  double tin); //!< time of flight.
+        ULambert ( Vec3 r1in,    //!< initial position.
+                   Vec3 r2in,    //!< final position
+                   double tin ); //!< time of flight.
 
-        virtual ~ULambert (void);
+        virtual ~ULambert ( void );
 
         // Universal Variable method
-        void universal(const bool, const int);
+        void universal( const bool, const int );
 
-        void setRo (Vec3);
-        void setR (Vec3);
-        void sett (double);
+        void setRo ( Vec3 );
+        void setR ( Vec3 );
+        void sett ( double );
 
-        Vec3 getVo (void);
-        Vec3 getV (void);
-        double gett (void);
+        Vec3 getVo ( void );
+        Vec3 getV ( void );
+        double gett ( void );
 
-        bool isFailure(void);
+        bool isFailure( void );
 
     private:
 

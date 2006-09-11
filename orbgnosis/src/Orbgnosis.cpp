@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.20 2006/09/06 14:32:09 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.21 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -34,6 +34,7 @@
 #include "Orbgnosis.h"
 #include <math.h>
 #include <iostream>
+
 using namespace std;
 
 /** @file
@@ -44,14 +45,14 @@ using namespace std;
  * The main program.  Currently runs some unit tests.
  */
 int
-main(void)
+main( void )
 {
     const int problems = 500;
     double t;
     Vec3 q1, q2;
-    srand(time(NULL));
+    srand( time( NULL ) );
 
-    ULambert* testcase = new ULambert[problems];
+    ULambert* testcase = new ULambert[ problems ];
 
     // Write file for tecplot.
 
@@ -143,48 +144,48 @@ main(void)
 
     //  Plotting a 2D cartesian of delta-f vs. TOF
 
-    q1.set3(1.1, 0.0, 0.0);  // units of ER
+    q1.set3( 1.1, 0.0, 0.0 );  // units of ER
 
     double f, f_max, f_min, f_inc;
     f_min = 2.0 * SMALL;
     f_max = 2.0 * M_PI + SMALL;
-    f_inc = (f_max - f_min) / (problems - 1);
+    f_inc = ( f_max - f_min ) / ( problems - 1 );
 
     const double r1 = 1.1;
     const double r2 = 1.2;
 
 
-    Vec3 vc1 (0, sqrt (1 / r1), 0);
+    Vec3 vc1 ( 0, sqrt ( 1 / r1 ), 0 );
     Vec3 vc2;
 
     double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
     bool L;
 
     t_min = 60.0 / TU_SEC;  // 1 minute in canonical
-    t_max = 6.0 * M_PI * sqrt(r2 * r2 * r2);
-    t_inc = (t_max - t_min) / (problems - 1);
+    t_max = 6.0 * M_PI * sqrt( r2 * r2 * r2 );
+    t_inc = ( t_max - t_min ) / ( problems - 1 );
 
     // This will run (problems * problems) times!!!!!
 
-    for (int i = 0; i < problems; i++)
+    for ( int i = 0; i < problems; i++ )
     {
         t = t_min + i * t_inc;
 
-        for (int j = 0; j < problems; j++)
+        for ( int j = 0; j < problems; j++ )
         {
             f = f_min + j * f_inc;
 
-            q2.setX( r2*cos(f) );
-            q2.setY( r2*sin(f) );
-            q2.setZ(0.0);
+            q2.setX( r2 * cos( f ) );
+            q2.setY( r2 * sin( f ) );
+            q2.setZ( 0.0 );
 
-            vc2.setX (( -sin(f)) * (sqrt(1 / r2)) );
-            vc2.setY ((cos(f)) * (sqrt(1 / r2)) );
-            vc2.setZ (0.0);
+            vc2.setX ( ( -sin( f ) ) * ( sqrt( 1 / r2 ) ) );
+            vc2.setY ( ( cos( f ) ) * ( sqrt( 1 / r2 ) ) );
+            vc2.setZ ( 0.0 );
 
-            testcase[j].setRo(q1);
-            testcase[j].setR(q2);
-            testcase[j].sett(t);
+            testcase[ j ].setRo( q1 );
+            testcase[ j ].setR( q2 );
+            testcase[ j ].sett( t );
 
             cout << f << ", ";
             cout << t*TU_SEC << ", ";
@@ -192,38 +193,42 @@ main(void)
             // Find minimum delta-V case among many multirev solutions.
 
             deltav = INF;
-            for (int revs = 0; revs < 15; revs++)
+
+            for ( int revs = 0; revs < 15; revs++ )
             {
                 L = false; // short way
-                testcase[j].universal(L, revs);
+                testcase[ j ].universal( L, revs );
                 short_deltav = INF;
-                if (!testcase[j].isFailure())
+
+                if ( !testcase[ j ].isFailure() )
                 {
-                    short_deltav = ( (norm(testcase[j].getVo() - vc1))
-                                     + (norm(testcase[j].getV() - vc2)) )
+                    short_deltav = ( ( norm( testcase[ j ].getVo() - vc1 ) )
+                                     + ( norm( testcase[ j ].getV() - vc2 ) ) )
                                    * ER / TU_SEC;
                 }
 
                 L = true; // long way
-                testcase[j].universal(L, revs);
+                testcase[ j ].universal( L, revs );
                 long_deltav = INF;
-                if (!testcase[j].isFailure())
+
+                if ( !testcase[ j ].isFailure() )
                 {
-                    long_deltav = ( (norm(testcase[j].getVo() - vc1))
-                                    + (norm(testcase[j].getV() - vc2)) )
+                    long_deltav = ( ( norm( testcase[ j ].getVo() - vc1 ) )
+                                    + ( norm( testcase[ j ].getV() - vc2 ) ) )
                                   * ER / TU_SEC;
                 }
 
-                if (short_deltav < deltav)
+                if ( short_deltav < deltav )
                 {
                     deltav = short_deltav;
                 }
 
-                if (long_deltav < deltav)
+                if ( long_deltav < deltav )
                 {
                     deltav = long_deltav;
                 }
             }
+
             cout << deltav << "\n";
         }
     }

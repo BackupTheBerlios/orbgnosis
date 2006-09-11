@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: BLambert.h,v 1.8 2006/06/15 20:50:33 trs137 Exp $
+* $Id: BLambert.h,v 1.9 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -37,32 +37,34 @@
  * It is robust and does not suffer from from convergence failure.
  * This implementation is adapted from Vallado's Ada procedure.
  */
+
 class BLambert
 {
+
     public:
 
-        BLambert (void);         // just zeros
+        BLambert ( void );         // just zeros
 
-        BLambert (Vec3 r1in,
-                  Vec3 r2in,
-                  double tin);
+        BLambert ( Vec3 r1in,
+                   Vec3 r2in,
+                   double tin );
 
-        virtual ~BLambert (void);
+        virtual ~BLambert ( void );
 
 
-        void battin(void);
-        double bat_SEE(double);
-        double bat_K(double);
+        void battin( void );
+        double bat_SEE( double );
+        double bat_K( double );
 
-        void setRo (Vec3);
-        void setR (Vec3);
-        void sett (double);
+        void setRo ( Vec3 );
+        void setR ( Vec3 );
+        void sett ( double );
 
-        Vec3 getVo (void);
-        Vec3 getV (void);
-        double gett (void);
+        Vec3 getVo ( void );
+        Vec3 getV ( void );
+        double gett ( void );
 
-        bool isFailure(void);
+        bool isFailure( void );
 
     private:
         double t;   //!< specified time of flight from Ro to R.

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Body.cpp,v 1.12 2006/06/15 20:50:33 trs137 Exp $
+* $Id: Body.cpp,v 1.13 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -35,12 +35,12 @@
  * Default Body constructor with no args.
  * Sets mass and moments to 1.0, and everything else to zero.
  */
-Body::Body (void)
-    : mass(1.0),
-      position(0.0, 0.0, 0.0),
-      velocity(0.0, 0.0, 0.0),
-      ang_vel(0.0, 0.0, 0.0),
-      moments(1.0, 1.0, 1.0)
+Body::Body ( void )
+        : mass( 1.0 ),
+        position( 0.0, 0.0, 0.0 ),
+        velocity( 0.0, 0.0, 0.0 ),
+        ang_vel( 0.0, 0.0, 0.0 ),
+        moments( 1.0, 1.0, 1.0 )
 {
     //cout << "Body constructor called with no args.\n";
 }
@@ -48,7 +48,7 @@ Body::Body (void)
 /**
  * The Body destructor.
  */
-Body::~Body (void)
+Body::~Body ( void )
 {
     // cout << "Body destructor called\n";
 }
@@ -56,12 +56,12 @@ Body::~Body (void)
 /**
  * The Body copy constructor.
  */
-Body::Body (const Body& copy)
-    : mass(copy.mass),
-      position(copy.position),
-      velocity(copy.velocity),
-      ang_vel(copy.ang_vel),
-      moments(copy.moments)
+Body::Body ( const Body& copy )
+        : mass( copy.mass ),
+        position( copy.position ),
+        velocity( copy.velocity ),
+        ang_vel( copy.ang_vel ),
+        moments( copy.moments )
 {
     //cout << "Body copy constructor called\n";
 }
@@ -70,7 +70,7 @@ Body::Body (const Body& copy)
  * The Body copy assignment operator.
  */
 Body&
-Body::operator = (Body b)
+Body::operator = ( Body b )
 {
     mass = b.mass;
     position = b.position;
@@ -83,29 +83,29 @@ Body::operator = (Body b)
  * Returns the kinetic energy of the Body.
  */
 double
-Body::kineticEnergy (void)
+Body::kineticEnergy ( void )
 {
-    double speed = norm(velocity);
-    return (0.5 * mass * speed * speed );
+    double speed = norm( velocity );
+    return ( 0.5 * mass * speed * speed );
 }
 
 /**
  * Returns the translational momentum of the Body.
  */
 double
-Body::transMomentum (void)
+Body::transMomentum ( void )
 {
-    double speed = norm(velocity);
-    return (mass * speed);
+    double speed = norm( velocity );
+    return ( mass * speed );
 }
 
 /**
  * Returns the angular momentum Vec3 of the Body.
  */
 Vec3
-Body::angMomentum (void)
+Body::angMomentum ( void )
 {
-    return (cross(ang_vel, moments));
+    return ( cross( ang_vel, moments ) );
 }
 
 /**
@@ -113,7 +113,7 @@ Body::angMomentum (void)
  * @param vin is the Vec3 to be added to the Body's position.
  */
 void
-Body::move (Vec3 vin)
+Body::move ( Vec3 vin )
 {
     position = position + vin;
 }
@@ -123,7 +123,7 @@ Body::move (Vec3 vin)
  * @param vin is the Vec3 to be added to the Body's velocity.
  */
 void
-Body::accelerate (Vec3 vin)
+Body::accelerate ( Vec3 vin )
 {
     velocity = velocity + vin;
 }
@@ -132,7 +132,7 @@ Body::accelerate (Vec3 vin)
  * Returns the sum of all forces acting upon the Body.
  */
 Vec3
-Body::findForce (void)
+Body::findForce ( void )
 {
-    return Vec3(0, 0, 0); //TODO not really necessary yet
+    return Vec3( 0, 0, 0 ); //TODO not really necessary yet
 }

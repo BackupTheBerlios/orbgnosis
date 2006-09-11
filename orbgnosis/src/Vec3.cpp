@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Vec3.cpp,v 1.14 2006/08/16 23:36:42 trs137 Exp $
+* $Id: Vec3.cpp,v 1.15 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -32,15 +32,17 @@
 #include "Orbgnosis.h" // defines DBL_MAX from <float.h>
 #include <math.h>
 #include <iostream>
+
 using namespace std;
 
 /**
  * The Vec3 constructor with no arguments defaults to all zeroes.
  */
-Vec3::Vec3 (void)
+Vec3::Vec3 ( void )
 {
-    for (int i = 0; i < 3; i++)
-        e[i] = 0.0;
+    for ( int i = 0; i < 3; i++ )
+        e[ i ] = 0.0;
+
     // cout << "Default Vec3 constructor called.\n";
 }
 
@@ -50,18 +52,18 @@ Vec3::Vec3 (void)
  * @param yin is the second element.
  * @param zin is the third element.
  */
-Vec3::Vec3 (double xin, double yin, double zin)
+Vec3::Vec3 ( double xin, double yin, double zin )
 {
-    e[0] = xin;
-    e[1] = yin;
-    e[2] = zin;
+    e[ 0 ] = xin;
+    e[ 1 ] = yin;
+    e[ 2 ] = zin;
     // cout << "3-arg Vec3 constructor called.\n";
 }
 
 /**
  * The Vec3 destructor.
  */
-Vec3::~Vec3 (void)
+Vec3::~Vec3 ( void )
 {
     //cout << "Vec3 dtor.\n";
 }
@@ -70,10 +72,11 @@ Vec3::~Vec3 (void)
  * The Vec3 copy constructor.
  * @param copy is a reference to the Vec3 to be copied.
  */
-Vec3::Vec3 (const Vec3& copy)
+Vec3::Vec3 ( const Vec3& copy )
 {
-    for (int i = 0; i < 3; i++)
-        e[i] = copy.e[i];
+    for ( int i = 0; i < 3; i++ )
+        e[ i ] = copy.e[ i ];
+
     //cout << "Vec3 copy constructor called\n";
 }
 
@@ -81,13 +84,15 @@ Vec3::Vec3 (const Vec3& copy)
  * The Vec3 copy assignment operator.
  */
 Vec3&
-Vec3::operator = (const Vec3& q)
+Vec3::operator = ( const Vec3& q )
 {
-    if (this != &q) // avoid pointless self-assignment
+    if ( this != &q )  // avoid pointless self-assignment
     {
-        for (int i = 0; i < 3; i++)
-            e[i] = q.e[i];
+
+        for ( int i = 0; i < 3; i++ )
+            e[ i ] = q.e[ i ];
     }
+
     return *this;
 }
 
@@ -95,10 +100,11 @@ Vec3::operator = (const Vec3& q)
  * The Vec3 addition-assignment operator.
  */
 Vec3&
-Vec3::operator += (const Vec3& q)
+Vec3::operator += ( const Vec3& q )
 {
-    for (int i = 0; i < 3; i++)
-        e[i] += q.e[i];
+    for ( int i = 0; i < 3; i++ )
+        e[ i ] += q.e[ i ];
+
     return *this;
 }
 
@@ -106,10 +112,11 @@ Vec3::operator += (const Vec3& q)
  * The Vec3 addition-assignment operator.
  */
 Vec3&
-Vec3::operator -= (const Vec3& q)
+Vec3::operator -= ( const Vec3& q )
 {
-    for (int i = 0; i < 3; i++)
-        e[i] -= q.e[i];
+    for ( int i = 0; i < 3; i++ )
+        e[ i ] -= q.e[ i ];
+
     return *this;
 }
 
@@ -119,11 +126,11 @@ Vec3::operator -= (const Vec3& q)
  * @param s is a scalar (type must be double).
  */
 Vec3
-operator * (const Vec3& q, const double& s)
+operator * ( const Vec3& q, const double& s )
 {
-    return Vec3 (q.e[0] * s,
-                 q.e[1] * s,
-                 q.e[2] * s);
+    return Vec3 ( q.e[ 0 ] * s,
+                  q.e[ 1 ] * s,
+                  q.e[ 2 ] * s );
 }
 
 /**
@@ -132,11 +139,11 @@ operator * (const Vec3& q, const double& s)
  * @param q is a vector (type must be Vec3).
  */
 Vec3
-operator * (const double& s, const Vec3& q)
+operator * ( const double& s, const Vec3& q )
 {
-    return Vec3 (q.e[0] * s,
-                 q.e[1] * s,
-                 q.e[2] * s);
+    return Vec3 ( q.e[ 0 ] * s,
+                  q.e[ 1 ] * s,
+                  q.e[ 2 ] * s );
 }
 
 /**
@@ -145,11 +152,11 @@ operator * (const double& s, const Vec3& q)
  * @param s is a scalar (type must be double).
  */
 Vec3
-operator / (const Vec3& q, const double& s)
+operator / ( const Vec3& q, const double& s )
 {
-    return Vec3 (q.e[0] / s,
-                 q.e[1] / s,
-                 q.e[2] / s);
+    return Vec3 ( q.e[ 0 ] / s,
+                  q.e[ 1 ] / s,
+                  q.e[ 2 ] / s );
 }
 
 /**
@@ -158,11 +165,11 @@ operator / (const Vec3& q, const double& s)
  * @param q is a vector (type must be Vec3).
  */
 Vec3
-operator / (const double& s, const Vec3& q)
+operator / ( const double& s, const Vec3& q )
 {
-    return Vec3 (s / q.e[0],
-                 s / q.e[1],
-                 s / q.e[2]);
+    return Vec3 ( s / q.e[ 0 ],
+                  s / q.e[ 1 ],
+                  s / q.e[ 2 ] );
 }
 
 /**
@@ -171,11 +178,11 @@ operator / (const double& s, const Vec3& q)
  * @param b is a constant reference to the second Vec3.
  */
 Vec3
-operator + (const Vec3& a, const Vec3& b)
+operator + ( const Vec3& a, const Vec3& b )
 {
-    return Vec3 (a.e[0] + b.e[0],
-                 a.e[1] + b.e[1],
-                 a.e[2] + b.e[2]);
+    return Vec3 ( a.e[ 0 ] + b.e[ 0 ],
+                  a.e[ 1 ] + b.e[ 1 ],
+                  a.e[ 2 ] + b.e[ 2 ] );
 }
 
 /**
@@ -183,7 +190,7 @@ operator + (const Vec3& a, const Vec3& b)
  * example: a = + b; 
  */
 Vec3
-operator + (const Vec3& a)
+operator + ( const Vec3& a )
 {
     return a;
 }
@@ -194,18 +201,18 @@ operator + (const Vec3& a)
  * @param b is a constant reference to the second Vec3.
  */
 Vec3
-operator - (const Vec3& a, const Vec3& b)
+operator - ( const Vec3& a, const Vec3& b )
 {
-    return Vec3 (a.e[0] - b.e[0],
-                 a.e[1] - b.e[1],
-                 a.e[2] - b.e[2]);
+    return Vec3 ( a.e[ 0 ] - b.e[ 0 ],
+                  a.e[ 1 ] - b.e[ 1 ],
+                  a.e[ 2 ] - b.e[ 2 ] );
 }
 
 /**
  * Vec3 unary subtraction.
  */
 Vec3
-operator - (const Vec3& a)
+operator - ( const Vec3& a )
 {
     return Vec3() - a;  // 0 - a = -a
 }
@@ -216,12 +223,12 @@ operator - (const Vec3& a)
  * @param b is a constant reference to the second Vec3.
  */
 Vec3
-cross (const Vec3& a, const Vec3& b)
+cross ( const Vec3& a, const Vec3& b )
 {
-    const double x = a.e[1] * b.e[2] - a.e[2] * b.e[1];
-    const double y = a.e[2] * b.e[0] - a.e[0] * b.e[2];
-    const double z = a.e[0] * b.e[1] - a.e[1] * b.e[0];
-    return Vec3(x, y, z);
+    const double x = a.e[ 1 ] * b.e[ 2 ] - a.e[ 2 ] * b.e[ 1 ];
+    const double y = a.e[ 2 ] * b.e[ 0 ] - a.e[ 0 ] * b.e[ 2 ];
+    const double z = a.e[ 0 ] * b.e[ 1 ] - a.e[ 1 ] * b.e[ 0 ];
+    return Vec3( x, y, z );
 }
 
 /**
@@ -230,9 +237,9 @@ cross (const Vec3& a, const Vec3& b)
  * @param b is a constant reference to the second Vec3.
  */
 double
-dot (const Vec3& a, const Vec3& b)
+dot ( const Vec3& a, const Vec3& b )
 {
-    return (a.e[0] * b.e[0]) + (a.e[1] * b.e[1]) + (a.e[2] * b.e[2]);
+    return ( a.e[ 0 ] * b.e[ 0 ] ) + ( a.e[ 1 ] * b.e[ 1 ] ) + ( a.e[ 2 ] * b.e[ 2 ] );
 }
 
 /**
@@ -240,9 +247,9 @@ dot (const Vec3& a, const Vec3& b)
  * @param q is a constant reference to a Vec3.
  */
 double
-norm (const Vec3& q)
+norm ( const Vec3& q )
 {
-    return sqrt (q.e[0]*q.e[0] + q.e[1]*q.e[1] + q.e[2]*q.e[2]);
+    return sqrt ( q.e[ 0 ] * q.e[ 0 ] + q.e[ 1 ] * q.e[ 1 ] + q.e[ 2 ] * q.e[ 2 ] );
 }
 
 /**
@@ -251,9 +258,9 @@ norm (const Vec3& q)
  * @param q is the Vec3 to be printed with nice formatting. 
  */
 ostream&
-operator << (ostream& s, Vec3 q)
+operator << ( ostream& s, Vec3 q )
 {
-    s << "(" << q.e[0] << ", " << q.e[1] << ", " << q.e[2] << ")";
+    s << "(" << q.e[ 0 ] << ", " << q.e[ 1 ] << ", " << q.e[ 2 ] << ")";
     return s;
 }
 
@@ -263,9 +270,9 @@ operator << (ostream& s, Vec3 q)
  * @param q is the Vec3 which we're going to try to read from input.
  */
 istream&
-operator >> (istream& s, Vec3 q)
+operator >> ( istream& s, Vec3 q )
 {
-    s >> q.e[0] >> q.e[1] >> q.e[2];
+    s >> q.e[ 0 ] >> q.e[ 1 ] >> q.e[ 2 ];
     return s;
 }
 
@@ -274,19 +281,19 @@ operator >> (istream& s, Vec3 q)
  * It's just a rotation matrix,
  */
 Vec3
-rotX (const Vec3& v, const double& a)
+rotX ( const Vec3& v, const double& a )
 {
-    const double c = cos(a);
-    const double s = sin(a);
+    const double c = cos( a );
+    const double s = sin( a );
     // Written out the long way...
     // const double x = 1 * v.e[0] + 0 * v.e[1] + 0 * v.e[2];
     // const double y = 0 * v.e[0] + c * v.e[1] - s * v.e[2];
     // const double z = 0 * v.e[0] + s * v.e[1] + c * v.e[2];
     // or more concisely...
-    const double x = v.e[0];
-    const double y = c * v.e[1] - s * v.e[2];
-    const double z = s * v.e[1] + c * v.e[2];
-    return Vec3(x, y, z);
+    const double x = v.e[ 0 ];
+    const double y = c * v.e[ 1 ] - s * v.e[ 2 ];
+    const double z = s * v.e[ 1 ] + c * v.e[ 2 ];
+    return Vec3( x, y, z );
 }
 
 /**
@@ -294,19 +301,19 @@ rotX (const Vec3& v, const double& a)
  *  It's just a rotation matrix,
  */
 Vec3
-rotY (const Vec3& v, const double& a)
+rotY ( const Vec3& v, const double& a )
 {
-    const double c = cos(a);
-    const double s = sin(a);
+    const double c = cos( a );
+    const double s = sin( a );
     // Written out the long way...
     // const double x =  c * v.e[0] + 0 * v.e[1] + s * v.e[2];
     // const double y =  0 * v.e[0] + 1 * v.e[1] - 0 * v.e[2];
     // const double z = -s * v.e[0] + 0 * v.e[1] + c * v.e[2];
     // or more concisely...
-    const double x =  c * v.e[0] + s * v.e[2];
-    const double y =  v.e[1];
-    const double z = -s * v.e[0] + c * v.e[2];
-    return Vec3(x, y, z);
+    const double x = c * v.e[ 0 ] + s * v.e[ 2 ];
+    const double y = v.e[ 1 ];
+    const double z = -s * v.e[ 0 ] + c * v.e[ 2 ];
+    return Vec3( x, y, z );
 }
 
 /**
@@ -314,72 +321,74 @@ rotY (const Vec3& v, const double& a)
  * It's just a rotation matrix,
  */
 Vec3
-rotZ (const Vec3& v, const double& a)
+rotZ ( const Vec3& v, const double& a )
 {
-    const double c = cos(a);
-    const double s = sin(a);
+    const double c = cos( a );
+    const double s = sin( a );
     // Written out the long way...
     // const double x = c * v.e[0] - s * v.e[1] + 0 * v.e[2];
     // const double y = s * v.e[0] + c * v.e[1] + 0 * v.e[2];
     // const double z = 0 * v.e[0] + 0 * v.e[1] + 1 * v.e[2];
     // or more concisely...
-    const double x = c * v.e[0] - s * v.e[1];
-    const double y = s * v.e[0] + c * v.e[1];
-    const double z = v.e[2];
-    return Vec3(x, y, z);
+    const double x = c * v.e[ 0 ] - s * v.e[ 1 ];
+    const double y = s * v.e[ 0 ] + c * v.e[ 1 ];
+    const double z = v.e[ 2 ];
+    return Vec3( x, y, z );
 }
 
 /**
  * Get method for the first element of a Vec3.
  */
 double
-Vec3::getX (void)
+Vec3::getX ( void )
 {
-    return e[0];
+    return e[ 0 ];
 }
 
 /**
  * Get method for the second element of a Vec3.
  */
 double
-Vec3::getY (void)
+Vec3::getY ( void )
 {
-    return e[1];
+    return e[ 1 ];
 }
 
 /**
  * Get method for the third element of a Vec3.
  */
 double
-Vec3::getZ (void)
+Vec3::getZ ( void )
 {
-    return e[2];
+    return e[ 2 ];
 }
 
 /**
  * Sets all three elements of a Vec3 to zero.
  */
 void
-Vec3::toZero (void)
+Vec3::toZero ( void )
 {
-    e[0] = e[1] = e[2] = 0.0;
+    e[ 0 ] = e[ 1 ] = e[ 2 ] = 0.0;
 }
 
 /**
  * Sets all three elements of a Vec3 to DBL_MAX (may cause problems).
  */
 void
-Vec3::toInf (void)
+Vec3::toInf ( void )
 {
     try
     {
-        e[0] = e[1] = e[2] = INF;    // INFINITY defined in math.h causes problems
+        e[ 0 ] = e[ 1 ] = e[ 2 ] = INF;    // INFINITY defined in math.h causes problems
         // with gcc4.0 on Mac OS X.
     }
-    catch (...)
+
+    catch ( ... )
     {
         cerr << "Vec3::toInf could not set double to " << INF << "\n";
     }
+
     return ;
 }
 
@@ -390,36 +399,36 @@ Vec3::toInf (void)
  * @param c is the third element.
  */
 void
-Vec3::set3 (double a, double b, double c)
+Vec3::set3 ( double a, double b, double c )
 {
-    e[0] = a;
-    e[1] = b;
-    e[2] = c;
+    e[ 0 ] = a;
+    e[ 1 ] = b;
+    e[ 2 ] = c;
 }
 
 /**
  * Set method for the first element of a Vec3.
  */
 void
-Vec3::setX (double xin)
+Vec3::setX ( double xin )
 {
-    e[0] = xin;
+    e[ 0 ] = xin;
 }
 
 /**
  * Set method for the second element of a Vec3.
  */
 void
-Vec3::setY (double yin)
+Vec3::setY ( double yin )
 {
-    e[1] = yin;
+    e[ 1 ] = yin;
 }
 
 /**
  * Set method for the third element of a Vec3.
  */
 void
-Vec3::setZ (double zin)
+Vec3::setZ ( double zin )
 {
-    e[2] = zin;
+    e[ 2 ] = zin;
 }

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Stumpff.h,v 1.10 2006/09/06 18:20:56 trs137 Exp $
+* $Id: Stumpff.h,v 1.11 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -51,21 +51,23 @@
  * The zeroth Stumpff c function
  */
 inline double
-stumpff_C0(double z)
+stumpff_C0( double z )
 {
-    if (fabs(z) < SMALL)
+    if ( fabs( z ) < SMALL )
         return 1.0;        // C0(0) = 1;
 
     double sqz = 1.0;
-    if (z > 0)
+
+    if ( z > 0 )
     {
-        sqz = sqrt(z);
-        return ( cos(sqz) );
+        sqz = sqrt( z );
+        return ( cos( sqz ) );
     }
+
     else
     { // z < 0
-        sqz = sqrt( -z);
-        return ( cosh(sqz) );
+        sqz = sqrt( -z );
+        return ( cosh( sqz ) );
     }
 }
 
@@ -73,21 +75,23 @@ stumpff_C0(double z)
  * The first Stumpff c function
  */
 inline double
-stumpff_C1(double z)
+stumpff_C1( double z )
 {
-    if (fabs(z) < SMALL)
+    if ( fabs( z ) < SMALL )
         return 1.0;        // C1(0) = 1;
 
     double sqz = 1.0;
-    if (z > 0)
+
+    if ( z > 0 )
     {
-        sqz = sqrt(z);
-        return ( sin(sqz) / sqz );
+        sqz = sqrt( z );
+        return ( sin( sqz ) / sqz );
     }
+
     else
     { // z < 0
-        sqz = sqrt( -z);
-        return ( sinh(sqz) / sqz );
+        sqz = sqrt( -z );
+        return ( sinh( sqz ) / sqz );
     }
 }
 
@@ -95,21 +99,23 @@ stumpff_C1(double z)
  * The second Stumpff c function
  */
 inline double
-stumpff_C2(double z)
+stumpff_C2( double z )
 {
-    if (fabs(z) < SMALL)
+    if ( fabs( z ) < SMALL )
         return 0.5;        // C2(0) = 1/2;
 
     double sqz = 1.0;
-    if (z > 0)
+
+    if ( z > 0 )
     {
-        sqz = sqrt(z);
-        return ( (1 - cos(sqz)) / z );
+        sqz = sqrt( z );
+        return ( ( 1 - cos( sqz ) ) / z );
     }
+
     else
     { // z < 0
-        sqz = sqrt( -z);
-        return ( (cosh(sqz) - 1) / ( -z) );
+        sqz = sqrt( -z );
+        return ( ( cosh( sqz ) - 1 ) / ( -z ) );
     }
 }
 
@@ -117,21 +123,23 @@ stumpff_C2(double z)
  * The third Stumpff c function
  */
 inline double
-stumpff_C3(double z)
+stumpff_C3( double z )
 {
-    if (fabs(z) < SMALL)
-        return (1.0 / 6.0);      // C3(0) = 1/6;
+    if ( fabs( z ) < SMALL )
+        return ( 1.0 / 6.0 );      // C3(0) = 1/6;
 
     double sqz = 1.0;
-    if (z > 0)
+
+    if ( z > 0 )
     {
-        sqz = sqrt(z);
-        return ( (sqz - sin(sqz)) / (sqz*sqz*sqz) );
+        sqz = sqrt( z );
+        return ( ( sqz - sin( sqz ) ) / ( sqz * sqz * sqz ) );
     }
+
     else
     { // z < 0
-        sqz = sqrt( -z);
-        return ( (sinh(sqz) - sqz) / (sqz*sqz*sqz) );
+        sqz = sqrt( -z );
+        return ( ( sinh( sqz ) - sqz ) / ( sqz * sqz * sqz ) );
     }
 }
 

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Sat.h,v 1.4 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Sat.h,v 1.5 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -36,13 +36,15 @@
 /**
  * A Satellite is Body moving on uniquely one Traj, so it "is" a Traj, too.
  */
+
 class Sat : public Body, public Traj
 {
+
     public:
-        Sat (void);    // Default ctor
-        Sat (const Sat&);       // copy constructor
-        Sat& operator = (Sat);  // copy assignment operator
-        virtual ~Sat (void);             // destructor
+        Sat ( void );    // Default ctor
+        Sat ( const Sat& );       // copy constructor
+        Sat& operator = ( Sat );  // copy assignment operator
+        virtual ~Sat ( void );             // destructor
 
     private:
 

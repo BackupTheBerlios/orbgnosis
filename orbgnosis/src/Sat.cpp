@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Sat.cpp,v 1.4 2006/06/12 21:22:17 trs137 Exp $
+* $Id: Sat.cpp,v 1.5 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -34,7 +34,7 @@
 /**
  * Default Sat constructor with no args. Triggers default constructors for Traj and Body.
  */
-Sat::Sat (void)
+Sat::Sat ( void )
 {
     //cout << "Sat constructor called.\n";
 }
@@ -42,7 +42,7 @@ Sat::Sat (void)
 /**
  * The Sat destructor.
  */
-Sat::~Sat (void)
+Sat::~Sat ( void )
 {
     // cout << "Sat destructor called\n";
 }
@@ -50,7 +50,7 @@ Sat::~Sat (void)
 /**
  * The Sat copy constructor.
  */
-Sat::Sat (const Sat& copy) : Body(copy), Traj(copy)
+Sat::Sat ( const Sat& copy ) : Body( copy ), Traj( copy )
 {
     //cout << "Sat copy constructor called.\n";
 }
@@ -59,7 +59,7 @@ Sat::Sat (const Sat& copy) : Body(copy), Traj(copy)
  * The Sat copy assignment operator.
  */
 Sat&
-Sat::operator = (Sat s)
+Sat::operator = ( Sat s )
 {
     mass = s.mass;
     position = s.position;

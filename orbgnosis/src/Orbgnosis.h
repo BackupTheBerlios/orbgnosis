@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.19 2006/09/06 14:32:09 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.20 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -40,7 +40,7 @@
 #endif
 #define INF 1.0e14    //!< A very big number
 
-#define EPS 1.0e-14   //!< A very small number, used in NSGA2
+#define EPS 1.0e-14   //!< A very small number, used in NSGA2 
 //#define E  2.71828182845905  //!< The natural number e
 //#define PI 3.14159265358979   use M_PI from <math.h> instead
 #define GNUPLOT_COMMAND "gnuplot -persist" //!<  Used for drawing with gnuplot

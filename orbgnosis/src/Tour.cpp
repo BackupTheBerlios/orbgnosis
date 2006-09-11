@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.6 2006/06/17 21:04:27 trs137 Exp $
+* $Id: Tour.cpp,v 1.7 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
@@ -32,6 +32,7 @@
 #include "Tour.h"
 #include <vector>
 #include <iostream>
+
 using namespace std;
 
 /**
@@ -41,62 +42,69 @@ using namespace std;
  * permStyle = 0: Steinhaus-Johnson-Trotter order
  * permStyle = 1: Lexicological order
  */
-Tour::Tour (int numTargets, int permStyle) try
-    : cols(numTargets),
-      rows(factorial(cols)),
-      order(rows),
-      p(cols+1),
-      pi(cols+1),
-      dir(cols+1),
-      rowCtr(0),
-      temp(0)
+
+Tour::Tour ( int numTargets, int permStyle ) try
+:
+    cols( numTargets ),
+    rows( factorial( cols ) ),
+    order( rows ),
+    p( cols + 1 ),
+    pi( cols + 1 ),
+    dir( cols + 1 ),
+    rowCtr( 0 ),
+    temp( 0 )
 {
     cout << "Tour constructor called.\n";
     // Resize order to have (rows) rows.
-    order.resize(rows);
-    for (int i = 0; i < rows; i++)
+    order.resize( rows );
+
+    for ( int i = 0; i < rows; i++ )
     {
         // Resize each row to hold (cols) columns.
-        order[i].resize(cols);
+        order[ i ].resize( cols );
     }
 
-    switch (permStyle)
+    switch ( permStyle )
     {
-        case 0: // Steinhaus-Johnson-Trotter permutations
-            // p.resize(cols+1);
-            // pi.resize(cols+1);
-            // dir.resize(cols+1);
-            for (int i = 1; i <= cols; i++)
-            {
-                dir[i] = -1;
-                p[i] = i;
-                pi[i] = i;
-            }
-            permSJT(1);
-            break;
 
-        case 1: // Lexicogical permutations
-            permLex();
-            break;
+    case 0:  // Steinhaus-Johnson-Trotter permutations
+        // p.resize(cols+1);
+        // pi.resize(cols+1);
+        // dir.resize(cols+1);
 
-        default:
-            cerr << "Error in Tour constructor: permStyle out of range.\n";
-            cerr << "bad permStyle = " << permStyle << ".\n";
-            exit(1);
+        for ( int i = 1; i <= cols; i++ )
+        {
+            dir[ i ] = -1;
+            p[ i ] = i;
+            pi[ i ] = i;
         }
+
+        permSJT( 1 );
+        break;
+
+    case 1:  // Lexicogical permutations
+        permLex();
+        break;
+
+    default:
+        cerr << "Error in Tour constructor: permStyle out of range.\n";
+        cerr << "bad permStyle = " << permStyle << ".\n";
+        exit( 1 );
+    }
 }
-catch (...) // std::length_error
+
+catch ( ... )  // std::length_error
 {
     cout << "Tour constructor failed.\n";
-    exit(1);
+    exit( 1 );
 }
 
 
- 
+
 /**
  * The Tour destructor.
  */
-Tour::~Tour (void)
+Tour::~Tour ( void )
 {
     cout << "Tour destructor called.\n";
 }
@@ -104,15 +112,15 @@ Tour::~Tour (void)
 /**
  * The Tour copy constructor.
  */
-Tour::Tour (const Tour& copy)
-    : cols(copy.cols),
-      rows(copy.rows),
-      order(rows),
-      p(cols+1),
-      pi(cols+1),
-      dir(cols+1),
-      rowCtr(0),
-      temp(0)
+Tour::Tour ( const Tour& copy )
+        : cols( copy.cols ),
+        rows( copy.rows ),
+        order( rows ),
+        p( cols + 1 ),
+        pi( cols + 1 ),
+        dir( cols + 1 ),
+        rowCtr( 0 ),
+        temp( 0 )
 {
     cout << "Tour copy constructor called.\n";
 }
@@ -121,7 +129,7 @@ Tour::Tour (const Tour& copy)
  * The Tour copy assignment operator.
  */
 Tour&
-Tour::operator = (Tour b)
+Tour::operator = ( Tour b )
 {
     cout << "Tour copy assignment operator was used.\n";
     return *this;
@@ -135,70 +143,78 @@ Tour::operator = (Tour b)
  * http://theory.cs.uvic.ca/inf/perm/PermInfo.html
  */
 void
-Tour::permSJT (int n)
+Tour::permSJT ( int n )
 {
-    if (n > cols)
+    if ( n > cols )
     {
         storeRowSJT();
     }
+
     else
     {
-        permSJT (n + 1);
-        for (int i = 1; i <= n - 1 ; i++)
+        permSJT ( n + 1 );
+
+        for ( int i = 1; i <= n - 1 ; i++ )
         {
-            exchangeSJT(n, dir[n]);
-            permSJT (n + 1);
+            exchangeSJT( n, dir[ n ] );
+            permSJT ( n + 1 );
         }
-        dir[n] = -dir[n];
+
+        dir[ n ] = -dir[ n ];
     }
 }
 
 void
-Tour::storeRowSJT (void)
+Tour::storeRowSJT ( void )
 {
-    for (int i = 0; i < cols; i++)
+    for ( int i = 0; i < cols; i++ )
     {
-        order[rowCtr][i] = p[i + 1] - 1; // XXX fixes off-by-one in SJT algo
+        order[ rowCtr ][ i ] = p[ i + 1 ] - 1; // XXX fixes off-by-one in SJT algo
         //cout << order[rowCtr][i] << " ";
     }
+
     //cout << "\n";
     rowCtr = rowCtr + 1;
 }
 
 void
-Tour::exchangeSJT(int x, int d)
+Tour::exchangeSJT( int x, int d )
 {
-    temp = p[pi[x] + d];
-    p[pi[x]] = temp;
-    p[pi[x] + d] = x;
-    pi[temp] = pi[x];
-    pi[x] = pi[x] + d;
+    temp = p[ pi[ x ] + d ];
+    p[ pi[ x ] ] = temp;
+    p[ pi[ x ] + d ] = x;
+    pi[ temp ] = pi[ x ];
+    pi[ x ] = pi[ x ] + d;
 }
 
 void
-Tour::printOrder (void)
+Tour::printOrder ( void )
 {
-    for (int r = 0; r < rows; r++)
+    for ( int r = 0; r < rows; r++ )
     {
-        for (int c = 0; c < cols; c++)
+        for ( int c = 0; c < cols; c++ )
         {
-            cout << order[r][c] << " ";
+            cout << order[ r ][ c ] << " ";
         }
+
         cout << "\n";
     }
 }
 
 void
-Tour::permLex(void)
+Tour::permLex( void )
 {
     // TODO
 }
 
 int
-Tour::factorial (const int k)
+Tour::factorial ( const int k )
 {
     int f = 1;
-    for (int i = 1; i <= k; i++) f = f * i;
+
+    for ( int i = 1; i <= k; i++ )
+        f = f * i;
+
     //cout << "The factorial of " << k << " is " << f << ".\n";
     return f;
 }

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.cpp,v 1.10 2006/06/15 20:50:33 trs137 Exp $
+* $Id: ULambert.cpp,v 1.11 2006/09/11 15:16:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -36,19 +36,20 @@
 #include "Stumpff.h"
 #include "ULambert.h"
 #include <iostream>
+
 using namespace std;
 
 /**
  * The universal variable Lambert constructor with no arguments.
  * All member variables are set to zero.
  */
-ULambert::ULambert(void) :
-        t(0.0),
-        Ro(0.0, 0.0, 0.0),
-        R(0.0, 0.0, 0.0),
-        Vo(0.0, 0.0, 0.0),
-        V(0.0, 0.0, 0.0),
-        failure(false)
+ULambert::ULambert( void ) :
+        t( 0.0 ),
+        Ro( 0.0, 0.0, 0.0 ),
+        R( 0.0, 0.0, 0.0 ),
+        Vo( 0.0, 0.0, 0.0 ),
+        V( 0.0, 0.0, 0.0 ),
+        failure( false )
 {
     //cout << "ULambert constructor called with no args.\n";
 }
@@ -59,13 +60,13 @@ ULambert::ULambert(void) :
  * @param r2in is the final position.
  * @param tin is the specified time of flight.
  */
-ULambert::ULambert(Vec3 r1in, Vec3 r2in, double tin) :
-        t(tin),
-        Ro(r1in),
-        R(r2in),
-        Vo(0.0, 0.0, 0.0),
-        V(0.0, 0.0, 0.0),
-        failure(false)
+ULambert::ULambert( Vec3 r1in, Vec3 r2in, double tin ) :
+        t( tin ),
+        Ro( r1in ),
+        R( r2in ),
+        Vo( 0.0, 0.0, 0.0 ),
+        V( 0.0, 0.0, 0.0 ),
+        failure( false )
 {
     // cout << "ULambert constructor called with 2 vectors and 1 time.\n";
 }
@@ -73,7 +74,7 @@ ULambert::ULambert(Vec3 r1in, Vec3 r2in, double tin) :
 /**
  * The universal variable Lambert destructor.
  */
-ULambert::~ULambert (void)
+ULambert::~ULambert ( void )
 {
     // cout << "ULambert destructor called \n";
 }
@@ -82,7 +83,7 @@ ULambert::~ULambert (void)
  * Sets the initial position vector, Ro.
  */
 void
-ULambert::setRo (Vec3 vin)
+ULambert::setRo ( Vec3 vin )
 {
     Ro = vin;
 }
@@ -91,7 +92,7 @@ ULambert::setRo (Vec3 vin)
  * Sets the final position vector, R.
  */
 void
-ULambert::setR (Vec3 vin)
+ULambert::setR ( Vec3 vin )
 {
     R = vin;
 }
@@ -100,7 +101,7 @@ ULambert::setR (Vec3 vin)
  * Sets the time of flight, t.
  */
 void
-ULambert::sett (double tin)
+ULambert::sett ( double tin )
 {
     t = tin;
 }
@@ -110,7 +111,7 @@ ULambert::sett (double tin)
  * This is the velocity at the point Ro which satisfies the Lamberts problem.
  */
 Vec3
-ULambert::getVo (void)
+ULambert::getVo ( void )
 {
     return Vo;
 }
@@ -120,7 +121,7 @@ ULambert::getVo (void)
  * This is the velocity at the point R which satisfies the Lamberts problem.
  */
 Vec3
-ULambert::getV (void)
+ULambert::getV ( void )
 {
     return V;
 }
@@ -129,7 +130,7 @@ ULambert::getV (void)
  * Gets the time of flight, t.
  */
 double
-ULambert::gett (void)
+ULambert::gett ( void )
 {
     return t;
 }
@@ -139,12 +140,13 @@ ULambert::gett (void)
  * This method is necessary because failure is private.
  */
 bool
-ULambert::isFailure(void)
+ULambert::isFailure( void )
 {
-    if (true == failure)
+    if ( true == failure )
     {
         return true;
     }
+
     else
     {
         return false;
@@ -157,7 +159,7 @@ ULambert::isFailure(void)
  * Astrodynamics and Applications".
  */
 void
-ULambert::universal (const bool Lin, const int multirev)
+ULambert::universal ( const bool Lin, const int multirev )
 {
     /// True if desired solution is to be the "long way", e.g.
     /// the swept angle is greater than pi or 180 degrees.
@@ -197,110 +199,128 @@ ULambert::universal (const bool Lin, const int multirev)
     V.toZero();
 
     // Magnitudes of Ro and R
-    Ro4 = norm(Ro);
-    R4 = norm(R);
+    Ro4 = norm( Ro );
+    R4 = norm( R );
 
     // "Nu" is true anomaly.
-    CosDeltaNu = dot(Ro, R) / (Ro4 * R4);
+    CosDeltaNu = dot( Ro, R ) / ( Ro4 * R4 );
 
-    if (true == longway)
+    if ( true == longway )
     {
-        VarA = -sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+        VarA = -sqrt( Ro4 * R4 * ( 1.0 + CosDeltaNu ) );
     }
+
     else
     {
-        VarA = sqrt( Ro4 * R4 * (1.0 + CosDeltaNu));
+        VarA = sqrt( Ro4 * R4 * ( 1.0 + CosDeltaNu ) );
     }
 
     // Form initial guesses.
     PsiOld = 0.0;
+
     PsiNew = 0.0;
+
     XOld = 0.0;
+
     C2New = 0.5;
+
     C3New = 1.0 / 6.0;
 
     // Set up initial bounds for the bisection.
-    if (0 == revs)
+    if ( 0 == revs )
     {
         Upper = 4.0 * M_PI * M_PI;
         Lower = -8.0 * M_PI;
     }
+
     else
     {
-        Upper = -SMALL + 4.0 * ((revs / 2) + 1) * ((revs / 2) + 1) * M_PI * M_PI;
-        Lower = SMALL + 4.0 * (revs / 2) * (revs / 2) * M_PI * M_PI;
+        Upper = -SMALL + 4.0 * ( ( revs / 2 ) + 1 ) * ( ( revs / 2 ) + 1 ) * M_PI * M_PI;
+        Lower = SMALL + 4.0 * ( revs / 2 ) * ( revs / 2 ) * M_PI * M_PI;
     }
 
     // Determine if the orbit is possible at all
-    if (fabs(VarA) > SMALL)
+    if ( fabs( VarA ) > SMALL )
     {
         Loops = 0;
         YNegKtr = 1;  // y neg counter
         dtNew = -10.0;
-        while ((fabs(dtNew - t) > SMALL) && (NumIter > Loops))
+
+        while ( ( fabs( dtNew - t ) > SMALL ) && ( NumIter > Loops ) )
         {
-            if (fabs(C2New) > SMALL )
+            if ( fabs( C2New ) > SMALL )
             {
                 Y = Ro4 + R4 -
-                    (VarA * (1.0 - PsiOld * C3New) / sqrt(C2New));
+                    ( VarA * ( 1.0 - PsiOld * C3New ) / sqrt( C2New ) );
             }
+
             else
             {
                 Y = Ro4 + R4;
             }
+
             // Check for negative values of Y.
-            if ( (0 < VarA) && (0 > Y))
+            if ( ( 0 < VarA ) && ( 0 > Y ) )
             {
                 YNegKtr = 1;
-                while ((0 > Y) && (10 > YNegKtr))
+
+                while ( ( 0 > Y ) && ( 10 > YNegKtr ) )
                 {
-                    PsiNew = 0.8 * (1 / C3New) * (1.0
-                                                  - (Ro4 + R4) * sqrt(C2New) / VarA);
+                    PsiNew = 0.8 * ( 1 / C3New ) * ( 1.0
+                                                     - ( Ro4 + R4 ) * sqrt( C2New ) / VarA );
                     // Find C2 and C3 functions.
-                    C2New = stumpff_C2(PsiNew);
-                    C3New = stumpff_C3(PsiNew);
+                    C2New = stumpff_C2( PsiNew );
+                    C3New = stumpff_C3( PsiNew );
                     PsiOld = PsiNew;
                     Lower = PsiOld;
-                    if (fabs(C2New) > SMALL)
+
+                    if ( fabs( C2New ) > SMALL )
                     {
-                        Y = Ro4 + R4 - (VarA * (1.0 -
-                                                PsiOld * C3New) / sqrt(C2New) );
+                        Y = Ro4 + R4 - ( VarA * ( 1.0 -
+                                                  PsiOld * C3New ) / sqrt( C2New ) );
                     }
+
                     else
                     {
                         Y = Ro4 + R4;
                     }
+
                     YNegKtr = YNegKtr + 1;
                 } // end while loop.
             } // end if Y neg.
 
-            if (10 > YNegKtr)
+            if ( 10 > YNegKtr )
             {
-                if (fabs(C2New) > SMALL)
+                if ( fabs( C2New ) > SMALL )
                 {
-                    XOld = sqrt(Y / C2New);
+                    XOld = sqrt( Y / C2New );
                 }
+
                 else
                 {
                     XOld = 0.0;
                 }
+
                 XOldCubed = XOld * XOld * XOld;
-                dtNew = XOldCubed * C3New + VarA * sqrt(Y);
+                dtNew = XOldCubed * C3New + VarA * sqrt( Y );
 
                 // Readjust upper and lower bounds.
-                if (dtNew < t)
+
+                if ( dtNew < t )
                 {
                     Lower = PsiOld;
                 }
+
                 else
                 {
                     Upper = PsiOld;
                 }
-                PsiNew = (Upper + Lower) * 0.5;
+
+                PsiNew = ( Upper + Lower ) * 0.5;
 
                 // Find C2 and C3 functions.
-                C2New = stumpff_C2(PsiNew);
-                C3New = stumpff_C3(PsiNew);
+                C2New = stumpff_C2( PsiNew );
+                C3New = stumpff_C3( PsiNew );
                 PsiOld = PsiNew;
                 Loops = Loops + 1;
 
@@ -315,14 +335,15 @@ ULambert::universal (const bool Lin, const int multirev)
                 *********************************************/
 
                 // Make sure the first guess isn't too close.
-                if (( fabs(dtNew - t) < SMALL) && (1 == Loops))
+
+                if ( ( fabs( dtNew - t ) < SMALL ) && ( 1 == Loops ) )
                 {
                     dtNew = t - 1.0;
                 }
             } // end if (10 > YNegKtr)
         } // end while loop
 
-        if ( (Loops >= NumIter) || (YNegKtr > 10) )
+        if ( ( Loops >= NumIter ) || ( YNegKtr > 10 ) )
         {
             // cout << "Error: Lambert Universal failed to converge. \n";
             //if (YNegKtr > 10) cout << "Y is negative\n";
@@ -331,18 +352,20 @@ ULambert::universal (const bool Lin, const int multirev)
             V.toInf();
             failure = true;
         }
+
         else
         {
 
             // Use F and G series to find velocity vectors.
             F = 1.0 - Y / Ro4;
             GDot = 1.0 - Y / R4;
-            G = 1.0 / (VarA * sqrt(Y)); // 1 over G
+            G = 1.0 / ( VarA * sqrt( Y ) ); // 1 over G
 
-            Vo = (R - F * Ro) * G;
-            V = (GDot * R - Ro) * G;
+            Vo = ( R - F * Ro ) * G;
+            V = ( GDot * R - Ro ) * G;
         } // end if answer has converged
     }
+
     else
     {
         // cout << "Vec3s are 180 degrees apart.\n";
