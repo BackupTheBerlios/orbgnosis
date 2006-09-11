@@ -1,4 +1,3 @@
-#
 # This makefile is free software; you can redistribute it and/or
 # modify it under the terms of the enclosed JBQ code license.
 # See LICENSE.Makefile
@@ -8,64 +7,92 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.10 2006/09/11 15:16:12 trs137 Exp $
+# $Id: Makefile,v 1.11 2006/09/11 18:23:23 trs137 Exp $
+
+# This makefile depends on GNU make and gcc.  Optionally, you may
+# use a high performance commercial compiler by editing TARGET, but
+# GNU make and gcc are always mandatory.
+# Optionally, you will need doxygen, pdflatex, a2ps and ps2pdf if you
+# wish to generate documentation or PDF program listings.
+#
+# Choose the platform and compiler. Valid choices are:
+#
+# TARGET := "default"     # GNU compiler, any architecture
+# TARGET := "icc_p4"     # Intel compiler, Pentium 4 (arl1426.arl.psu.edu)
+# TARGET := "hammer"      # Intel compiler, Opteron (hammer.aset.psu.edu)
+# TARGET := "power"       # IBM VisualAge, Power5 (power.ics.psu.edu)
+#
+TARGET := "icc_p4"
 
 # The file name, ...
 BINARY      := orbgnosis
-VERSION     := 0.2
+VERSION     := 0.5
 BUILDDATE   := $(shell date +%m%d%Y)
 BUILD_TYPE  := CVS
 
 # output directories
-
-OBJDIR  := obj
-DEPDIR  := dep
-SRCDIR  := src
-DOCDIR  := doc
-
+OBJDIR := obj
+DEPDIR := dep
+SRCDIR := src
+DOCDIR := doc
 TEMPDEPFILE := /tmp/orbgnosis_temp_deps
 
-# compiler, linker, ...
+# Set the compiler ...
+CC := g++ -c -pipe
+LD := g++
+DEP := g++ -MM  # always use gcc to generate deps
+ifeq ($(TARGET), "icc_p4")
+    CC := icpc -c -pipe
+    LD := icpc
+endif
+ifeq ($(TARGET), "hammer")
+    CC := icpc -c -pipe
+    LD := icpc
+endif
+ifeq ($(TARGET), "power")
+    CC := xlc++ -c -pipe
+    LD := xlc++ 
+endif
 
-#CC := g++ -c -pipe
-CC := icpc -c -pipe
-
-# These can be set from the shell to change the build type
+# This can be set from the shell to change the build type
 ifeq ($(BUILD_DEBUG),true)
     CFLAGS += -g -O0 
     BUILD_TYPE = Debug
 else
-# cpu-type "native" only supported in gcc 4.2.
     CFLAGS += -O2
-	#CFLAGS += -march=native -mtune=native
-    #CFLAGS += -mtune=G4
-    #CFLAGS += -Wdisabled-optimization
+    ifeq ($(TARGET), "icc_p4")
+        CFLAGS += -Wall -Wcheck -w1 -Wp64
+        CFLAGS += -align -ip -march=pentium4
+        CFLAGS += -opt_report -opt_report_level=max
+        CFLAGS += -opt_report_phase all
+        CFLAGS += -opt_report_file=icc_opt_report
+    endif
+    ifeq ($(TARGET), "hammer")
+        CFLAGS += -Wall -Wcheck -w2 -Wp64
+        CFLAGS += -align -ip
+        CFLAGS += -opt_report -opt_report_level=max
+        CFLAGS += -opt_report_phase all
+        CFLAGS += -opt_report_file=icc_opt_report
+    endif
+    ifeq ($(TARGET), "power")
+        CFLAGS += -qwarn64 -qformat -qinfo=all
+        CFLAGS += -qarch=pwr5 -qtune=power5
+        CFLAGS += -qhot -qreport
+    endif
 endif
 
+ifeq ($(CC),"g++ -c -pipe")  
+    CFLAGS += -Wredundant-decls -Winline -Weffc++
+    CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
+    CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
+    CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
+endif
+
+
 CFLAGS += -DVERSION_STRING=\"$(BUILDDATE)\"
-#CFLAGS += -Wredundant-decls -Winline -Weffc++
-#CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
-#CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
-#CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
-# The following are not supported in gcc < 4.0
-#CFLAGS += -Wstrict-null-sentinel
-# The following are not supported gcc < 4.2.
-#CFLAGS += -Wunsafe-loop-optimizations
 
-# These are for icc only
-CFLAGS += -Wall -Wcheck -w2 -Wp64
-CFLAGS += -align -ip -march=pentium4
-CFLAGS += -opt_report -opt_report_level=max
-CFLAGS += -opt_report_phase all
-CFLAGS += -opt_report_file=icc_opt_report
-
-# be able to add flags from the env at will without chaging the makefile
+# You can add flags from the environment at will without chaging the makefile
 CFLAGS += $(ORBGNOSIS_ADDL_BUILD_FLAGS)
-
-#LD := g++
-LD := icpc
-
-DEP := g++ -MM
 
 # create the dep dir.
 MAKEDEP := $(shell mkdir -p $(DEPDIR))
@@ -75,7 +102,6 @@ TAR := tar -cjvf
 MAKE:= gmake
 
 ################################################
-
 # the engine
 
 MAKEFILE := Makefile
@@ -97,6 +123,10 @@ HEADERS := $(addprefix $(SRCDIR)/,$(BASEHEADERS))
 default : build
 
 build : $(BINARY)
+	@echo Completed build for $(FULLNAME).  Please read through the output above
+	@echo for any errors or warnings.
+	@echo CC = $(CC)
+	@echo CFLAGS = $(CFLAGS)
 
 #   rule to create the object file directory if needed
 $(OBJDIR)::
