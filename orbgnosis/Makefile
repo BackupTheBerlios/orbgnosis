@@ -8,7 +8,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.8 2006/09/05 14:41:25 trs137 Exp $
+# $Id: Makefile,v 1.9 2006/09/11 01:10:49 trs137 Exp $
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -37,7 +37,7 @@ else
 # cpu-type "native" only supported in gcc 4.2.
     CFLAGS += -O2
 	#CFLAGS += -march=native -mtune=native
-    CFLAGS += -mtune=G4
+    #CFLAGS += -mtune=G4
     CFLAGS += -Wdisabled-optimization
 endif
 
@@ -47,7 +47,7 @@ CFLAGS += -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic
 CFLAGS += -Wno-multichar -Wpointer-arith -Wwrite-strings -Wconversion
 CFLAGS += -Wcast-qual -Wshadow -Wabi -Wreorder
 # The following are not supported in gcc < 4.0
-CFLAGS += -Wstrict-null-sentinel
+#CFLAGS += -Wstrict-null-sentinel
 # The following are not supported gcc < 4.2.
 #CFLAGS += -Wunsafe-loop-optimizations
 

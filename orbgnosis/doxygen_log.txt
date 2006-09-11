@@ -1,6 +1,3 @@
-/usr/home/trs137/orbgnosis/src/Orbgnosis.cpp:44: Warning: Member main(void) (function) of file Orbgnosis.cpp is not documented.
-/usr/home/trs137/orbgnosis/src/Orbgnosis.h:55: Warning: Member NaN (define) of file Orbgnosis.h is not documented.
-/usr/home/trs137/orbgnosis/src/problemdef.h:42: Warning: Member test_problem(double *xreal, double *xbin, int **gene, double *obj, double *constr) (function) of file problemdef.h is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:61: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:62: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
@@ -14,24 +11,25 @@
 /usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member dir (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member rowCtr (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member temp (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:66: Warning: Member get_a(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:67: Warning: Member get_e(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:68: Warning: Member get_i(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:69: Warning: Member get_raan(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_w(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_f(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:72: Warning: Member get_r(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:73: Warning: Member get_v(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:74: Warning: Member get_E(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:75: Warning: Member get_M(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:76: Warning: Member get_argLat(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:77: Warning: Member get_lonTrue(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:78: Warning: Member get_lonPer(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:79: Warning: Member get_e_vector(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:80: Warning: Member get_h_vector(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:81: Warning: Member get_n_vector(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member get_orbitType(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:125: Warning: Member anomalies(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:126: Warning: Member special(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:65: Warning: Member kepler(Traj, double) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:68: Warning: Member get_a(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:69: Warning: Member get_e(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_i(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_raan(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:72: Warning: Member get_w(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:73: Warning: Member get_f(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:74: Warning: Member get_r(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:75: Warning: Member get_v(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:76: Warning: Member get_E(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:77: Warning: Member get_M(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:78: Warning: Member get_argLat(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:79: Warning: Member get_lonTrue(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:80: Warning: Member get_lonPer(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:81: Warning: Member get_e_vector(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member get_h_vector(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:83: Warning: Member get_n_vector(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:84: Warning: Member get_orbitType(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:127: Warning: Member anomalies(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.h:128: Warning: Member special(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
 /usr/home/trs137/orbgnosis/src/Vec3.h:97: Warning: Member e[3] (variable) of class Vec3 is not documented.
