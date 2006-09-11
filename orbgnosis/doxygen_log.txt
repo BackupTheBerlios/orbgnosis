@@ -29,7 +29,13 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member get_h_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:83: Warning: Member get_n_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:84: Warning: Member get_orbitType(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:127: Warning: Member anomalies(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:128: Warning: Member special(void) (function) of class Traj is not documented.
+/usr/home/trs137/orbgnosis/src/Traj.cpp:52: Warning: argument `inclination' of command @param is not found in the argument list of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin)
+/usr/home/trs137/orbgnosis/src/Traj.cpp:52: Warning: The following parameters of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin) are not documented:
+  parameter iin
+
+/usr/home/trs137/orbgnosis/src/Traj.cpp:412: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
+/usr/home/trs137/orbgnosis/src/Traj.cpp:412: Warning: The following parameters of Traj::set_f(double fin) are not documented:
+  parameter fin
+
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:154: Warning: parameters of member ULambert::universal are not (all) documented
 /usr/home/trs137/orbgnosis/src/Vec3.h:97: Warning: Member e[3] (variable) of class Vec3 is not documented.

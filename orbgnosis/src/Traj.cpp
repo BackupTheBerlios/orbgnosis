@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.22 2006/09/06 20:19:52 trs137 Exp $
+* $Id: Traj.cpp,v 1.23 2006/09/11 01:50:28 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -50,15 +50,16 @@ Traj::Traj (void) : a(0.0), e(0.0), i(0.0), raan(0.0), w(0.0), f(0.0),
 }
 
 /**
- * Traj constructor.
- * All six classical Keplerian elements are
- * specified in the constructor.
- * @param ain the semimajor axis (length units).
- * @param ein the eccentricity (dimensionless).
- * @param iin the inclination (radians).
- * @param raanin the right ascention of the ascending node (radians)
- * @param win the argument of periapsis (radians).
- * @param fin the true anomaly (radians).
+ * Traj constructor with classical elements.
+ * The six classical Keplerian elements are specified in this version
+ * of the constructor.  The state vectors (position and velocity) are
+ * calculated automatically.
+ * @param ain semimajor axis (length units).
+ * @param ein eccentricity (dimensionless).
+ * @param inclination (radians).
+ * @param raanin right ascention of the ascending node (radians)
+ * @param win argument of periapsis (radians).
+ * @param fin true anomaly (radians).
  */
 Traj::Traj (double ain, double ein, double iin, double raanin, double win,
     double fin) :
@@ -74,8 +75,12 @@ Traj::Traj (double ain, double ein, double iin, double raanin, double win,
 }
 
 /**
- * Traj constructor.
- * State vector in canonical units used.
+ * Traj constructor with state vector.
+ * This version of the constructor takes position and velocity vectors
+ * in canonical units.  Classical elements are calculated automatically from
+ * these vectors.
+ * @param rin radius in geocentric IJK frame (Earth radii)
+ * @param vin velocity in geocentric IJK frame (Earth radii per canonical time unit)
  */
 Traj::Traj (Vec3 rin, Vec3 vin) : 
     a(0.0), e(0.0), i(0.0), raan(0.0), w(0.0), f(0.0),
@@ -152,7 +157,7 @@ Traj::~Traj (void)
 }
 
 /**
- * Prints classic orbital elements nicely.
+ * One way to print a trajectory's data.
  */
 void
 Traj::print (void)
@@ -178,6 +183,8 @@ Traj::print (void)
 /**
  * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
  * find the state vector after the time interval has elapsed.
+ * @param traj_0 the initial trajectory at time zero.
+ * @param t amount of time, in canonical units.
  */
 Traj
 kepler (Traj traj_0, double t)
@@ -313,10 +320,10 @@ Vec3 Traj::get_h_vector (void) { return h_vector; }
 Vec3 Traj::get_n_vector (void) { return n_vector; }
 
 /**
- * Mutator method for semimajor axis.
- * Constraints: [a < 0 : e > 1]
- *              [a = 0 : e = 1]
- *              [a > 0 : e < 1]
+ * Mutator method for semimajor axis.  Automatically re-calculates state vector.
+ * @param ain the semimajor axis must correspond appropriately to the
+ * eccentricity.  For e > 1, ain must be negative.  For e = 1, ain must be zero.
+ * For e < 1, ain must be positive.
  */
 void
 Traj::set_a (double ain)
@@ -333,17 +340,18 @@ Traj::set_a (double ain)
 }
 
 /**
- * Mutator method for eccentricity.
- * Constraints: [a < 0 : e > 1]
- *              [a = 0 : e = 1]
- *              [a > 0 : e < 1]
+ * Mutator method for eccentricity.  Automatically re-calculates state vector.
+ * @param ein the eccentricity must correspond correctly to the
+ * semimajor axis, a.  For negative a, ein must be greater than one.
+ * For a = 0, e must be exactly one.  For positive a, e must be between
+ * zero and one, non-inclusive.
  */
 void
 Traj::set_e (double ein)
 {
     if (    ((a < 0) && (ein <= 1))
          || ((fabs(a) < SMALL) && (fabs(ein-1.0) < SMALL))
-         || ((a > 0)  && (ein >= 1)) )
+         || ((a > 0)  && ((ein >= 1) || (ein <=0)) )         )
     {
         cerr << "ERROR: Traj::set_e can't change eccentricity to a value incompatible with semimajor axis." << endl;
         exit(1);
@@ -352,8 +360,8 @@ Traj::set_e (double ein)
     randv(); // changing classical orbital element requires re-running randv()
 }
 /**
- * Mutator method for inclination.
- * Constraints: [ 0 <= i <= 2*pi ]
+ * Mutator method for inclination.  Automatically re-calculates state vector.
+ * @param iin the inclination must be between zero and two pi, inclusive.
  */
 void
 Traj::set_i (double iin)
@@ -368,7 +376,9 @@ Traj::set_i (double iin)
 }
 
 /**
- * Mutator method for RAAN.
+ * Mutator method for RAAN.  Automatically re-calculates state vector.
+ * @param raanin the right ascention of the ascending node must be between zero
+ * and two pi, inclusive.
  * Constraints: [ 0 <= RAAN <= 2*pi ]
  */
 void
@@ -384,8 +394,8 @@ Traj::set_raan (double raanin)
 }
 
 /**
- * Mutator method for argument of periapsis.
- * Constraints: [ 0 <= w <= 2*pi ]
+ * Mutator method for argument of periapsis. Automatically re-calculates state vector.
+ * @param win the argument of periapsis must bet between zero and two pi, inclusive.
  */
 void
 Traj::set_w (double win)
@@ -400,8 +410,8 @@ Traj::set_w (double win)
 }
 
 /**
- * Mutator method for true anomaly.
- * Constraints: [ 0 <= f <= 2*pi ]
+ * Mutator method for true anomaly. Automatically re-calculates state vector.
+ * @param f the true anomaly must be between zero and two pi, inclusive.
  */
 void
 Traj::set_f (double fin)
@@ -416,8 +426,10 @@ Traj::set_f (double fin)
 }
 
 /**
- * Mutator method for geocentric position vector.
- * Constraints: [ norm(r) > 1.0 ] (units of earth radii)
+ * Mutator method for geocentric position vector.  Automatically re-calculates
+ * classical elements.
+ * @param rin the geocentric position vector must not be inside the Earth.
+ * Units of length are in Earth radii.
  */
 void
 Traj::set_r (Vec3 rin)
@@ -432,8 +444,10 @@ Traj::set_r (Vec3 rin)
 }
 
 /**
- * Mutator method for geocentric velocity vector.
- * Constraints: [ norm(v) < speed of light ] (units of ER/TU)
+ * Mutator method for geocentric velocity vector. Automatically re-calculates
+ * classical elements.
+ * @param vin the geocentric velocity vector must not be faster than the speed
+ * of light.  Units are ER/TU.
  */
 void
 Traj::set_v (Vec3 vin)
@@ -450,7 +464,9 @@ Traj::set_v (Vec3 vin)
 
 /**
  * Calculates position and velocity vectors, given
- * classical orbital elements in canonical units.
+ * classical orbital elements in canonical units.  The vector-based
+ * constructor and several mutator methods use this function, but
+ * programmers should not use it directly in their own code.
  */
 void
 Traj::randv()
@@ -493,7 +509,9 @@ Traj::randv()
 
 /**
  * Calculates classical orbital elements, given radius and velocity
- * in canonical units.
+ * in canonical units.  The elements-based contructor and several mutator
+ * methods use this function, but programmers should not use it directly
+ * in their own code.
  */
 void
 Traj::elorb(void)
@@ -544,6 +562,10 @@ Traj::elorb(void)
     special();
 }
 
+/**
+ * This private function is used by randv() and elorb() to calculate
+ * the eccentric and mean anomaly of a trajectory.
+ */
 void
 Traj::anomalies()
 {
@@ -563,6 +585,13 @@ Traj::anomalies()
     argLat = w + f;
 }
 
+/**
+ * This private function is used by randv() and elorb() to handle
+ * special case orbits that require non-standard orbital elements.
+ * Circular inclined orbits will use argument of latitude.
+ * Circular equatorial orbits use true longitude.
+ * Noncircular equatorial trajectories use longitude of periapsis.
+ */
 void
 Traj::special()
 {
