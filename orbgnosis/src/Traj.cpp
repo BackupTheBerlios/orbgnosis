@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.24 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Traj.cpp,v 1.25 2006/09/12 18:25:16 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -146,7 +146,6 @@ Traj::operator = ( Traj t )
         h_vector = t.h_vector;
         n_vector = t.n_vector;
     }
-
     return *this;
 }
 
@@ -166,7 +165,7 @@ Traj::print ( void )
 {
     cout << "TRAJECTORY PRINTOUT: " << endl;
     cout << "semimajor axis:               " << a << endl;
-    cout << "eccentricity:                 " << e_vector << ", " << e << endl;
+    cout << "eccentricity:                 " << e << ", " <<  e_vector << endl;
     cout << "inclination:                  " << i << endl;
     cout << "RA of ascending node:         " << raan << endl;
     cout << "argument of periapsis:        " << w << endl;
@@ -180,148 +179,6 @@ Traj::print ( void )
     cout << "Longitude of periapsis        " << lonPer << endl;
     cout << "spec angular momentum:        " << h_vector << ", norm = " << norm( h_vector ) << endl;
     cout << "node vector:                  " << n_vector << ", norm = " << norm( n_vector ) << endl;
-}
-
-/**
- * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
- * find the state vector after the time interval has elapsed.
- * @param traj_0 the initial trajectory at time zero.
- * @param t amount of time, in canonical units.
- */
-Traj
-kepler ( Traj traj_0, double t )
-{
-    if ( fabs( t ) <= SMALL )
-        return traj_0; // Zero time, so no movement.
-    else
-    {
-        // set up local variables
-        double r0, v0;  // initial radius and velocity (magnitudes only)
-        Vec3 rfinal, vfinal;      // final radius and velocity (vectors)
-        double F, G;    // universal variable f and g expressions
-        double Fdot, Gdot; // F and G's rates of change
-        double Xold;    // universal variable
-        double Xnew;    // universal variable
-        double Xold2;   // Xold squared
-        double Xnew2;   // Xnew squared
-        double Znew;    // new value of Z
-        double C2new;   // Stumpff C2 value
-        double C3new;   // Stumpff C3 value
-        double tnew;    // new time
-        double rdotv;   // r0 dot v0;
-        double a;       // semimajor axis;
-        double alpha;   // 1 / (semimajor axis)
-        double ksi;     // specific mechanicak energy
-        double period;  // orbital period
-        double S, W;    // variables for parabolic special case
-        double Rval;
-        double temp;
-        int counter = 0;
-        const int limit = 40;  // iteration limit
-
-        r0 = norm( traj_0.get_r() ); // current radius
-        v0 = norm( traj_0.get_v() ); // current velocity
-        Xold = 0.0;
-        Znew = 0.0;
-        rdotv = dot( traj_0.get_r(), traj_0.get_v() );
-
-        ksi = ( 0.5 * v0 * v0 ) - ( 1 / r0 );     // canonical!
-        alpha = -2.0 * ksi;
-
-        a = traj_0.get_a();
-
-        if ( alpha >= SMALL )
-        {
-            period = 2 * M_PI * sqrt( pow( fabs( a ), 3.0 ) );
-
-            if ( fabs( t ) > fabs( period ) )
-                t = fmod ( t, period ); // multirev
-
-            if ( fabs( alpha - 1.0 ) > SMALL )
-                Xold = t * alpha;
-            else
-                Xold = t * alpha * 0.97;
-        }
-
-        else
-        {
-            if ( fabs( alpha ) < SMALL )
-            {
-                // Parabola XXX TESTME
-                double h = norm( traj_0.get_h_vector() );
-                double p = h * h;
-                S = 0.5 * ( M_PI / 2.0 - atan( 3.0 * sqrt( 1.0 / ( p * p * p ) ) * t ) );
-                W = atan( pow( tan( S ), 1.0 / 3.0 ) );
-                Xold = sqrt( p ) * ( 2.0 * ( 1.0 / tan( 2.0 * W ) ) );
-                alpha = 0.0;
-            }
-
-            else
-            {
-                // Hyperbola XXX TESTME
-                // This only works correctly for positive t.
-                temp = -2.0 * t /
-                       ( a * ( rdotv + sqrt( -a ) * ( 1.0 - r0 * alpha ) ) );
-                Xold = sqrt( -a ) * log( temp );
-            }
-        }
-
-        while ( 1 )    // XXX fugly
-        {
-            Xold2 = Xold * Xold;
-            Znew = Xold2 * alpha;
-            C2new = stumpff_C2( Znew );
-            C3new = stumpff_C3( Znew );
-
-            tnew = Xold2 * Xold * C3new + rdotv * Xold2 * C2new +
-                   r0 * Xold * ( 1.0 - Znew * C3new );
-
-            Rval = Xold2 * C2new + rdotv * Xold * ( 1.0 - Znew * C3new ) +
-                   r0 * ( 1.0 - Znew * C2new );
-
-            Xnew = Xold + ( t - tnew ) / Rval;
-
-            counter++;
-            Xold = Xnew;
-
-            if ( ( fabs( tnew - t ) < SMALL ) || ( counter >= limit ) )
-                break;
-        }  // end while
-
-        if ( counter >= limit )
-        {
-            cerr << "Kepler failed to converge!" << endl; // oh noes
-            cerr << "Time interval was " << t << endl;
-            cerr << "Trajectory was... " << endl;
-            traj_0.print();
-            exit( 1 );
-        }
-
-        // Calculate position and velocity vectors at new time
-        Xnew2 = Xnew * Xnew;
-
-        F = 1.0 - ( Xnew2 * C2new / r0 );
-
-        G = t - Xnew2 * Xnew * C3new;
-
-        rfinal = F * traj_0.get_r() + G * traj_0.get_v();
-
-        Gdot = 1.0 - ( Xnew2 * C2new / norm( rfinal ) );
-
-        Fdot = ( Xnew / ( r0 * norm( rfinal ) ) ) * ( Znew * C3new - 1.0 );
-
-        vfinal = Fdot * traj_0.get_r() + Gdot * traj_0.get_v();
-
-        temp = F * Gdot - Fdot * G;
-
-        if ( fabs( temp - 1.0 ) > 0.00001 )
-        {
-            cerr << "Kepler had an error with f and g." << endl;
-            exit( 1 );
-        }
-
-        return Traj( rfinal, vfinal );
-    }
 }
 
 /*
@@ -405,6 +262,36 @@ Vec3 Traj::get_h_vector ( void )
 Vec3 Traj::get_n_vector ( void )
 {
     return n_vector;
+}
+
+/**
+ * Completely re-set a trajectory by specifying all six classical orbital
+ * elements.  This method automatically takes care of the state vector
+ * and miscelleous things.
+ */
+void
+Traj::set_elorb ( double ain, double ein, double iin, double raanin, double win,
+                  double fin)
+{
+    a = ain;
+    e = ein;
+    i = iin;
+    raan = raanin;
+    w = win;
+    f = fin;
+    randv();
+}
+
+/**
+ * Completely re-set a traj by specifying the position and velocity vectors.
+ * This method automatically takes care of the classical elements and misc things.
+ */
+void
+Traj::set_randv ( Vec3 rin, Vec3 vin )
+{
+    r = rin;
+    v = vin;
+    elorb();
 }
 
 /**
@@ -512,7 +399,7 @@ Traj::set_f ( double fin )
 {
     if ( ( fin < 0 ) || ( fin > 2 * M_PI ) )
     {
-        cerr << "ERROR: Traj::set_f can't set bad true anomaly value." << endl;
+        cerr << "ERROR: Traj::set_f can't set to bad true anomaly value." << endl;
         exit( 1 );
     }
 
@@ -609,7 +496,6 @@ Traj::randv()
     // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
-
     special();
 } // end randv
 
@@ -622,6 +508,7 @@ Traj::randv()
 void
 Traj::elorb( void )
 {
+    double frac; // temporary variable for bounds checking
     h_vector = cross( r, v );
     n_vector = cross( Vec3( 0, 0, 1 ), h_vector );
     double vv = norm( v );
@@ -645,25 +532,35 @@ Traj::elorb( void )
 
     // Inclination.  Units: Radians
     // Quadrant check is not necessary.
-    i = acos( h_vector.getZ() / hh );
+    frac = h_vector.getZ() / hh;
+    if (frac > 1.0) frac = 1.0;
+    if (frac < -1.0) frac = -1.0;
+    i = acos( frac );
 
     // RA of ascending node.  Units: Radians.
-    raan = acos( n_vector.getX() / nn );
+    frac = n_vector.getX() / nn;
+    if (frac > 1.0) frac = 1.0;
+    if (frac < -1.0) frac = -1.0;
+    raan = acos( frac );
     // Quadrant check!
-
     if ( n_vector.getY() < 0 )
         raan = 2 * M_PI - raan;
 
     // Argument of Perigee. Units: Radians.
-    w = acos( dot( n_vector, e_vector ) / ( nn * e ) );
+    frac =  dot( n_vector, e_vector ) / ( nn * e );
+    if (frac > 1.0) frac = 1.0;
+    if (frac < -1.0) frac = -1.0;
+    w = acos( frac );
 
     // Quadrant check!
     if ( e_vector.getZ() < 0 )
         w = 2 * M_PI - w;
 
     // True Anomaly.  Units: Radians.
-    f = acos( dot( e_vector, r ) / ( e * rr ) );
-
+    frac =  dot(e_vector, r) / (e * rr);
+    if (frac > 1.0) frac = 1.0;
+    if (frac < -1.0) frac = -1.0;
+    f = acos( frac );
     // Quadrant check!
     if ( dot( r, v ) < 0 )
         f = 2 * M_PI - f;
@@ -671,7 +568,6 @@ Traj::elorb( void )
     // Everything is solved except for the other anomalies
     // and special-case orbital elements.
     anomalies();
-
     special();
 }
 
@@ -717,13 +613,16 @@ void
 Traj::special()
 {
     double rr = norm( r );
+    double frac;    // for bounds checking.
     // Argument of Latitude (only for circular inclined orbits)
 
     if ( e < SMALL )
     {
-        argLat = acos( dot( n_vector, r ) / ( norm( n_vector ) * rr ) );
+        frac = dot( n_vector, r ) / ( norm( n_vector ) * rr ); 
+        if (frac > 1.0) frac = 1.0;
+        if (frac < -1.0) frac = -1.0;
+        argLat = acos( frac );
         // Quadrant check!
-
         if ( r.getZ() < 0 )
             argLat = 2 * M_PI - argLat;
     }
@@ -731,9 +630,11 @@ Traj::special()
     // True Longitude (only for circular equatorial orbits)
     if ( ( e < SMALL ) && ( i < SMALL ) )
     {
-        lonTrue = acos( r.getX() / rr );
+        frac =  r.getX() / rr;
+        if (frac > 1.0) frac = 1.0;
+        if (frac < -1.0) frac = -1.0;
+        lonTrue = acos( frac );
         // Quadrant check!
-
         if ( r.getY() < 0 )
             lonTrue = 2 * M_PI - lonTrue;
     }
@@ -741,8 +642,11 @@ Traj::special()
     // Longitude of Periapsis (only for non-circular equatorial trajs)
     if ( i < SMALL )
     {
-        lonPer = acos( e_vector.getX() / e );
-
+        frac = e_vector.getX() / e;
+        if (frac > 1.0) frac = 1.0;
+        if (frac < -1.0) frac = -1.0;
+        lonPer = acos( frac );
+        // quadrant check
         if ( e_vector.getY() < 0 )
             lonPer = 2 * M_PI - lonPer;
     }

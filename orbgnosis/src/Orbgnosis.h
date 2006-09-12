@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.20 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.21 2006/09/12 18:25:16 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -46,12 +46,30 @@
 #define GNUPLOT_COMMAND "gnuplot -persist" //!<  Used for drawing with gnuplot
 
 #define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"
-#define ER 6378.137    //!< Earth radius in km.
-#define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup>
-#define ROOTMU 631.3481     //!< the square root of Mu.
-#define TU_SEC 806.81112382429    //!< canonical time units (s)
-#define TU_MIN 13.44685206374     //!< canonical time units (m)
+#define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup> in S.I. units.
+#define ROOTMU 631.3481     //!< the square root of MU in S.I. units.
 
-#define NaN std::numeric_limits<double>::quiet_nan(); //!< ifndef NAN...
+/* A NOTE ON "CANONICAL" TIME
+ * Time and length units are chosen so that MU is unity.  This
+ * minimizes roundoff and truncation error, as well as saves floating
+ * point operations involving MU.
+ *
+ * In geocentric trajectories, Earth's radius is a convenient unit of
+ * length, so that's what we will use.
+ *
+ * Now, suppose there is a circular orbit with radius = 1 length unit.
+ * Its semimajor axis is also 1 length unit.
+ * Its orbital period is 2 * pi * sqrt( a*a*a / MU ), and since we wish MU
+ * to be one, we may solve the expression:
+ * In canonical time units, a trajectory with a semimajor axis of 1 length 
+ * unit has a period of exactly two pi time units.  Knowing this, we may
+ * easily find the length of a canonical time unit in terms of seconds
+ * or minutes.
+ */
+#define ER 6378.137    //!< Earth radius in km... (km per canonical length unit)
+#define TU_SEC 806.81112382429    //!< seconds per canonical time unit
+#define TU_MIN 13.44685206374     //!< minutes per canonical time unit
+
+#define nan std::numeric_limits<double>::quiet_nan(); //!< ifndef NAN...
 
 #endif /* _ORBGNOSIS_H_ */

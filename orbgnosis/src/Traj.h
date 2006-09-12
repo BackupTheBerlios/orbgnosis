@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.20 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Traj.h,v 1.21 2006/09/12 18:25:16 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -64,8 +64,6 @@ class Traj
 
         void print ( void );  // Prints trajectory parameters to stdout.
 
-        Traj kepler ( Traj, double ); // solve kepler's problem
-
         // Accessors
         double get_a ( void );
         double get_e ( void );
@@ -86,6 +84,8 @@ class Traj
         unsigned int get_orbitType ( void );
 
         // Mutators
+        void set_elorb ( double, double, double, double, double, double );
+        void set_randv ( Vec3, Vec3 );
         void set_a ( double );
         void set_e ( double );
         void set_i ( double );
@@ -94,7 +94,6 @@ class Traj
         void set_f ( double );
         void set_r ( Vec3 );
         void set_v ( Vec3 );
-
         // Setting non-classical elements is forbidden.
         // Setting miscellaneous private members is forbidden.
 
