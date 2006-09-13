@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.25 2006/09/12 18:25:16 trs137 Exp $
+* $Id: Traj.cpp,v 1.26 2006/09/13 02:01:15 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -146,6 +146,7 @@ Traj::operator = ( Traj t )
         h_vector = t.h_vector;
         n_vector = t.n_vector;
     }
+
     return *this;
 }
 
@@ -165,7 +166,7 @@ Traj::print ( void )
 {
     cout << "TRAJECTORY PRINTOUT: " << endl;
     cout << "semimajor axis:               " << a << endl;
-    cout << "eccentricity:                 " << e << ", " <<  e_vector << endl;
+    cout << "eccentricity:                 " << e << ", " << e_vector << endl;
     cout << "inclination:                  " << i << endl;
     cout << "RA of ascending node:         " << raan << endl;
     cout << "argument of periapsis:        " << w << endl;
@@ -496,6 +497,7 @@ Traj::randv()
     // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
+
     special();
 } // end randv
 
@@ -533,23 +535,39 @@ Traj::elorb( void )
     // Inclination.  Units: Radians
     // Quadrant check is not necessary.
     frac = h_vector.getZ() / hh;
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     i = acos( frac );
 
     // RA of ascending node.  Units: Radians.
     frac = n_vector.getX() / nn;
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     raan = acos( frac );
+
     // Quadrant check!
     if ( n_vector.getY() < 0 )
         raan = 2 * M_PI - raan;
 
     // Argument of Perigee. Units: Radians.
-    frac =  dot( n_vector, e_vector ) / ( nn * e );
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+    frac = dot( n_vector, e_vector ) / ( nn * e );
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     w = acos( frac );
 
     // Quadrant check!
@@ -557,10 +575,16 @@ Traj::elorb( void )
         w = 2 * M_PI - w;
 
     // True Anomaly.  Units: Radians.
-    frac =  dot(e_vector, r) / (e * rr);
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+    frac = dot(e_vector, r) / (e * rr);
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     f = acos( frac );
+
     // Quadrant check!
     if ( dot( r, v ) < 0 )
         f = 2 * M_PI - f;
@@ -568,6 +592,7 @@ Traj::elorb( void )
     // Everything is solved except for the other anomalies
     // and special-case orbital elements.
     anomalies();
+
     special();
 }
 
@@ -618,10 +643,16 @@ Traj::special()
 
     if ( e < SMALL )
     {
-        frac = dot( n_vector, r ) / ( norm( n_vector ) * rr ); 
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+        frac = dot( n_vector, r ) / ( norm( n_vector ) * rr );
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         argLat = acos( frac );
+
         // Quadrant check!
         if ( r.getZ() < 0 )
             argLat = 2 * M_PI - argLat;
@@ -630,10 +661,16 @@ Traj::special()
     // True Longitude (only for circular equatorial orbits)
     if ( ( e < SMALL ) && ( i < SMALL ) )
     {
-        frac =  r.getX() / rr;
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+        frac = r.getX() / rr;
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         lonTrue = acos( frac );
+
         // Quadrant check!
         if ( r.getY() < 0 )
             lonTrue = 2 * M_PI - lonTrue;
@@ -643,9 +680,15 @@ Traj::special()
     if ( i < SMALL )
     {
         frac = e_vector.getX() / e;
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         lonPer = acos( frac );
+
         // quadrant check
         if ( e_vector.getY() < 0 )
             lonPer = 2 * M_PI - lonPer;

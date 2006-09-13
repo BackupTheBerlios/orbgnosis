@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.7 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Tour.cpp,v 1.8 2006/09/13 02:01:15 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
@@ -67,7 +67,7 @@ Tour::Tour ( int numTargets, int permStyle ) try
     switch ( permStyle )
     {
 
-    case 0:  // Steinhaus-Johnson-Trotter permutations
+    case 0:    // Steinhaus-Johnson-Trotter permutations
         // p.resize(cols+1);
         // pi.resize(cols+1);
         // dir.resize(cols+1);
@@ -82,7 +82,7 @@ Tour::Tour ( int numTargets, int permStyle ) try
         permSJT( 1 );
         break;
 
-    case 1:  // Lexicogical permutations
+    case 1:    // Lexicogical permutations
         permLex();
         break;
 

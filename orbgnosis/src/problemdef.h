@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: problemdef.h,v 1.6 2006/09/11 15:16:13 trs137 Exp $
+* $Id: problemdef.h,v 1.7 2006/09/13 02:01:15 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -43,13 +43,13 @@
  */
 void test_problem ( double *xreal, double *xbin, int **gene, double *obj, double *constr )
 {
-    obj[ 0 ] =   /* TODO */
-        obj[ 1 ] =   /* TODO */
-            obj[ 2 ] =   /* TODO */
-                constr[ 0 ] =   /* TODO */
-                    constr[ 1 ] =   /* TODO */
-                        constr[ 2 ] =   /* TODO */
-                            constr[ 3 ] =   /* TODO */
+    obj[ 0 ] =      /* TODO */
+        obj[ 1 ] =      /* TODO */
+            obj[ 2 ] =      /* TODO */
+                constr[ 0 ] =      /* TODO */
+                    constr[ 1 ] =      /* TODO */
+                        constr[ 2 ] =      /* TODO */
+                            constr[ 3 ] =      /* TODO */
                                 return ;
 }
 

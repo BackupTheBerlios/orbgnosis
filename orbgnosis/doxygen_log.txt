@@ -1,4 +1,4 @@
-/usr/home/trs137/orbgnosis/src/Kepler.h:48: Warning: Member kepler(Traj traj_0, double t) (function) of file Kepler.h is not documented.
+/usr/home/trs137/orbgnosis/src/Kepler.h:62: Warning: Member kepler(Traj traj_0, double t) (function) of file Kepler.h is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:50: Warning: Member printOrder(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:64: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:65: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
@@ -33,8 +33,8 @@
 /usr/home/trs137/orbgnosis/src/Traj.cpp:53: Warning: The following parameters of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin) are not documented:
   parameter iin
 
-/usr/home/trs137/orbgnosis/src/Traj.cpp:393: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
-/usr/home/trs137/orbgnosis/src/Traj.cpp:393: Warning: The following parameters of Traj::set_f(double fin) are not documented:
+/usr/home/trs137/orbgnosis/src/Traj.cpp:394: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
+/usr/home/trs137/orbgnosis/src/Traj.cpp:394: Warning: The following parameters of Traj::set_f(double fin) are not documented:
   parameter fin
 
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:156: Warning: parameters of member ULambert::universal are not (all) documented
