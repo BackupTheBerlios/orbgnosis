@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.22 2006/09/13 02:01:15 trs137 Exp $
+* $Id: Traj.h,v 1.23 2006/09/14 02:24:58 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -47,15 +47,15 @@ class Traj
         Traj ( void ); // defaults to all zeroes
 
         // This ctor calls randv() to fill in the missing data.
-        Traj ( double,       // a
-               double,       // e
-               double,       // i
-               double,       // raan
-               double,       // w
+        Traj ( double,      // a
+               double,      // e
+               double,      // i
+               double,      // raan
+               double,      // w
                double );   // f
 
         // This ctor calls elorb() to fill in the missing elements.
-        Traj ( Vec3,      // r
+        Traj ( Vec3,     // r
                Vec3 );  // v
 
         virtual ~Traj ( void );       // dtor
@@ -63,6 +63,7 @@ class Traj
         Traj& operator = ( Traj );    // copy assignment
 
         void print ( void );  // Prints trajectory parameters to stdout.
+        void print_El (void); // Prints just the 6 classical elements one line.
 
         // Accessors
         double get_a ( void );

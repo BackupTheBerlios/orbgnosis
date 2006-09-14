@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Kepler.h,v 1.2 2006/09/13 02:01:15 trs137 Exp $
+* $Id: Kepler.h,v 1.3 2006/09/14 02:24:58 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -35,47 +35,43 @@
 #include "Vec3.h"
 #include <iostream>
 #include <math.h>
-
 using namespace std;
-
-/*
- * TODO: add exception handling for bad cases.  Throw an error up
- * to be caught by whatever calls kepler().  Cases that fail to
- * converge or have f&g problems can be safely skipped, as they
- * are extremely rare.  In other words, rather than tryin in vain
- * to solve one of those cases, we just pass over it and do
- * other stuff.  The likelihood of such a case being a valid or
- * fit solution is very low.
- *
- * In other words, just don't allow cases where eccentricity is
- * very close to 1.0.
- */
 
 /** @file
  * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
  * find the state vector after the time interval has elapsed.
  * @param traj_0 the initial trajectory at time zero.
  * @param t amount of time, in canonical units.
+ *
+ * kepler() will throw an integer exception in some cases:
+ * If it exceeds the iteration limit it throws 1.
+ * If it converges, but the F&G transformation is out of tolerance, it throws
+ * a 2.
+ * Obviously, programmers are encouraged to wrap calls to kepler()
+ * in a try-catch block.  For example,
+ * try
+ * {
+ *     newtraj = kepler(oldtraj, dt);
+ * }
+ * catch (int status)
+ * {
+ *    cerr << "kepler threw " << status << endl;
+ * } 
  */
 Traj
 kepler ( Traj traj_0, double t )
 {
     //srand (time (NULL));
-
-    if (t < 0)
+    if (t < 0) 
     {
-        cerr << "Kepler needs time > 0." << endl;
+        cout << "Kepler needs time > 0." << endl;
         exit(1);
     }
-
     if ( fabs( t ) <= SMALL )
     {
         cout << "Kepler: time was zero.  No movement." << endl;
         return traj_0; // Zero time, so no movement.
-    }
-
-    else
-    {
+    } else {
         // set up local variables
         double r0, v0;  // initial radius and velocity (magnitudes only)
         Vec3 rfinal, vfinal;      // final radius and velocity (vectors)
@@ -99,8 +95,8 @@ kepler ( Traj traj_0, double t )
         double temp;
         double adjust;  // variable step adjuster.
         int counter = 0;
-        int bbq = 0;
-        int limit = 40;  // iteration limit
+        int adj_ctr = 0;
+        const int limit = 400;  // iteration limit (default = 40)
 
         r0 = norm( traj_0.get_r() ); // current radius
         v0 = norm( traj_0.get_v() ); // current velocity
@@ -113,25 +109,21 @@ kepler ( Traj traj_0, double t )
         a = traj_0.get_a();
 
         // Set up initial guess for Xold.
-
-        if ( alpha >= 0.02 ) // was (alpha >= SMALL)   // was 0.02
+        if ( alpha >= 0.0001 ) // was (alpha >= SMALL)
         {
             //cout << "**** Kepler is working on an ellipse ****" << endl;
             period = 2 * M_PI * sqrt( pow( fabs( a ), 3.0 ) );
-
             if ( fabs( t ) > fabs( period ) )
             {
                 // cout << "Kepler is dealing with >1 revolution." << endl;
                 t = fmod ( t, period ); // multirev
             }
-
             if ( fabs( alpha - 1.0 ) > 0.5 )
-                Xold = t * alpha * 0.999;
+                Xold = t * alpha;
             else
                 Xold = t * alpha * 0.97; // first guess can't be too close
-        } else
-        {
-            if ( fabs(alpha) < 0.02 )
+        } else {
+            if ( fabs(alpha) < 0.0001 ) // was (fabs(alpha) < SMALL )
             {
                 // Parabola
                 //cout << "**** Kepler is working on a parabola ****" << endl;
@@ -141,21 +133,17 @@ kepler ( Traj traj_0, double t )
                 W = atan( pow( tan(S), 1.0 / 3.0 ) );
                 Xold = sqrt(p) * ( 2.0 * ( 1.0 / tan( 2.0 * W ) ) );
                 // alpha = 0.0;  // experiment!!!
-            }
-
-            else
-            {
+            } else {
                 // Hyperbola
                 // This only works correctly for positive t.
                 //cout << "**** Kepler is working on a hyperbola ****" << endl;
-                limit = limit * 10;
                 temp = -2.0 * t /
                        ( a * ( rdotv + sqrt( -a ) * ( 1.0 - r0 * alpha ) ) );
                 Xold = sqrt( -a ) * log( temp );
             }
         }
 
-        while ( 1 )    // XXX fugly loop
+        while ( 1 )    // XXX ugly loop
         {
             Xold2 = Xold * Xold;
             Znew = Xold2 * alpha;
@@ -169,114 +157,93 @@ kepler ( Traj traj_0, double t )
                    r0 * ( 1.0 - Znew * C2new );
 
             if ((a > 0.0) &&
-                    (fabs(Xnew) > 2*M_PI*sqrt(a)) &&
-                    (ksi < 0.0))
+                (fabs(Xnew) > 2*M_PI*sqrt(a)) &&
+                (ksi < 0.0))
             {
-                /* OMGWTFBBQ
+                /* XXX
                  * This adjusts the step size if things are going badly.
                  * Rval is multiplied by a random number between 7 and 10.
-                 * We don't use the same scaling factor each time, to avoid
-                 * aliasing.  Yes this actually works!
+                 * Why random?  Because I can't think of a good constant value.
+                 * Vallado recommends 7 to 10.
                  */
-                adjust = 3.0 * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) + 7.0;
-                //cout << adjust << endl;
+                adjust = 3.0*((double)rand()/((double)(RAND_MAX)+(double)(1)))+7.0;
                 Xnew = Xold + (t - tnew) / (Rval * adjust);
-                limit = limit + 20; // cut some slack
-                bbq++;  // count how often we use variable step size
-            }
-
-            else
-            {
+                adj_ctr++;
+            } else {
                 Xnew = Xold + ( t - tnew ) / Rval;
             }
-
             counter++;
             //cout << tnew-t << endl;
             Xold = Xnew;
-
-            if ( ( fabs( tnew - t ) < 1.0e-7 ) || ( counter >= limit )
-                    || (bbq >= 1000) )
-                break;
+            if (( fabs( tnew - t ) < SMALL ) || ( counter >= limit )) break;
         }  // end while
 
         // Update Znew, C2new and C3new!
         // Vallado's original code doesn't have this.
-        // Not doing this will cause small errors,
+        // Not doing this will cause small errors, 
         // especially with parabolic cases.
         Xold2 = Xold * Xold;
-
         Znew = Xold2 * alpha;
-
         C2new = stumpff_C2( Znew );
-
         C3new = stumpff_C3( Znew );
-
         //---------------------------------------------------
 
         //cout << "Kepler finished iterating after " << counter << " times." << endl;
         // Calculate position and velocity vectors at new time
         Xnew2 = Xnew * Xnew;
-
         F = 1.0 - ( Xnew2 * C2new / r0 );
-
         G = t - Xnew2 * Xnew * C3new;
-
         rfinal = F * traj_0.get_r() + G * traj_0.get_v();
-
         Gdot = 1.0 - ( Xnew2 * C2new / norm( rfinal ) );
-
         Fdot = ( Xnew / ( r0 * norm( rfinal ) ) ) * ( Znew * C3new - 1.0 );
-
         vfinal = Fdot * traj_0.get_r() + Gdot * traj_0.get_v();
-
         temp = F * Gdot - Fdot * G;
 
-        if (( counter >= limit ) || (bbq >= 1000))
+        if ( counter >= limit ) 
         {
-            cerr << "Kepler failed to converge!" << endl; // oh noes
-            cerr << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
-            cerr << "fabs (tnew - t) = " << fabs(temp - 1.0) << endl;
-            cerr << "counter was " << counter << endl;
-            cerr << "BBQ counter was " << bbq << endl;
-            cerr << "Time interval was " << t << endl;
-            cerr << "Alpha was         " << alpha << endl;
-            cerr << "ksi  was          " << ksi << endl;
+            throw(1);
+            /*cout << endl;
+            cout << "Iteration limit exceeded. adj_ctr = " << adj_ctr << endl; // oh noes
+            cout << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
+            cout << "fabs (tnew - t) = " << fabs(temp-1.0) << endl;
+            cout << "counter was " << counter << endl;
+            cout << "Time interval was " << t << endl;
+            cout << "Alpha was         " << alpha << endl;
+            cout << "ksi  was          " << ksi << endl;
             traj_0.print();
-            cerr << endl;
+            cout << endl;
             Traj result (rfinal, vfinal);
             result.print();
-            cerr << endl;
-            cerr << "Traj badEL (" << traj_0.get_a() << ", " << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
-            cerr << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
-            cerr << "Traj badRV (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
-            cerr << "Kepler (bad, " << t << ");" << endl;
-            exit( 1 );
+            cout << endl;
+            cout << setprecision(5) << "badEL = Traj (" << traj_0.get_a() << ", "  << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
+            cout << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
+            cout << "badRV = Traj (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
+            cout << "result = kepler (badRV, " << t << ");" << endl;
+            exit( 1 ); */
         }
 
         if ( fabs( temp - 1.0 ) > 0.00001 ) // Vallado's tolerance = 0.00001
         {
-            cerr << "Kepler converged, but there was an error with f and g." << endl;
-            cerr << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
-            cerr << "fabs (tnew - t) = " << fabs(temp - 1.0) << endl;
-            cerr << "BBQ counter was " << bbq << endl;
-            cerr << "counter was " << counter << endl;
-            cerr << "Time interval was " << t << endl;
-            cerr << "Alpha was         " << alpha << endl;
-            cerr << "ksi  was          " << ksi << endl;
+            throw(2);
+            /*cout << endl;
+            cout << "F and G error. fabs(temp-1.0) = " << fabs(temp-1.0) << endl;
+            cout << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
+            cout << "fabs (tnew - t) = " << fabs(temp-1.0) << endl;
+            cout << "counter was " << counter << endl;
+            cout << "Time interval was " << t << endl;
+            cout << "Alpha was         " << alpha << endl;
+            cout << "ksi  was          " << ksi << endl;
             traj_0.print();
-            cerr << endl;
+            cout << endl;
             Traj result (rfinal, vfinal);
             result.print();
-            cerr << endl;
-            cerr << "Traj badEL (" << traj_0.get_a() << ", " << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
-            cerr << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
-            cerr << "Traj badRV (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
-            cerr << "Kepler (bad, " << t << ");" << endl;
-            exit( 1 );
+            cout << endl;
+            cout << "badEL = Traj (" << traj_0.get_a() << ", "  << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
+            cout << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
+            cout << "badRV = Traj (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
+            cout << "result = kepler (badRV, " << t << ");" << endl;
+            exit( 1 ); */
         }
-
-        cout << counter << endl;
-
         return Traj( rfinal, vfinal );
     }
 }
