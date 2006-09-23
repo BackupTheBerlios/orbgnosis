@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.27 2006/09/14 02:24:58 trs137 Exp $
+* $Id: Traj.cpp,v 1.28 2006/09/23 04:03:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -146,6 +146,7 @@ Traj::operator = ( Traj t )
         h_vector = t.h_vector;
         n_vector = t.n_vector;
     }
+
     return *this;
 }
 
@@ -163,29 +164,31 @@ Traj::~Traj ( void )
 void
 Traj::print ( void )
 {
-    cout << "TRAJECTORY PRINTOUT: " << endl;
-    cout << "semimajor axis:               " << a << endl;
-    cout << "eccentricity:                 " << e << ", " <<  e_vector << endl;
-    cout << "inclination:                  " << i << endl;
-    cout << "RA of ascending node:         " << raan << endl;
-    cout << "argument of periapsis:        " << w << endl;
-    cout << "true anomaly:                 " << f << endl;
-    cout << "radius vector:                " << r << ", norm = " << norm( r ) << endl;
-    cout << "velocity vector:              " << v << ", norm = " << norm( v ) << endl;
-    cout << "eccentric/hyperbolic anomaly: " << E << endl;
-    cout << "mean anomaly:                 " << M << endl;
-    cout << "Argument of latitude          " << argLat << endl;
-    cout << "True longitude                " << lonTrue << endl;
-    cout << "Longitude of periapsis        " << lonPer << endl;
-    cout << "spec angular momentum:        " << h_vector << ", norm = " << norm( h_vector ) << endl;
-    cout << "node vector:                  " << n_vector << ", norm = " << norm( n_vector ) << endl;
+    cout << "   position vector:              " << r << ", norm = " << norm(r) << endl;
+    cout << "   velocity vector:              " << v << ", norm = " << norm(v) << endl;
+    cout << "   ------------------------------" << endl;
+    cout << "   semimajor axis:               " << a << endl;
+    cout << "   eccentricity:                 " << e << endl;
+    cout << "   inclination:                  " << i << endl;
+    cout << "   RA of ascending node:         " << raan << endl;
+    cout << "   argument of periapsis:        " << w << endl;
+    cout << "   true anomaly:                 " << f << endl;
+    cout << "   ------------------------------" << endl;
+    cout << "   mean anomaly:                 " << M << endl;
+    cout << "   eccentric/hyperbolic anomaly: " << E << endl;
+    cout << "   argument of latitude:         " << argLat << endl;
+    cout << "   true longitude:               " << lonTrue << endl;
+    cout << "   longitude of periapsis:       " << lonPer << endl;
+    cout << "   specific angular momentum:    " << h_vector << ", norm = " << norm( h_vector ) << endl;
+    cout << "   eccentricity vector:          " << e_vector << endl;
+    cout << "   node vector:                  " << n_vector << endl;
 }
 
 /**
  * Print just the classical elements on line line:
  * a, e, i, raan, w, f
  */
-# include <iomanip>
+# include <iomanip> // XXX
 void
 Traj::print_El( void)
 {
@@ -475,6 +478,95 @@ Traj::set_v ( Vec3 vin )
 }
 
 /**
+ * Mutator method for mean anomaly.  Automatically re-calculates.
+ * everything else.  Only to be used for elliptical orbits.
+ * @param min the mean anomaly.
+ */
+void
+Traj::set_M( double min )
+{
+    M = min;
+    const double limit = 50;    // iteraton limit
+    int count;                  // iteration counter
+    double Eold, Enew;          // next eccentric anomaly value
+    double sinf, cosf;          // sine and cosine of true anomaly
+
+    if (e > 1.0) // Hyperbolic trajectory if e is over 1.
+    {
+        // Set up initial guess
+        if (e < 1.6)
+        {
+            if ((M < 0.0) && (M > -M_PI) || (M > M_PI))
+            {
+                Eold = M - e;
+            } else {
+                Eold = M + e;
+            }
+        } else {
+            if ((e < 3.6) && (fabs(M) > M_PI))
+            {
+                if (M > 0.0)
+                {
+                    Eold = M - e;
+                } else {
+                    Eold = M + e;
+                }
+            } else {
+                Eold = M / (e - 1.0);
+            }
+        }
+    
+        count = 1;
+        Enew = Eold + ((M - e * sinh(Eold) + Eold) / (E * cosh(Eold) - 1.0));
+        while ((fabs(Enew-Eold) > SMALL) && (count < limit))
+        {
+            Eold  = Enew;
+            Enew  = Eold + ((M - e * sinh(Eold) + Eold) / (E * cosh(Eold) - 1.0));
+            count = count + 1;
+        }
+        sinf = -(sqrt(e*e-1.0) * sinh(Enew)) / (1.0 - e * cosh(Enew));
+        cosf = (cosh(Enew) - e) / (1.0 - e * cosh(Enew));
+        f = atan2(sinf, cosf);
+    }
+    else
+    {
+        if (e > SMALL) // Elliptical
+        {
+            if (((M > 0.0) && (M > -M_PI)) || (M > M_PI))
+            {
+                Eold = M - e;
+            } else {
+                Eold = M + e;
+            }
+            count = 1;
+            Enew = Eold + (M - Eold + e * sin(Eold)) / (1.0 - e * cos(Eold));
+            while ((fabs(Enew-Eold) > SMALL) && (count <= limit))
+            {
+                Eold = Enew;
+                Enew = Eold + (M - Eold + e * sin(Eold)) / (1.0 - e * cos(Eold));
+                count = count + 1;
+            }
+            sinf = (sqrt(1.0 - e * e) * sin(Enew)) / (1.0 - e * cos(Enew));
+            cosf = (cos(Enew) - e) / (1.0 - e * cos(Enew));
+            f = atan2(sinf, cosf);
+        }
+        else // Circular
+        {
+            count = 0;
+            f = M;
+            Enew = M;
+        }
+    }
+    if (count > limit)
+    {
+        cerr << "set_M() failed to converge while calculating E from M." << endl;
+        exit(1);
+    }
+    E = Enew;
+    randv();
+}
+
+/**
  * Calculates position and velocity vectors, given
  * classical orbital elements in canonical units.  The vector-based
  * constructor and several mutator methods use this function, but
@@ -524,6 +616,7 @@ Traj::randv()
     // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
+
     special();
 } // end randv
 
@@ -561,23 +654,39 @@ Traj::elorb( void )
     // Inclination.  Units: Radians
     // Quadrant check is not necessary.
     frac = h_vector.getZ() / hh;
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     i = acos( frac );
 
     // RA of ascending node.  Units: Radians.
     frac = n_vector.getX() / nn;
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     raan = acos( frac );
+
     // Quadrant check!
     if ( n_vector.getY() < 0 )
         raan = 2 * M_PI - raan;
 
     // Argument of Perigee. Units: Radians.
-    frac =  dot( n_vector, e_vector ) / ( nn * e );
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+    frac = dot( n_vector, e_vector ) / ( nn * e );
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     w = acos( frac );
 
     // Quadrant check!
@@ -585,10 +694,16 @@ Traj::elorb( void )
         w = 2 * M_PI - w;
 
     // True Anomaly.  Units: Radians.
-    frac =  dot(e_vector, r) / (e * rr);
-    if (frac > 1.0) frac = 1.0;
-    if (frac < -1.0) frac = -1.0;
+    frac = dot(e_vector, r) / (e * rr);
+
+    if (frac > 1.0)
+        frac = 1.0;
+
+    if (frac < -1.0)
+        frac = -1.0;
+
     f = acos( frac );
+
     // Quadrant check!
     if ( dot( r, v ) < 0 )
         f = 2 * M_PI - f;
@@ -596,6 +711,7 @@ Traj::elorb( void )
     // Everything is solved except for the other anomalies
     // and special-case orbital elements.
     anomalies();
+
     special();
 }
 
@@ -646,10 +762,16 @@ Traj::special()
 
     if ( e < SMALL )
     {
-        frac = dot( n_vector, r ) / ( norm( n_vector ) * rr ); 
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+        frac = dot( n_vector, r ) / ( norm( n_vector ) * rr );
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         argLat = acos( frac );
+
         // Quadrant check!
         if ( r.getZ() < 0 )
             argLat = 2 * M_PI - argLat;
@@ -658,10 +780,16 @@ Traj::special()
     // True Longitude (only for circular equatorial orbits)
     if ( ( e < SMALL ) && ( i < SMALL ) )
     {
-        frac =  r.getX() / rr;
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+        frac = r.getX() / rr;
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         lonTrue = acos( frac );
+
         // Quadrant check!
         if ( r.getY() < 0 )
             lonTrue = 2 * M_PI - lonTrue;
@@ -671,9 +799,15 @@ Traj::special()
     if ( i < SMALL )
     {
         frac = e_vector.getX() / e;
-        if (frac > 1.0) frac = 1.0;
-        if (frac < -1.0) frac = -1.0;
+
+        if (frac > 1.0)
+            frac = 1.0;
+
+        if (frac < -1.0)
+            frac = -1.0;
+
         lonPer = acos( frac );
+
         // quadrant check
         if ( e_vector.getY() < 0 )
             lonPer = 2 * M_PI - lonPer;

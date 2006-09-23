@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.23 2006/09/14 02:24:58 trs137 Exp $
+* $Id: Traj.h,v 1.24 2006/09/23 04:03:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -82,7 +82,6 @@ class Traj
         Vec3 get_e_vector ( void );
         Vec3 get_h_vector ( void );
         Vec3 get_n_vector ( void );
-        unsigned int get_orbitType ( void );
 
         // Mutators
         void set_elorb ( double, double, double, double, double, double );
@@ -95,8 +94,7 @@ class Traj
         void set_f ( double );
         void set_r ( Vec3 );
         void set_v ( Vec3 );
-        // Setting non-classical elements is forbidden.
-        // Setting miscellaneous private members is forbidden.
+        void set_M ( double );
 
     private:
         // SIX CLASSICAL ORBITAL ELEMENTS:

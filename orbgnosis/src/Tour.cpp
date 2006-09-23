@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.8 2006/09/13 02:01:15 trs137 Exp $
+* $Id: Tour.cpp,v 1.9 2006/09/23 04:03:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
@@ -42,7 +42,6 @@ using namespace std;
  * permStyle = 0: Steinhaus-Johnson-Trotter order
  * permStyle = 1: Lexicological order
  */
-
 Tour::Tour ( int numTargets, int permStyle ) try
 :
     cols( numTargets ),
@@ -63,10 +62,8 @@ Tour::Tour ( int numTargets, int permStyle ) try
         // Resize each row to hold (cols) columns.
         order[ i ].resize( cols );
     }
-
     switch ( permStyle )
     {
-
     case 0:    // Steinhaus-Johnson-Trotter permutations
         // p.resize(cols+1);
         // pi.resize(cols+1);
@@ -78,7 +75,6 @@ Tour::Tour ( int numTargets, int permStyle ) try
             p[ i ] = i;
             pi[ i ] = i;
         }
-
         permSJT( 1 );
         break;
 

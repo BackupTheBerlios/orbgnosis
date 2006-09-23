@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.h,v 1.5 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Tour.h,v 1.6 2006/09/23 04:03:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -37,7 +37,6 @@ using namespace std;
 /**
  * A sequence of trajectories that visits each target once.
  */
-
 class Tour
 {
 

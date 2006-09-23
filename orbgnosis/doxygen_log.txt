@@ -1,17 +1,19 @@
 /usr/home/trs137/orbgnosis/src/Kepler.h:63: Warning: Member kepler(Traj traj_0, double t) (function) of file Kepler.h is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:50: Warning: Member printOrder(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:64: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:65: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:68: Warning: Member permLex(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:70: Warning: Member factorial(const int k) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member cols (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member rows (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member order (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member p (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member pi (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:58: Warning: Member dir (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:59: Warning: Member rowCtr (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:60: Warning: Member temp (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:63: Warning: Member t10s (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:64: Warning: Member numTargets (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:49: Warning: Member printOrder(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:63: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:64: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:67: Warning: Member permLex(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:69: Warning: Member factorial(const int k) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:52: Warning: Member cols (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member rows (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member order (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member p (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member pi (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member dir (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:58: Warning: Member rowCtr (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:59: Warning: Member temp (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:69: Warning: Member get_a(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_e(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_i(void) (function) of class Traj is not documented.
@@ -28,13 +30,12 @@
 /usr/home/trs137/orbgnosis/src/Traj.h:82: Warning: Member get_e_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:83: Warning: Member get_h_vector(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:84: Warning: Member get_n_vector(void) (function) of class Traj is not documented.
-/usr/home/trs137/orbgnosis/src/Traj.h:85: Warning: Member get_orbitType(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.cpp:53: Warning: argument `inclination' of command @param is not found in the argument list of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin)
 /usr/home/trs137/orbgnosis/src/Traj.cpp:53: Warning: The following parameters of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin) are not documented:
   parameter iin
 
-/usr/home/trs137/orbgnosis/src/Traj.cpp:421: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
-/usr/home/trs137/orbgnosis/src/Traj.cpp:421: Warning: The following parameters of Traj::set_f(double fin) are not documented:
+/usr/home/trs137/orbgnosis/src/Traj.cpp:424: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
+/usr/home/trs137/orbgnosis/src/Traj.cpp:424: Warning: The following parameters of Traj::set_f(double fin) are not documented:
   parameter fin
 
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:156: Warning: parameters of member ULambert::universal are not (all) documented
