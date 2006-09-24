@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.24 2006/09/23 04:03:44 trs137 Exp $
+* $Id: Traj.h,v 1.25 2006/09/24 23:57:51 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */

@@ -1,6 +1,6 @@
 /usr/home/trs137/orbgnosis/src/Kepler.h:63: Warning: Member kepler(Traj traj_0, double t) (function) of file Kepler.h is not documented.
-/usr/home/trs137/orbgnosis/src/Constellation.h:63: Warning: Member t10s (variable) of class Constellation is not documented.
-/usr/home/trs137/orbgnosis/src/Constellation.h:64: Warning: Member numTargets (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:64: Warning: Member t10s (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:65: Warning: Member numTargets (variable) of class Constellation is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:49: Warning: Member printOrder(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:63: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:64: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.

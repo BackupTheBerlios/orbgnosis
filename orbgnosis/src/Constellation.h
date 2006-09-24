@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Constellation.h,v 1.1 2006/09/23 04:03:44 trs137 Exp $
+* $Id: Constellation.h,v 1.2 2006/09/24 23:57:51 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -41,7 +41,8 @@ class Constellation
 {
     public:
         Constellation (int);                    // constructor
-        Constellation (const Constellation&);   // copy constructor
+        Constellation (const Constellation&);   // copy ctor
+
         virtual ~Constellation (void);          // destructor
 
         void print (void);   // Prints the entire constellation..

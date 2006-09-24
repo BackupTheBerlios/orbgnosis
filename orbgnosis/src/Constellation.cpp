@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Constellation.cpp,v 1.1 2006/09/23 04:03:44 trs137 Exp $
+* $Id: Constellation.cpp,v 1.2 2006/09/24 23:57:51 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -40,20 +40,25 @@ using namespace std;
  * Constellation constructor.
  * @param n number of targets.
  */
-Constellation::Constellation (int n) try :
-    numTargets (n),
-    t10s(numTargets)
+Constellation::Constellation (int n) :
+    numTargets(n)
 {
-    cout << "Constellation constructor called. ";
-    cout << "This constellation has " << numTargets << " satellites.";
-    cout << endl;
     // Set size for container of trajectories.
     t10s.resize(numTargets);
+    cout << "Constellation constructor called. ";
+    cout << "This constellation has " << n << " satellites.";
+    cout << endl;
 }
-catch (...)
+
+/**
+ * Constellation copy constuctor.
+ */
+Constellation::Constellation (const Constellation& copy) :
+    numTargets(copy.numTargets)
 {
-    cerr << "Constellation constructor failed.";
-    exit(1);
+    t10s.resize(copy.numTargets);
+    for (int i = 0; i < numTargets; i++)
+        t10s[i] = copy.t10s[i];
 }
 
 /**
@@ -62,16 +67,6 @@ catch (...)
 Constellation::~Constellation (void)
 {
     cout << "Constellation destructor called." << endl;
-}
-
-/**
- * Constellation copy constructor.
- */
-Constellation::Constellation (const Constellation& copy) :
-    numTargets(copy.numTargets),
-    t10s(numTargets)
-{
-    cout << "Constellation copy constructor called." << endl;
 }
 
 /**
