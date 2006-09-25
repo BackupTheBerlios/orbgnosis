@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.13 2006/09/11 18:32:23 trs137 Exp $
+# $Id: Makefile,v 1.14 2006/09/25 19:00:36 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -26,7 +26,7 @@ TARGET := "icc_p4"
 
 # The file name, ...
 BINARY      := orbgnosis
-VERSION     := 0.5
+VERSION     := 0.9
 BUILDDATE   := $(shell date +%m%d%Y)
 BUILD_TYPE  := CVS
 
