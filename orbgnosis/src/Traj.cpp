@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.29 2006/09/24 23:57:51 trs137 Exp $
+* $Id: Traj.cpp,v 1.30 2006/09/25 15:38:25 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -43,6 +43,8 @@ using namespace std;
 Traj::Traj ( void ) : a( 0.0 ), e( 0.0 ), i( 0.0 ), raan( 0.0 ), w( 0.0 ), f( 0.0 ),
         r( 0.0, 0.0, 0.0 ), v( 0.0, 0.0, 0.0 ),
         E( NAN ), M( NAN ), argLat( NAN ), lonTrue( NAN ), lonPer( NAN ),
+        raan_dot( 0.0 ),
+        w_dot( 0.0 ),
         e_vector( 0.0, 0.0, 0.0 ),
         h_vector( 0.0, 0.0, 0.0 ),
         n_vector( 0.0, 0.0, 0.0 )
@@ -67,6 +69,8 @@ Traj::Traj ( double ain, double ein, double iin, double raanin, double win,
         a( ain ), e( ein ), i( iin ), raan( raanin ), w( win ), f( fin ),
         r( 0.0, 0.0, 0.0 ), v( 0.0, 0.0, 0.0 ),
         E( NAN ), M( NAN ), argLat( NAN ), lonTrue( NAN ), lonPer( NAN ),
+        raan_dot( 0.0 ),
+        w_dot( 0.0 ),
         e_vector( 0.0, 0.0, 0.0 ),
         h_vector( 0.0, 0.0, 0.0 ),
         n_vector( 0.0, 0.0, 0.0 )
@@ -87,6 +91,8 @@ Traj::Traj ( Vec3 rin, Vec3 vin ) :
         a( 0.0 ), e( 0.0 ), i( 0.0 ), raan( 0.0 ), w( 0.0 ), f( 0.0 ),
         r( rin ), v( vin ),
         E( NAN ), M( NAN ), argLat( NAN ), lonTrue( NAN ), lonPer( NAN ),
+        raan_dot( 0.0 ),
+        w_dot( 0.0 ),
         e_vector( 0.0, 0.0, 0.0 ),
         h_vector( 0.0, 0.0, 0.0 ),
         n_vector( 0.0, 0.0, 0.0 )
@@ -113,6 +119,8 @@ Traj::Traj ( const Traj& copy ) :
         argLat( copy.argLat ),
         lonTrue( copy.lonTrue ),
         lonPer( copy.lonPer ),
+        raan_dot( copy.raan_dot),
+        w_dot( copy.w_dot ),
         e_vector( copy.e_vector ),
         h_vector( copy.h_vector ),
         n_vector( copy.n_vector )
@@ -142,11 +150,12 @@ Traj::operator = ( Traj t )
         argLat = t.argLat;
         lonTrue = t.lonTrue;
         lonPer = t.lonPer;
+        raan_dot = t.raan_dot;
+        w_dot = t.w_dot;
         e_vector = t.e_vector;
         h_vector = t.h_vector;
         n_vector = t.n_vector;
     }
-
     return *this;
 }
 
@@ -179,6 +188,8 @@ Traj::print ( void )
     cout << "   argument of latitude:         " << argLat << endl;
     cout << "   true longitude:               " << lonTrue << endl;
     cout << "   longitude of periapsis:       " << lonPer << endl;
+    cout << "   raan_dot:                     " << raan_dot << endl;
+    cout << "   w_dot:                        " << w_dot << endl;
     cout << "   specific angular momentum:    " << h_vector << ", norm = " << norm( h_vector ) << endl;
     cout << "   eccentricity vector:          " << e_vector << endl;
     cout << "   node vector:                  " << n_vector << endl;
@@ -263,6 +274,16 @@ double Traj::get_lonTrue ( void )
 double Traj::get_lonPer ( void )
 {
     return lonPer;
+}
+
+double Traj::get_raan_dot ( void )
+{
+    return raan_dot;
+}
+
+double Traj::get_w_dot ( void )
+{
+    return w_dot;
 }
 
 Vec3 Traj::get_e_vector ( void )
@@ -616,8 +637,8 @@ Traj::randv()
     // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
-
     special();
+    find_J2_rates();
 } // end randv
 
 /**
@@ -711,8 +732,8 @@ Traj::elorb( void )
     // Everything is solved except for the other anomalies
     // and special-case orbital elements.
     anomalies();
-
     special();
+    find_J2_rates();
 }
 
 /**
@@ -812,4 +833,35 @@ Traj::special()
         if ( e_vector.getY() < 0 )
             lonPer = 2 * M_PI - lonPer;
     }
+}
+
+/**
+ * This private function is used by randv() and elorb() to calculate
+ * the secular components of J2's effect on raan and w.
+ */
+void
+Traj::find_J2_rates()
+{
+    if (e < 1.0) // only do it if the orbit repeats
+    {
+        double n = sqrt( 1.0 / (a*a*a)); // mean motion;
+        double p = a*(1-e*e);            // semiparameter;
+        raan_dot = -3.0 * n * J2 / (2.0 * p * p);
+        w_dot = 3.0 * n * J2 * (4.0 - 5.0 * sin(i) * sin(i))
+                / (4.0 * p * p);
+    }
+    else
+    {
+        raan_dot = w_dot = 0.0;
+    }
+}
+
+/**
+ * Only Kepler.h should use this.
+ */
+void
+Traj::do_J2_regression(double dt)
+{
+    raan = raan + dt * raan_dot;
+    w = w + dt * w_dot;
 }

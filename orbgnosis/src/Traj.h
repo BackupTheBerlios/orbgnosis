@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.h,v 1.25 2006/09/24 23:57:51 trs137 Exp $
+* $Id: Traj.h,v 1.26 2006/09/25 15:38:26 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -52,10 +52,10 @@ class Traj
                double,      // i
                double,      // raan
                double,      // w
-               double );   // f
+               double );    // f
 
         // This ctor calls elorb() to fill in the missing elements.
-        Traj ( Vec3,     // r
+        Traj ( Vec3,    // r
                Vec3 );  // v
 
         virtual ~Traj ( void );       // dtor
@@ -79,6 +79,8 @@ class Traj
         double get_argLat ( void );
         double get_lonTrue ( void );
         double get_lonPer ( void );
+        double get_raan_dot (void );
+        double get_w_dot (void );
         Vec3 get_e_vector ( void );
         Vec3 get_h_vector ( void );
         Vec3 get_n_vector ( void );
@@ -94,7 +96,8 @@ class Traj
         void set_f ( double );
         void set_r ( Vec3 );
         void set_v ( Vec3 );
-        void set_M ( double );
+        void set_M ( double );   // heavy
+        void do_J2_regression ( double ); // approximate
 
     private:
         // SIX CLASSICAL ORBITAL ELEMENTS:
@@ -116,6 +119,10 @@ class Traj
         double lonTrue;  //!< True Longitude (radians).
         double lonPer;   //!< Longitude of Periapsis (radians).
 
+        // SECULAR J2 EFFECTS
+        double raan_dot; //!< Nodal regression (radians/TU)
+        double w_dot;    //!< Apsidal regression (radians/TU).
+
         // OTHER VECTORS:
         Vec3 e_vector;  //!< Eccentricity
         Vec3 h_vector;  //!< Specific angular momentum
@@ -124,8 +131,11 @@ class Traj
         // Private methods.
         void randv ( void );     // Calculates r and v vectors from classical elements.
         void elorb ( void );     // Calculates classical elements from 2 vectors.
+        // NOTE: randv and elorb call anomalies, special and J2 for you!  You don't
+        // need to run any of the 3 functions below on your own.
         void anomalies ( void ); // Routines common to randv() and elorb().
         void special ( void );   // Calculates orb elements for special case orbits.
+        void find_J2_rates ( void );        // Updates J2 effects.
 };
 
 #endif /* _TRAJ_H_ */

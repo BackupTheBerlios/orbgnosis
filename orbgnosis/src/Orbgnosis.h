@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.23 2006/09/14 02:24:58 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.24 2006/09/25 15:38:25 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -69,6 +69,8 @@
 #define ER 6378.137    //!< Earth radius in km... (km per canonical length unit)
 #define TU_SEC 806.81112382429    //!< seconds per canonical time unit
 #define TU_MIN 13.44685206374     //!< minutes per canonical time unit
+
+#define J2 0.00108263             //!< Earth J2, canonical.
 
 #define nan std::numeric_limits<double>::quiet_nan(); //!< ifndef NAN...
 

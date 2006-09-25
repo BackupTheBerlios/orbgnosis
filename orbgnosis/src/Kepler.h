@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Kepler.h,v 1.3 2006/09/14 02:24:58 trs137 Exp $
+* $Id: Kepler.h,v 1.4 2006/09/25 15:38:25 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -37,9 +37,11 @@
 #include <math.h>
 using namespace std;
 
-/** @file
+/**
  * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
- * find the state vector after the time interval has elapsed.
+ * find the state vector after the time interval has elapsed.  This function
+ * calculates r and v vectors and does not consider J2.  If you need J2, 
+ * use PKepler() instead.
  * @param traj_0 the initial trajectory at time zero.
  * @param t amount of time, in canonical units.
  *
@@ -48,15 +50,7 @@ using namespace std;
  * If it converges, but the F&G transformation is out of tolerance, it throws
  * a 2.
  * Obviously, programmers are encouraged to wrap calls to kepler()
- * in a try-catch block.  For example,
- * try
- * {
- *     newtraj = kepler(oldtraj, dt);
- * }
- * catch (int status)
- * {
- *    cerr << "kepler threw " << status << endl;
- * } 
+ * in a try-catch block.
  */
 Traj
 kepler ( Traj traj_0, double t )
@@ -97,6 +91,7 @@ kepler ( Traj traj_0, double t )
         int counter = 0;
         int adj_ctr = 0;
         const int limit = 400;  // iteration limit (default = 40)
+        Traj result;
 
         r0 = norm( traj_0.get_r() ); // current radius
         v0 = norm( traj_0.get_v() ); // current velocity
@@ -199,51 +194,12 @@ kepler ( Traj traj_0, double t )
         vfinal = Fdot * traj_0.get_r() + Gdot * traj_0.get_v();
         temp = F * Gdot - Fdot * G;
 
-        if ( counter >= limit ) 
-        {
-            throw(1);
-            /*cout << endl;
-            cout << "Iteration limit exceeded. adj_ctr = " << adj_ctr << endl; // oh noes
-            cout << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
-            cout << "fabs (tnew - t) = " << fabs(temp-1.0) << endl;
-            cout << "counter was " << counter << endl;
-            cout << "Time interval was " << t << endl;
-            cout << "Alpha was         " << alpha << endl;
-            cout << "ksi  was          " << ksi << endl;
-            traj_0.print();
-            cout << endl;
-            Traj result (rfinal, vfinal);
-            result.print();
-            cout << endl;
-            cout << setprecision(5) << "badEL = Traj (" << traj_0.get_a() << ", "  << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
-            cout << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
-            cout << "badRV = Traj (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
-            cout << "result = kepler (badRV, " << t << ");" << endl;
-            exit( 1 ); */
-        }
+        if ( counter >= limit ) throw(1);
+        if ( fabs( temp - 1.0 ) > 0.00001 ) throw(2);
 
-        if ( fabs( temp - 1.0 ) > 0.00001 ) // Vallado's tolerance = 0.00001
-        {
-            throw(2);
-            /*cout << endl;
-            cout << "F and G error. fabs(temp-1.0) = " << fabs(temp-1.0) << endl;
-            cout << "fabs (temp-1.0) = " << fabs(tnew - t) << endl;
-            cout << "fabs (tnew - t) = " << fabs(temp-1.0) << endl;
-            cout << "counter was " << counter << endl;
-            cout << "Time interval was " << t << endl;
-            cout << "Alpha was         " << alpha << endl;
-            cout << "ksi  was          " << ksi << endl;
-            traj_0.print();
-            cout << endl;
-            Traj result (rfinal, vfinal);
-            result.print();
-            cout << endl;
-            cout << "badEL = Traj (" << traj_0.get_a() << ", "  << traj_0.get_e() << ", " << traj_0.get_i() << ", ";
-            cout << traj_0.get_raan() << ", " << traj_0.get_w() << ", " << traj_0.get_f() << ");" << endl;
-            cout << "badRV = Traj (Vec3" << traj_0.get_r() << ", Vec3" << traj_0.get_v() << ");" << endl;
-            cout << "result = kepler (badRV, " << t << ");" << endl;
-            exit( 1 ); */
-        }
-        return Traj( rfinal, vfinal );
+        // Traj constructor automatically takes care of classical elements.
+        result = Traj (rfinal, vfinal);
+        result.do_J2_regression(t);
+        return result;
     }
 }
