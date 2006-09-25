@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.30 2006/09/25 15:38:25 trs137 Exp $
+* $Id: Traj.cpp,v 1.31 2006/09/25 16:22:20 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -864,4 +864,5 @@ Traj::do_J2_regression(double dt)
 {
     raan = raan + dt * raan_dot;
     w = w + dt * w_dot;
+    randv();
 }
