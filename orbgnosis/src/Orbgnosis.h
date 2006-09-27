@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.25 2006/09/25 16:22:20 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.26 2006/09/27 22:04:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -35,16 +35,7 @@
 #ifndef _ORBGNOSIS_H_
 #define _ORBGNOSIS_H_
 
-#ifdef INF
-#undef INF
-#endif
 #define INF 1.0e14    //!< A very big number
-
-#define EPS 1.0e-14   //!< A very small number, used in NSGA2 
-//#define E  2.71828182845905  //!< The natural number e
-//#define PI 3.14159265358979   use M_PI from <math.h> instead
-#define GNUPLOT_COMMAND "gnuplot -persist" //!<  Used for drawing with gnuplot
-
 #define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"
 #define MU 398600.4418 //!< the gravitational parameter of Earth in km<sup>3</sup> s<sup>-2</sup> in S.I. units.
 #define ROOTMU 631.3481     //!< the square root of MU in S.I. units.

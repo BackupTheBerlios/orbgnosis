@@ -23,76 +23,64 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.9 2006/09/23 04:03:44 trs137 Exp $
+* $Id: Tour.cpp,v 1.10 2006/09/27 22:04:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
 */
 
 #include "Tour.h"
-#include <vector>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
 /**
- * Tour constructor takes two int args.
- * Generates a matrix of integers rows x columns in size.
- * numTargets is the number of targets.
- * permStyle = 0: Steinhaus-Johnson-Trotter order
- * permStyle = 1: Lexicological order
+ * Tour constructor.  Tell it the # of nodes.
  */
-Tour::Tour ( int numTargets, int permStyle ) try
+Tour::Tour (int numTargets) try
 :
-    cols( numTargets ),
-    rows( factorial( cols ) ),
+    cols( numTargets+1 ),
+    rows( fact(numTargets) ),
     order( rows ),
-    p( cols + 1 ),
-    pi( cols + 1 ),
-    dir( cols + 1 ),
-    rowCtr( 0 ),
-    temp( 0 )
+    rowCtr( 0 )
 {
-    cout << "Tour constructor called.\n";
     // Resize order to have (rows) rows.
     order.resize( rows );
+    // Resize each row to hold (cols) columns.
+    for ( int i = 0; i < rows; i++ ) order[i].resize(cols);
 
-    for ( int i = 0; i < rows; i++ )
-    {
-        // Resize each row to hold (cols) columns.
-        order[ i ].resize( cols );
-    }
-    switch ( permStyle )
-    {
-    case 0:    // Steinhaus-Johnson-Trotter permutations
-        // p.resize(cols+1);
-        // pi.resize(cols+1);
-        // dir.resize(cols+1);
+    // create filename
+    stringstream s;
+    string snum;
+    s << numTargets;
+    s >> snum;
+    // e.g. ifstream datafile ("data/5.dat");
+    string filename = "data/" + snum + ".dat";
+    ifstream datafile (filename.c_str());
 
-        for ( int i = 1; i <= cols; i++ )
+    string line;
+    if (datafile.is_open())
+    {
+        for (int r=0; r < rows; r++)
         {
-            dir[ i ] = -1;
-            p[ i ] = i;
-            pi[ i ] = i;
+            getline (datafile, line);
+            for (int c=0; c < cols; c++)
+            {
+                order[r][c] = atoi(line.substr(c,1).c_str());
+            }
         }
-        permSJT( 1 );
-        break;
-
-    case 1:    // Lexicogical permutations
-        permLex();
-        break;
-
-    default:
-        cerr << "Error in Tour constructor: permStyle out of range.\n";
-        cerr << "bad permStyle = " << permStyle << ".\n";
-        exit( 1 );
+        datafile.close();
     }
+    else cerr << "Could not open file.\n";
 }
-
-catch ( ... )  // std::length_error
+catch ( ... )
 {
-    cout << "Tour constructor failed.\n";
-    exit( 1 );
+    cerr << "Tour constructor failed.\n";
+    exit(1);
 }
 
 
@@ -102,85 +90,7 @@ catch ( ... )  // std::length_error
  */
 Tour::~Tour ( void )
 {
-    cout << "Tour destructor called.\n";
-}
-
-/**
- * The Tour copy constructor.
- */
-Tour::Tour ( const Tour& copy )
-        : cols( copy.cols ),
-        rows( copy.rows ),
-        order( rows ),
-        p( cols + 1 ),
-        pi( cols + 1 ),
-        dir( cols + 1 ),
-        rowCtr( 0 ),
-        temp( 0 )
-{
-    cout << "Tour copy constructor called.\n";
-}
-
-/**
- * The Tour copy assignment operator.
- */
-Tour&
-Tour::operator = ( Tour b )
-{
-    cout << "Tour copy assignment operator was used.\n";
-    return *this;
-}
-
-/**
- * The recursive Steinhaus-Johnson-Trotter permutation algorithm.
- * Original algoritm (c) 1995, Frank Ruskey.
- * "can be modified, translated to other languages, etc.
- *  so long as proper acknowledgement is given (author and source)."
- * http://theory.cs.uvic.ca/inf/perm/PermInfo.html
- */
-void
-Tour::permSJT ( int n )
-{
-    if ( n > cols )
-    {
-        storeRowSJT();
-    }
-
-    else
-    {
-        permSJT ( n + 1 );
-
-        for ( int i = 1; i <= n - 1 ; i++ )
-        {
-            exchangeSJT( n, dir[ n ] );
-            permSJT ( n + 1 );
-        }
-
-        dir[ n ] = -dir[ n ];
-    }
-}
-
-void
-Tour::storeRowSJT ( void )
-{
-    for ( int i = 0; i < cols; i++ )
-    {
-        order[ rowCtr ][ i ] = p[ i + 1 ] - 1; // XXX fixes off-by-one in SJT algo
-        //cout << order[rowCtr][i] << " ";
-    }
-
-    //cout << "\n";
-    rowCtr = rowCtr + 1;
-}
-
-void
-Tour::exchangeSJT( int x, int d )
-{
-    temp = p[ pi[ x ] + d ];
-    p[ pi[ x ] ] = temp;
-    p[ pi[ x ] + d ] = x;
-    pi[ temp ] = pi[ x ];
-    pi[ x ] = pi[ x ] + d;
+    //cout << "Tour destructor called.\n";
 }
 
 void
@@ -190,27 +100,24 @@ Tour::printOrder ( void )
     {
         for ( int c = 0; c < cols; c++ )
         {
-            cout << order[ r ][ c ] << " ";
+            cout << order[r][c] << " ";
         }
 
         cout << "\n";
     }
 }
 
-void
-Tour::permLex( void )
+int
+Tour::fact (const int k)
 {
-    // TODO
+    int f = 1;
+    for ( int i = 1; i <= k; i++ ) f = f * i;
+    //cout << "The factorial of " << k << " is " << f << ".\n";
+    return f;
 }
 
 int
-Tour::factorial ( const int k )
+Tour::get_target (int r, int c)
 {
-    int f = 1;
-
-    for ( int i = 1; i <= k; i++ )
-        f = f * i;
-
-    //cout << "The factorial of " << k << " is " << f << ".\n";
-    return f;
+    return order[r][c];
 }

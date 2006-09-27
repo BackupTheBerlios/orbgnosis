@@ -1,5 +1,5 @@
 /*-
-* Copyright (c) 2005 Ted Stodgell. All rights reserved.
+* Copyright (c) 2006 Ted Stodgell. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
@@ -23,34 +23,37 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: problemdef.h,v 1.7 2006/09/13 02:01:15 trs137 Exp $
+* $Id: Graph.h,v 1.1 2006/09/27 22:04:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
-/**
- * @file
- * This header file defines the test_problem() function used by NSGA-2.
- * Please see NSGA-2 docs for more examples.
- */
-
-#ifndef _PROBLEMDEF_H_
-#define _PROBLEMDEF_H_
-#include "Orbgnosis.h"
+#ifndef _GRAPH_H_
+#define _GRAPH_H_
+#include "Vec3.h" 
+#include <vector>
+using namespace std;
 
 /**
- * Interface with NSGA-2
+ * A group of graph nodes to be visited.
  */
-void test_problem ( double *xreal, double *xbin, int **gene, double *obj, double *constr )
+class Graph
 {
-    obj[ 0 ] =      /* TODO */
-        obj[ 1 ] =      /* TODO */
-            obj[ 2 ] =      /* TODO */
-                constr[ 0 ] =      /* TODO */
-                    constr[ 1 ] =      /* TODO */
-                        constr[ 2 ] =      /* TODO */
-                            constr[ 3 ] =      /* TODO */
-                                return ;
-}
+    public:
+        Graph (int);            // constructor
+        Graph (const Graph&);   // copy ctor
 
-#endif /* _PROBLEMDEF_H_ */
+        virtual ~Graph (void);          // destructor
+
+        void print (void);   // Prints the entire constellation..
+
+
+        // Methods for generating realistic constellations...
+        void set_all(Vec3);    // Sets every traj exactly the same.
+        void noise(double);    // Perturbs each target slightly
+
+        vector<Vec3> node;
+        const int numTargets;       // # of satellites in constellation
+};
+
+#endif /* _GRAPH_H_ */

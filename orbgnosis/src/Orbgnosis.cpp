@@ -1,5 +1,4 @@
-/*-
-* Copyright (c) 2006 Ted Stodgell. All rights reserved.
+/*- Copyright (c) 2006 Ted Stodgell. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions
@@ -23,218 +22,614 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.21 2006/09/11 15:16:13 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.22 2006/09/27 22:04:39 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
 */
 
-#include "Vec3.h"
+/*
+ * Orbgnosis filenames are Capitalized.   (and they're C++)
+ * NSGA-II filenames are not capitalized. (and they're ansi C)
+ */
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "Graph.h"
 #include "ULambert.h"
 #include "Orbgnosis.h"
-#include <math.h>
-#include <iostream>
+#include "Tour.h"
+#include "Vec3.h"
+
+//# include <stdio.h>    // from old nsga2r.c
+//# include <stdlib.h>   // from old nsga2r.c
+# include <math.h>
+# include <unistd.h>
+# include "nsga2/global.h"
+# include "nsga2/rand.h"
+int nreal;
+int nbin;
+int nobj;
+int ncon;
+int popsize;
+double pcross_real;
+double pcross_bin;
+double pmut_real;
+double pmut_bin;
+double eta_c;
+double eta_m;
+int ngen;
+int nbinmut;
+int nrealmut;
+int nbincross;
+int nrealcross;
+int *nbits;
+double *min_realvar;
+double *max_realvar;
+double *min_binvar;
+double *max_binvar;
+int bitlength;
+int choice;
+int obj1;
+int obj2;
+int obj3;
+int angle1;
+int angle2;
 
 using namespace std;
 
-/** @file
- * The main program.
- */
-
-/**
- * The main program.  Currently runs some unit tests.
- */
-int
-main( void )
+int main (int argc, char **argv)
 {
-    const int problems = 500;
-    double t;
-    Vec3 q1, q2;
-    srand( time( NULL ) );
+    srand (time(NULL));
+    const int targets = 3;
+    int start, end;
+    int bestkey = -999;
+    double bestd = INF;
+    double d, dtot;   // distance of path
+    Tour mytour(targets);
+    //mytour.printOrder();
 
-    ULambert* testcase = new ULambert[ problems ];
+    Graph mygraph(targets + 1); // include initial position of chaser, too.
+    mygraph.set_all(Vec3(100.0, 100.0, 100.0));
+    mygraph.noise(1.0);
+    mygraph.print();
+    cout << endl;
+    cout << "There are " << mytour.rows << " permutations." << endl;
+    cout << endl;
 
-    // Write file for tecplot.
-
-    cout << "TITLE=\"Xfer from 1.1(ER) to 1.2(ER)\"\n";
-    cout << "VARIABLES=\"xfer angle (radians)\",\"tof(s)\", \"delta-V(km/s)\"\n";
-    cout << "ZONE T=\"MYZONE,BG\", I=" << problems
-    << ", J=" << problems << ", F=POINT\n";
-
-
-    /*  TEST 1: Make random problems
-     
-        const int prange = 12000;  // -prange to +prange (km)
-        const int trange = 5000;   // 0 to +trange (s)
-        double a, b, c;
-        double    x     = 0.0;     // random double between 0 and 1
-     
-       
-        for (int i = 0; i < problems; i++)
-        {
-            cout << ".";
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            a = (2*x*prange - prange) / ER;
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            b = (2*x*prange - prange) / ER;
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            c = (2*x*prange - prange) / ER;
-     
-            q.set3(a, b, c);
-            testcase[i].setRo(q);
-     
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            a = (2*x*prange - prange) / ER;
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            b = (2*x*prange - prange) / ER;
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            c = (2*x*prange - prange) / ER;
-     
-            q.set3(a, b, c);
-            testcase[i].setR(q);
-     
-            x = ((double)rand()/((double)(RAND_MAX)+(double)(1)));
-            t = x*trange / TU_SEC;
-     
-            // We're filling thse with CANONICAL UNITS, not S.I.
-     
-            testcase[i].sett(t);
-        }
-    */
-
-    /* TEST 2: Solve Curtiss 5.02 for a range of TOFs
-     
-        q1.set3(5000.0, 10000.0, 2100.0);
-        q1 = q1 / ER;
-     
-        q2.set3(-14600.0, 2500.0, 7000.0);
-        q2 = q2 / ER;
-     
-        double t_max, t_min, t_inc;
-        t_min = 60.0 / TU_SEC;  // 1 minute in canonical TU
-        // t_max = 1 orbital period for a cirular orbit of radius q1.
-        double radius = norm(q1);
-        t_max = 2.0 * M_PI * sqrt(radius*radius*radius);
-     
-        // we want (problems) incrments from t_min to t_max.
-        t_inc = (t_max-t_min) / (problems-1);
-     
-        for (int i = 0; i < problems; i++)
-        {
-            cout << ".";
-            testcase[i].setRo(q1);
-            testcase[i].setR(q2);
-            testcase[i].sett(t_min+(i*t_inc));
-        }
-     
-        cout << "\n\nThe problems are ready. Here we go!\n\n";
-     
-        for (int i = 0; i < problems; i++)
-        {
-            // cout << "Problem " << i << ":\n";
-            testcase[i].universal();
-            testcase[i].elements();
-        }
-     
-    */
-
-    //  TEST 3:
-    //  sweep delta-f (delta-nu) from zero to pi,
-    //  vary TOF from small to large.
-
-    //  Plotting a 2D cartesian of delta-f vs. TOF
-
-    q1.set3( 1.1, 0.0, 0.0 );  // units of ER
-
-    double f, f_max, f_min, f_inc;
-    f_min = 2.0 * SMALL;
-    f_max = 2.0 * M_PI + SMALL;
-    f_inc = ( f_max - f_min ) / ( problems - 1 );
-
-    const double r1 = 1.1;
-    const double r2 = 1.2;
-
-
-    Vec3 vc1 ( 0, sqrt ( 1 / r1 ), 0 );
-    Vec3 vc2;
-
-    double deltav, short_deltav, long_deltav, t_max, t_min, t_inc;
-    bool L;
-
-    t_min = 60.0 / TU_SEC;  // 1 minute in canonical
-    t_max = 6.0 * M_PI * sqrt( r2 * r2 * r2 );
-    t_inc = ( t_max - t_min ) / ( problems - 1 );
-
-    // This will run (problems * problems) times!!!!!
-
-    for ( int i = 0; i < problems; i++ )
+    for (int r = 0; r < mytour.rows; r++)
     {
-        t = t_min + i * t_inc;
+        d = dtot = 0.0;
 
-        for ( int j = 0; j < problems; j++ )
+        for (int c = 0; c < mytour.cols - 1; c++) // c is the starting node of each edge
         {
-            f = f_min + j * f_inc;
+            start = mytour.get_target(r, c);
+            end = mytour.get_target(r, c + 1);
+            //cout << "starting at " << start;
+            //cout << " and going to " << end;
+            d = norm(mygraph.node[start] - mygraph.node[end]);
+            //cout << " edge length = " << d << endl;
+            dtot = dtot + d;
+        }
+        //cout << "Total path length = " << dtot << endl << endl;
+        cout << r << ", " << dtot << endl;
 
-            q2.setX( r2 * cos( f ) );
-            q2.setY( r2 * sin( f ) );
-            q2.setZ( 0.0 );
-
-            vc2.setX ( ( -sin( f ) ) * ( sqrt( 1 / r2 ) ) );
-            vc2.setY ( ( cos( f ) ) * ( sqrt( 1 / r2 ) ) );
-            vc2.setZ ( 0.0 );
-
-            testcase[ j ].setRo( q1 );
-            testcase[ j ].setR( q2 );
-            testcase[ j ].sett( t );
-
-            cout << f << ", ";
-            cout << t*TU_SEC << ", ";
-
-            // Find minimum delta-V case among many multirev solutions.
-
-            deltav = INF;
-
-            for ( int revs = 0; revs < 15; revs++ )
-            {
-                L = false; // short way
-                testcase[ j ].universal( L, revs );
-                short_deltav = INF;
-
-                if ( !testcase[ j ].isFailure() )
-                {
-                    short_deltav = ( ( norm( testcase[ j ].getVo() - vc1 ) )
-                                     + ( norm( testcase[ j ].getV() - vc2 ) ) )
-                                   * ER / TU_SEC;
-                }
-
-                L = true; // long way
-                testcase[ j ].universal( L, revs );
-                long_deltav = INF;
-
-                if ( !testcase[ j ].isFailure() )
-                {
-                    long_deltav = ( ( norm( testcase[ j ].getVo() - vc1 ) )
-                                    + ( norm( testcase[ j ].getV() - vc2 ) ) )
-                                  * ER / TU_SEC;
-                }
-
-                if ( short_deltav < deltav )
-                {
-                    deltav = short_deltav;
-                }
-
-                if ( long_deltav < deltav )
-                {
-                    deltav = long_deltav;
-                }
-            }
-
-            cout << deltav << "\n";
+        if (dtot < bestd)
+        {
+            bestd = dtot;
+            bestkey = r;
         }
     }
 
-    delete[] testcase;
-    testcase = NULL;
+    cout << endl;
+    cout << "The very best tour was # " << bestkey << endl;
+    cout << "Its length was " << bestd << endl;
+
+    /*******************************************************/
+    int i;
+    FILE *fpt1;
+    FILE *fpt2;
+    FILE *fpt3;
+    FILE *fpt4;
+    FILE *fpt5;
+    FILE *gp;
+    population *parent_pop;
+    population *child_pop;
+    population *mixed_pop;
+
+    if (argc < 2)
+    {
+        printf("\n Usage ./nsga2r random_seed \n");
+        exit(1);
+    }
+
+    seed = (double)atof(argv[1]);
+
+    if (seed <= 0.0 || seed >= 1.0)
+    {
+        printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
+        exit(1);
+    }
+
+    fpt1 = fopen("initial_pop.out", "w");
+    fpt2 = fopen("final_pop.out", "w");
+    fpt3 = fopen("best_pop.out", "w");
+    fpt4 = fopen("all_pop.out", "w");
+    fpt5 = fopen("params.out", "w");
+    fprintf(fpt1, "# This file contains the data of initial population\n");
+    fprintf(fpt2, "# This file contains the data of final population\n");
+    fprintf(fpt3, "# This file contains the data of final feasible population (if found)\n");
+    fprintf(fpt4, "# This file contains the data of all generations\n");
+    fprintf(fpt5, "# This file contains information about inputs as read by the program\n");
+    printf("\n Enter the problem relevant and algorithm relevant parameters ... ");
+    printf("\n Enter the population size (a multiple of 4) : ");
+    scanf("%d", &popsize);
+
+    if (popsize < 4 || (popsize % 4) != 0)
+    {
+        printf("\n population size read is : %d", popsize);
+        printf("\n Wrong population size entered, hence exiting \n");
+        exit (1);
+    }
+
+    printf("\n Enter the number of generations : ");
+    scanf("%d", &ngen);
+
+    if (ngen < 1)
+    {
+        printf("\n number of generations read is : %d", ngen);
+        printf("\n Wrong nuber of generations entered, hence exiting \n");
+        exit (1);
+    }
+
+    printf("\n Enter the number of objectives : ");
+    scanf("%d", &nobj);
+
+    if (nobj < 1)
+    {
+        printf("\n number of objectives entered is : %d", nobj);
+        printf("\n Wrong number of objectives entered, hence exiting \n");
+        exit (1);
+    }
+
+    printf("\n Enter the number of constraints : ");
+    scanf("%d", &ncon);
+
+    if (ncon < 0)
+    {
+        printf("\n number of constraints entered is : %d", ncon);
+        printf("\n Wrong number of constraints enetered, hence exiting \n");
+        exit (1);
+    }
+
+    printf("\n Enter the number of real variables : ");
+    scanf("%d", &nreal);
+
+    if (nreal < 0)
+    {
+        printf("\n number of real variables entered is : %d", nreal);
+        printf("\n Wrong number of variables entered, hence exiting \n");
+        exit (1);
+    }
+
+    if (nreal != 0)
+    {
+        min_realvar = (double *)malloc(nreal * sizeof(double));
+        max_realvar = (double *)malloc(nreal * sizeof(double));
+
+        for (i = 0; i < nreal; i++)
+        {
+            printf ("\n Enter the lower limit of real variable %d : ", i + 1);
+            scanf ("%lf", &min_realvar[i]);
+            printf ("\n Enter the upper limit of real variable %d : ", i + 1);
+            scanf ("%lf", &max_realvar[i]);
+
+            if (max_realvar[i] <= min_realvar[i])
+            {
+                printf("\n Wrong limits entered for the min and max bounds of real variable, hence exiting \n");
+                exit(1);
+            }
+        }
+
+        printf ("\n Enter the probability of crossover of real variable (0.6-1.0) : ");
+        scanf ("%lf", &pcross_real);
+
+        if (pcross_real < 0.0 || pcross_real > 1.0)
+        {
+            printf("\n Probability of crossover entered is : %e", pcross_real);
+            printf("\n Entered value of probability of crossover of real variables is out of bounds, hence exiting \n");
+            exit (1);
+        }
+
+        printf ("\n Enter the probablity of mutation of real variables (1/nreal) : ");
+        scanf ("%lf", &pmut_real);
+
+        if (pmut_real < 0.0 || pmut_real > 1.0)
+        {
+            printf("\n Probability of mutation entered is : %e", pmut_real);
+            printf("\n Entered value of probability of mutation of real variables is out of bounds, hence exiting \n");
+            exit (1);
+        }
+
+        printf ("\n Enter the value of distribution index for crossover (5-20): ");
+        scanf ("%lf", &eta_c);
+
+        if (eta_c <= 0)
+        {
+            printf("\n The value entered is : %e", eta_c);
+            printf("\n Wrong value of distribution index for crossover entered, hence exiting \n");
+            exit (1);
+        }
+
+        printf ("\n Enter the value of distribution index for mutation (5-50): ");
+        scanf ("%lf", &eta_m);
+
+        if (eta_m <= 0)
+        {
+            printf("\n The value entered is : %e", eta_m);
+            printf("\n Wrong value of distribution index for mutation entered, hence exiting \n");
+            exit (1);
+        }
+    }
+
+    printf("\n Enter the number of binary variables : ");
+    scanf("%d", &nbin);
+
+    if (nbin < 0)
+    {
+        printf ("\n number of binary variables entered is : %d", nbin);
+        printf ("\n Wrong number of binary variables entered, hence exiting \n");
+        exit(1);
+    }
+
+    if (nbin != 0)
+    {
+        nbits = (int *)malloc(nbin * sizeof(int));
+        min_binvar = (double *)malloc(nbin * sizeof(double));
+        max_binvar = (double *)malloc(nbin * sizeof(double));
+
+        for (i = 0; i < nbin; i++)
+        {
+            printf ("\n Enter the number of bits for binary variable %d : ", i + 1);
+            scanf ("%d", &nbits[i]);
+
+            if (nbits[i] < 1)
+            {
+                printf("\n Wrong number of bits for binary variable entered, hence exiting");
+                exit(1);
+            }
+
+            printf ("\n Enter the lower limit of binary variable %d : ", i + 1);
+            scanf ("%lf", &min_binvar[i]);
+            printf ("\n Enter the upper limit of binary variable %d : ", i + 1);
+            scanf ("%lf", &max_binvar[i]);
+
+            if (max_binvar[i] <= min_binvar[i])
+            {
+                printf("\n Wrong limits entered for the min and max bounds of binary variable entered, hence exiting \n");
+                exit(1);
+            }
+        }
+
+        printf ("\n Enter the probability of crossover of binary variable (0.6-1.0): ");
+        scanf ("%lf", &pcross_bin);
+
+        if (pcross_bin < 0.0 || pcross_bin > 1.0)
+        {
+            printf("\n Probability of crossover entered is : %e", pcross_bin);
+            printf("\n Entered value of probability of crossover of binary variables is out of bounds, hence exiting \n");
+            exit (1);
+        }
+
+        printf ("\n Enter the probability of mutation of binary variables (1/nbits): ");
+        scanf ("%lf", &pmut_bin);
+
+        if (pmut_bin < 0.0 || pmut_bin > 1.0)
+        {
+            printf("\n Probability of mutation entered is : %e", pmut_bin);
+            printf("\n Entered value of probability  of mutation of binary variables is out of bounds, hence exiting \n");
+            exit (1);
+        }
+    }
+
+    if (nreal == 0 && nbin == 0)
+    {
+        printf("\n Number of real as well as binary variables, both are zero, hence exiting \n");
+        exit(1);
+    }
+
+    choice = 0;
+    printf("\n Do you want to use gnuplot to display the results realtime (0 for NO) (1 for yes) : ");
+    scanf("%d", &choice);
+
+    if (choice != 0 && choice != 1)
+    {
+        printf("\n Entered the wrong choice, hence exiting, choice entered was %d\n", choice);
+        exit(1);
+    }
+
+    if (choice == 1)
+    {
+        gp = popen(GNUPLOT_COMMAND, "w");
+
+        if (gp == NULL)
+        {
+            printf("\n Could not open a pipe to gnuplot, check the definition of GNUPLOT_COMMAND in file global.h\n");
+            printf("\n Edit the string to suit your system configuration and rerun the program\n");
+            exit(1);
+        }
+
+        if (nobj == 2)
+        {
+            printf("\n Enter the objective for X axis display : ");
+            scanf("%d", &obj1);
+
+            if (obj1 < 1 || obj1 > nobj)
+            {
+                printf("\n Wrong value of X objective entered, value entered was %d\n", obj1);
+                exit(1);
+            }
+
+            printf("\n Enter the objective for Y axis display : ");
+            scanf("%d", &obj2);
+
+            if (obj2 < 1 || obj2 > nobj)
+            {
+                printf("\n Wrong value of Y objective entered, value entered was %d\n", obj2);
+                exit(1);
+            }
+
+            obj3 = -1;
+        }
+
+        else
+        {
+            printf("\n #obj > 2, 2D display or a 3D display ?, enter 2 for 2D and 3 for 3D :");
+            scanf("%d", &choice);
+
+            if (choice != 2 && choice != 3)
+            {
+                printf("\n Entered the wrong choice, hence exiting, choice entered was %d\n", choice);
+                exit(1);
+            }
+
+            if (choice == 2)
+            {
+                printf("\n Enter the objective for X axis display : ");
+                scanf("%d", &obj1);
+
+                if (obj1 < 1 || obj1 > nobj)
+                {
+                    printf("\n Wrong value of X objective entered, value entered was %d\n", obj1);
+                    exit(1);
+                }
+
+                printf("\n Enter the objective for Y axis display : ");
+                scanf("%d", &obj2);
+
+                if (obj2 < 1 || obj2 > nobj)
+                {
+                    printf("\n Wrong value of Y objective entered, value entered was %d\n", obj2);
+                    exit(1);
+                }
+
+                obj3 = -1;
+            }
+
+            else
+            {
+                printf("\n Enter the objective for X axis display : ");
+                scanf("%d", &obj1);
+
+                if (obj1 < 1 || obj1 > nobj)
+                {
+                    printf("\n Wrong value of X objective entered, value entered was %d\n", obj1);
+                    exit(1);
+                }
+
+                printf("\n Enter the objective for Y axis display : ");
+                scanf("%d", &obj2);
+
+                if (obj2 < 1 || obj2 > nobj)
+                {
+                    printf("\n Wrong value of Y objective entered, value entered was %d\n", obj2);
+                    exit(1);
+                }
+
+                printf("\n Enter the objective for Z axis display : ");
+                scanf("%d", &obj3);
+
+                if (obj3 < 1 || obj3 > nobj)
+                {
+                    printf("\n Wrong value of Z objective entered, value entered was %d\n", obj3);
+                    exit(1);
+                }
+
+                printf("\n You have chosen 3D display, hence location of eye required \n");
+                printf("\n Enter the first angle (an integer in the range 0-180) (if not known, enter 60) :");
+                scanf("%d", &angle1);
+
+                if (angle1 < 0 || angle1 > 180)
+                {
+                    printf("\n Wrong value for first angle entered, hence exiting \n");
+                    exit(1);
+                }
+
+                printf("\n Enter the second angle (an integer in the range 0-360) (if not known, enter 30) :");
+                scanf("%d", &angle2);
+
+                if (angle2 < 0 || angle2 > 360)
+                {
+                    printf("\n Wrong value for second angle entered, hence exiting \n");
+                    exit(1);
+                }
+            }
+        }
+    }
+
+    printf("\n Input data successfully entered, now performing initialization \n");
+    fprintf(fpt5, "\n Population size = %d", popsize);
+    fprintf(fpt5, "\n Number of generations = %d", ngen);
+    fprintf(fpt5, "\n Number of objective functions = %d", nobj);
+    fprintf(fpt5, "\n Number of constraints = %d", ncon);
+    fprintf(fpt5, "\n Number of real variables = %d", nreal);
+
+    if (nreal != 0)
+    {
+        for (i = 0; i < nreal; i++)
+        {
+            fprintf(fpt5, "\n Lower limit of real variable %d = %e", i + 1, min_realvar[i]);
+            fprintf(fpt5, "\n Upper limit of real variable %d = %e", i + 1, max_realvar[i]);
+        }
+
+        fprintf(fpt5, "\n Probability of crossover of real variable = %e", pcross_real);
+        fprintf(fpt5, "\n Probability of mutation of real variable = %e", pmut_real);
+        fprintf(fpt5, "\n Distribution index for crossover = %e", eta_c);
+        fprintf(fpt5, "\n Distribution index for mutation = %e", eta_m);
+    }
+
+    fprintf(fpt5, "\n Number of binary variables = %d", nbin);
+
+    if (nbin != 0)
+    {
+        for (i = 0; i < nbin; i++)
+        {
+            fprintf(fpt5, "\n Number of bits for binary variable %d = %d", i + 1, nbits[i]);
+            fprintf(fpt5, "\n Lower limit of binary variable %d = %e", i + 1, min_binvar[i]);
+            fprintf(fpt5, "\n Upper limit of binary variable %d = %e", i + 1, max_binvar[i]);
+        }
+
+        fprintf(fpt5, "\n Probability of crossover of binary variable = %e", pcross_bin);
+        fprintf(fpt5, "\n Probability of mutation of binary variable = %e", pmut_bin);
+    }
+
+    fprintf(fpt5, "\n Seed for random number generator = %e", seed);
+    bitlength = 0;
+
+    if (nbin != 0)
+    {
+        for (i = 0; i < nbin; i++)
+        {
+            bitlength += nbits[i];
+        }
+    }
+
+    fprintf(fpt1, "# of objectives = %d, # of constraints = %d, # of real_var = %d, # of bits of bin_var = %d, constr_violation, rank, crowding_distance\n", nobj, ncon, nreal, bitlength);
+    fprintf(fpt2, "# of objectives = %d, # of constraints = %d, # of real_var = %d, # of bits of bin_var = %d, constr_violation, rank, crowding_distance\n", nobj, ncon, nreal, bitlength);
+    fprintf(fpt3, "# of objectives = %d, # of constraints = %d, # of real_var = %d, # of bits of bin_var = %d, constr_violation, rank, crowding_distance\n", nobj, ncon, nreal, bitlength);
+    fprintf(fpt4, "# of objectives = %d, # of constraints = %d, # of real_var = %d, # of bits of bin_var = %d, constr_violation, rank, crowding_distance\n", nobj, ncon, nreal, bitlength);
+    nbinmut = 0;
+    nrealmut = 0;
+    nbincross = 0;
+    nrealcross = 0;
+    parent_pop = (population *)malloc(sizeof(population));
+    child_pop = (population *)malloc(sizeof(population));
+    mixed_pop = (population *)malloc(sizeof(population));
+    allocate_memory_pop (parent_pop, popsize);
+    allocate_memory_pop (child_pop, popsize);
+    allocate_memory_pop (mixed_pop, 2*popsize);
+    randomize();
+    initialize_pop (parent_pop);
+    printf("\n Initialization done, now performing first generation");
+    decode_pop(parent_pop);
+    evaluate_pop (parent_pop);
+    assign_rank_and_crowding_distance (parent_pop);
+    report_pop (parent_pop, fpt1);
+    fprintf(fpt4, "# gen = 1\n");
+    report_pop(parent_pop, fpt4);
+    printf("\n gen = 1");
+    fflush(stdout);
+
+    if (choice != 0)
+        onthefly_display (parent_pop, gp, 1);
+
+    fflush(fpt1);
+
+    fflush(fpt2);
+
+    fflush(fpt3);
+
+    fflush(fpt4);
+
+    fflush(fpt5);
+
+    sleep(1);   /* XXX why? */
+
+    for (i = 2; i <= ngen; i++)
+    {
+        selection (parent_pop, child_pop);
+        mutation_pop (child_pop);
+        decode_pop(child_pop);
+        evaluate_pop(child_pop);
+        merge (parent_pop, child_pop, mixed_pop);
+        fill_nondominated_sort (mixed_pop, parent_pop);
+        /* Comment following four lines if information for all
+        generations is not desired, it will speed up the execution */
+        fprintf(fpt4, "# gen = %d\n", i);
+        report_pop(parent_pop, fpt4);
+        fflush(fpt4);
+
+        if (choice != 0)
+            onthefly_display (parent_pop, gp, i);
+
+        /* Comment the four lines above for no display */
+        printf("\n gen = %d", i);
+    }
+
+    printf("\n Generations finished, now reporting solutions");
+    report_pop(parent_pop, fpt2);
+    report_feasible(parent_pop, fpt3);
+
+    if (nreal != 0)
+    {
+        fprintf(fpt5, "\n Number of crossover of real variable = %d", nrealcross);
+        fprintf(fpt5, "\n Number of mutation of real variable = %d", nrealmut);
+    }
+
+    if (nbin != 0)
+    {
+        fprintf(fpt5, "\n Number of crossover of binary variable = %d", nbincross);
+        fprintf(fpt5, "\n Number of mutation of binary variable = %d", nbinmut);
+    }
+
+    fflush(stdout);
+    fflush(fpt1);
+    fflush(fpt2);
+    fflush(fpt3);
+    fflush(fpt4);
+    fflush(fpt5);
+    fclose(fpt1);
+    fclose(fpt2);
+    fclose(fpt3);
+    fclose(fpt4);
+    fclose(fpt5);
+
+    if (choice != 0)
+    {
+        pclose(gp);
+    }
+
+    if (nreal != 0)
+    {
+        free (min_realvar);
+        free (max_realvar);
+    }
+
+    if (nbin != 0)
+    {
+        free (min_binvar);
+        free (max_binvar);
+        free (nbits);
+    }
+
+    deallocate_memory_pop (parent_pop, popsize);
+    deallocate_memory_pop (child_pop, popsize);
+    deallocate_memory_pop (mixed_pop, 2*popsize);
+    free (parent_pop);
+    free (child_pop);
+    free (mixed_pop);
+    printf("\n Routine successfully exited \n");
 
     return EXIT_SUCCESS;
 }
