@@ -1,18 +1,17 @@
+/usr/home/trs137/orbgnosis/src/global.h:56: Warning: Compound lists is not documented.
+/usr/home/trs137/orbgnosis/src/global.h:50: Warning: Compound population is not documented.
+/usr/home/trs137/orbgnosis/src/global.h:37: Warning: Compound individual is not documented.
 /usr/home/trs137/orbgnosis/src/Constellation.h:64: Warning: Member t10s (variable) of class Constellation is not documented.
 /usr/home/trs137/orbgnosis/src/Constellation.h:65: Warning: Member numTargets (variable) of class Constellation is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:49: Warning: Member printOrder(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:63: Warning: Member storeRowSJT(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:64: Warning: Member exchangeSJT(int, int) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:67: Warning: Member permLex(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:69: Warning: Member factorial(const int k) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:52: Warning: Member cols (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member rows (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member order (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member p (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:56: Warning: Member pi (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member dir (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Graph.h:55: Warning: Member node (variable) of class Graph is not documented.
+/usr/home/trs137/orbgnosis/src/Graph.h:56: Warning: Member numTargets (variable) of class Graph is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:48: Warning: Member fact(const int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:51: Warning: Member get_target(int, int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member cols (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member rows (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member order (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Tour.h:58: Warning: Member rowCtr (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:59: Warning: Member temp (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:69: Warning: Member get_a(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_e(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_i(void) (function) of class Traj is not documented.

@@ -1,4 +1,4 @@
-/* $Id: problemdef.c,v 1.1 2006/09/28 16:06:27 trs137 Exp $ */
+/* $Id: problemdef.c,v 1.2 2006/09/28 16:22:04 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -43,7 +43,7 @@
 /* # define zdt5 */
 /* # define zdt6 */
 /* # define bnh */
-/* # define osy */
+ # define osy 
 /* # define srn */
 /* # define tnk */
 /* # define ctp1 */
@@ -53,7 +53,7 @@
 /* # define ctp5 */
 /* # define ctp6 */
 /* # define ctp7 */
-# define ctp8
+/* # define ctp8 */
 
 /*  Test problem SCH1
     # of real variables = 1
