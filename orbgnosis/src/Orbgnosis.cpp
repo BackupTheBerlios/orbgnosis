@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.22 2006/09/27 22:04:39 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.23 2006/09/28 16:04:49 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -46,8 +46,8 @@
 //# include <stdlib.h>   // from old nsga2r.c
 # include <math.h>
 # include <unistd.h>
-# include "nsga2/global.h"
-# include "nsga2/rand.h"
+# include "global.h"
+# include "rand.h"
 int nreal;
 int nbin;
 int nobj;
@@ -82,7 +82,7 @@ using namespace std;
 int main (int argc, char **argv)
 {
     srand (time(NULL));
-    const int targets = 3;
+    const int targets = 5;
     int start, end;
     int bestkey = -999;
     double bestd = INF;
