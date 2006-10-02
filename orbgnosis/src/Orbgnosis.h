@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.27 2006/10/02 06:58:09 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.28 2006/10/02 08:51:19 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -38,7 +38,7 @@
 #include "Graph.h"
 #include "Tour.h"
 
-#define TARGETS 5
+#define TARGETS 9
 
 #define INF 1.0e14    //!< A very big number
 #define SMALL 1.0e-8   //!< Tolerance and general-purpose "really small number"

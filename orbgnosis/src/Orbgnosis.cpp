@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.24 2006/10/02 06:58:09 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.25 2006/10/02 08:51:19 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -92,12 +92,11 @@ extern Graph mygraph(TARGETS+1);
 /****************************************************************/
 /* PROBLEM DEFINITION GOES HERE. DON'T USE problemdef.c         */
 
-# define wsp1  /* Static wandering salesman problem, 1 objective */
-/* # define wsp2 */  /* Static wandering salesman problem, 2 objectives */
+// # define wsp1             /* Static wandering salesman problem, 1 objective */
+# define wsp2             /* Static wandering salesman problem, 2 objectives */
+// # define wsp_astro        /* Dynamic wsp where nodes are satellites */
 
-/* Dynamic wandering salesman problem w/ geocentric trajectories */
-/* # define wsp_astro */
-
+// Single objective = total length of the tour.
 #ifdef wsp1
 void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
@@ -129,6 +128,46 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     return ;
 }
 #endif // wsp1
+
+// Two objectives: the horizontal and vertical components of the total tour length.
+#ifdef wsp2
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+    /*
+     * Add up the length of the Hamiltonian path, going in the order
+     * specified by mytour.
+     */
+    int start, end; // each edge of the graph has a start node and an end node.
+    double x, xtot; // horizontal component of edge weight (distance) and total path distance.
+    double y, ytot; // vertical component edge weight (distance) and total path distance.
+    Vec3 edge;
+    x = y = xtot = ytot = 0.0;
+    /*
+     * NOTE! We're using a real coded variable for "key".
+     * Real coding the tour permutation key lets us take advantage of the
+     * Steinhaus-Johnson-Trotter ordering of the permutation data files.. i.e.
+     * adjacent permutation differ by exactly one transposition.  It's a kind
+     * of combinatoric gray coding.
+     */
+    int key;        // the corresponding row number in mytour.
+    key = (int)xreal[0];  // convert double to int.
+
+    for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
+    {
+        start = mytour.get_target(key, c);    // initially, mytour column 0
+        end   = mytour.get_target(key, c+1);  // initially, mytour column 1
+        edge = mygraph.node[start] - mygraph.node[end];
+        x = fabs(edge.getX());
+        y = fabs(edge.getY());
+        xtot = xtot + x;
+        ytot = ytot + y;
+    }
+    obj[0] = xtot;
+    obj[1] = ytot;
+    return ;
+}
+#endif // wsp2
+
 /****************************************************************/
 
 
@@ -138,11 +177,47 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     mygraph.set_all(Vec3(100.0, 100.0, 0.0));
     mygraph.noise(1.0);
 
-    mygraph.print();
-    cout << endl;
-    mytour.printOrder();
-    cout << endl;
-
+    //mygraph.print();
+    //cout << endl;
+    //mytour.printOrder();
+    //cout << endl;
+    /*******************************************************/
+    // Do an exhaustive search and find the best wsp2, just to check.
+    int start, end;
+    Vec3 edge;
+    double x, xtot, y, ytot;
+    double xbest, ybest;
+    int key_xbest, key_ybest;
+    x = y = xtot = ytot = 0.0;
+    xbest = INF;
+    ybest = INF;
+    key_xbest = -999;
+    key_ybest = -999;
+    for (int r = 0; r < mytour.rows; r++)
+    {
+        xtot = 0.0;
+        ytot = 0.0;
+        for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
+        {
+            start = mytour.get_target(r, c);    // initially, mytour column 0
+            end   = mytour.get_target(r, c+1);  // initially, mytour column 1
+            edge = mygraph.node[start] - mygraph.node[end];
+            x = fabs(edge.getX());
+            y = fabs(edge.getY());
+            xtot = xtot + x;
+            ytot = ytot + y;
+        }
+        if (xtot < xbest)
+        {
+            xbest = xtot;
+            key_xbest = r;
+        }
+        if (ytot < ybest)
+        {
+            ybest = ytot;
+            key_ybest = r;
+        }
+    }
     /*******************************************************/
     int i;
     FILE *fpt1;
@@ -592,6 +667,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
 
         /* Comment the four lines above for no display */
         printf("\n gen = %d", i);
+        /* sleep(1); */
     }
 
     printf("\n Generations finished, now reporting solutions");
@@ -647,6 +723,12 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     free (child_pop);
     free (mixed_pop);
     printf("\n Routine successfully exited \n");
+
+    cout << "The shortest horizontal tour was # " << key_xbest << ", length = ";
+    cout << xbest << endl;
+    cout << "The shortest vertical tour was # " << key_ybest << ", length = ";
+    cout << ybest << endl;
+
 
     return EXIT_SUCCESS;
 }
