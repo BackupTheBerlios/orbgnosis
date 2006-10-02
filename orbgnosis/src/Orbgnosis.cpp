@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.26 2006/10/02 11:40:00 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.27 2006/10/02 12:00:38 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -285,6 +285,16 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         // Add the delta-V's onto the cumulative delta V for the entire mission.
         obj[1] = obj[1] + norm(deltaV1) + norm(deltaV2);
     }
+    // a negative constraint value means a violation.
+    // We don't want "Star Trek" style maneuvers, so we will
+    // constrain missions that use an obscene amount of delta-V.
+    // Remember, units of deltaV are canonical...
+    // Earth radii per time unit.
+    if (obj[1] > 30) // the cutoff is arbitrary
+        constr[0] = -1.0;
+    else
+        constr[0] = 1.0;
+
 
     /* CLEAN UP MEMORY */
     delete dwell; dwell = NULL;
@@ -803,7 +813,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
 
         /* Comment the four lines above for no display */
         printf("\n gen = %d", i);
-        sleep(1);
+        // sleep(1);
     }
 
     printf("\n Generations finished, now reporting solutions");
