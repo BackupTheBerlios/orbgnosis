@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.25 2006/10/02 08:51:19 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.26 2006/10/02 11:40:00 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -37,7 +37,9 @@
 #include <fstream>
 #include <string>
 #include "Constellation.h"
+#include "Traj.h"
 #include "Graph.h"
+#include "Kepler.h"
 #include "ULambert.h"
 #include "Orbgnosis.h"
 #include "Tour.h"
@@ -88,13 +90,14 @@ int angle2;
 /* OMG THIS ACTUALLY COMPILED */
 extern Tour mytour(TARGETS);
 extern Graph mygraph(TARGETS+1);
+extern Constellation mycon(TARGETS+1);
 
 /****************************************************************/
 /* PROBLEM DEFINITION GOES HERE. DON'T USE problemdef.c         */
 
 // # define wsp1             /* Static wandering salesman problem, 1 objective */
-# define wsp2             /* Static wandering salesman problem, 2 objectives */
-// # define wsp_astro        /* Dynamic wsp where nodes are satellites */
+// # define wsp2             /* Static wandering salesman problem, 2 objectives */
+ # define wsp_astro        /* Dynamic wsp where nodes are satellites */
 
 // Single objective = total length of the tour.
 #ifdef wsp1
@@ -168,12 +171,144 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 }
 #endif // wsp2
 
+#ifdef wsp_astro
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+/* CHROMOSOME STRUCTURE:
+ * xreal[0] = key  (the tour order)
+ * xreal[1] = dwell0
+ * xreal[2] = TOF0
+ * xreal[3] = dwell1
+ * xreal[4] = TOF1
+ * xreal[5] = dwell2
+ * xreal[6] = TOF2
+ * etc...
+ *
+ * obj[0] = total time of flight
+ * obj[1] = total delta-V
+ */
+    obj[0] = 0.0;
+    obj[1] = 0.0;
+
+    int start, end; // each edge of the graph has a start node and an end node.
+
+    /*
+     * NOTE! We're using a real coded variable for "key".
+     * Real coding the tour permutation key lets us take advantage of the
+     * Steinhaus-Johnson-Trotter ordering of the permutation data files.. i.e.
+     * adjacent permutation differ by exactly one transposition.  It's a kind
+     * of combinatoric gray coding.
+     */
+    int key;        // the corresponding row number in mytour.
+    key = (int)xreal[0];  // convert double to int.
+    Vec3 V_start;
+    Vec3 V_end;
+    Vec3 R_start;
+    Vec3 R_end;
+    Vec3 deltaV1;
+    Vec3 deltaV2;
+    Traj start_traj;
+    Traj end_traj;
+    ULambert xfer;
+
+    double* dwell = new double [TARGETS];
+    double* TOF = new double [TARGETS];
+    double* t_depart = new double [TARGETS];
+    double* t_arrive = new double [TARGETS];
+    for (int i = 0; i < TARGETS; i++)
+    {
+        t_depart[i] = 0.0;
+        t_arrive[i] = 0.0;
+    }
+    for (int i = 0; i < TARGETS; i++)
+    {
+        dwell[i] = xreal[2*i+1];
+        TOF[i]  = xreal[2*i+2];
+    }
+
+    t_depart[0] = dwell[0];
+    t_depart[1] = dwell[0] + TOF[0] + dwell[1];
+    t_depart[2] = dwell[0] + TOF[0] + dwell[1] + TOF[1] + dwell[2];
+    // etc...
+
+    t_arrive[0] = dwell[0] + TOF[0];
+    t_arrive[1] = dwell[0] + TOF[0] + dwell[1] + TOF[1];
+    t_arrive[2] = dwell[0] + TOF[0] + dwell[1] + TOF[1] + dwell[2] + TOF[2];
+    // etc...
+
+    // The time-of-flight objective function is quite simple.
+    // more general case: obj[0] = t_arrive[TARGETS-1];
+    obj[0] = t_arrive[2];
+
+    for (int c = 0; c < TARGETS - 1; c++) // always start at node #0
+    {
+        start = mytour.get_target(key, c);
+        end   = mytour.get_target(key, c+1);
+
+        /*
+         * Figure out where the chaser is at the time of burn #1 on the current xfer arc.
+         */
+        // mycon.t10s[start] is the trajectory at the beginning of this edge (the c-th edge)
+        // t_depart[c] is the time at which we leave upon the c-th transfer arc.
+        // start_traj is the location of the start-th node at time t_depart[c].
+        // the start-th node is where the chaser is right now.
+        start_traj = kepler(mycon.t10s[start], t_depart[c]);
+
+        /*
+         * Figure out where the current target will be at the time of intercept.. i.e.
+         * at the time of burn #2 on the current xfer arc.
+         */
+        // mycon.t10s[end] is the trajectory at the end of this edge.
+        // t_arrive[c] is the time at which we will complete the c-th transfer arc.
+        // end_traj is the location of the end-th node at time t_arrive[c].
+        // the end-th node is where the chaser is headed.
+        end_traj = kepler(mycon.t10s[end], t_arrive[c]);
+
+        // Extract initial state vector from start_traj.
+        R_start = start_traj.get_r();
+        V_start = start_traj.get_v();
+
+        // Extract final state vector from end_traj.
+        R_end = end_traj.get_r();
+        V_end = end_traj.get_v();
+
+        // We already know the TOF for this transfer arc: TOF[c].
+        // Get ready for universal Lambert problem.
+        xfer.setRo(R_start);
+        xfer.setR(R_end);
+        xfer.sett(TOF[c]);
+        // xfer.universal(false, 0) Long-way = false, multiple revs = 0.
+        xfer.universal(false, 0);
+        deltaV1 = xfer.getVo() - V_start;
+        deltaV2 = xfer.getV() - V_end;
+
+        // Add the delta-V's onto the cumulative delta V for the entire mission.
+        obj[1] = obj[1] + norm(deltaV1) + norm(deltaV2);
+    }
+
+    /* CLEAN UP MEMORY */
+    delete dwell; dwell = NULL;
+    delete TOF;   TOF = NULL;
+    delete t_depart; t_depart = NULL;
+    delete t_arrive; t_arrive = NULL;
+    return;
+}
+#endif // wsp_astro
+
 /****************************************************************/
 
 
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
     srand (time(NULL));
+    Traj mytraj;
+    mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
+    mycon.distribute(mytraj);
+    mycon.noise(0.00001);
+
+
+    /* WSP2 stuff
+
     mygraph.set_all(Vec3(100.0, 100.0, 0.0));
     mygraph.noise(1.0);
 
@@ -181,7 +316,6 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     //cout << endl;
     //mytour.printOrder();
     //cout << endl;
-    /*******************************************************/
     // Do an exhaustive search and find the best wsp2, just to check.
     int start, end;
     Vec3 edge;
@@ -218,6 +352,8 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
             key_ybest = r;
         }
     }
+    */
+
     /*******************************************************/
     int i;
     FILE *fpt1;
@@ -667,7 +803,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
 
         /* Comment the four lines above for no display */
         printf("\n gen = %d", i);
-        /* sleep(1); */
+        sleep(1);
     }
 
     printf("\n Generations finished, now reporting solutions");
@@ -724,10 +860,12 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     free (mixed_pop);
     printf("\n Routine successfully exited \n");
 
+/*
     cout << "The shortest horizontal tour was # " << key_xbest << ", length = ";
     cout << xbest << endl;
     cout << "The shortest vertical tour was # " << key_ybest << ", length = ";
     cout << ybest << endl;
+*/
 
 
     return EXIT_SUCCESS;
