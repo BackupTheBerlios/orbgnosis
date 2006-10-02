@@ -1,4 +1,4 @@
-/* $Id: mutation.c,v 1.1 2006/09/28 16:06:27 trs137 Exp $ */
+/* $Id: mutation.c,v 1.2 2006/10/02 03:52:53 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -20,7 +20,7 @@
  * academic use, these can be used or modified  at will, however an      *
  * acknowledgement of developers at appropriate places would be highly   *
  * appreciated.                                                          *
- *************************************************************************/
+ *************************************************************************/ 
 /* Mutation routines */
 
 # include <stdio.h>

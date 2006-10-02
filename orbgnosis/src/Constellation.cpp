@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Constellation.cpp,v 1.5 2006/09/25 18:44:10 trs137 Exp $
+* $Id: Constellation.cpp,v 1.6 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -34,6 +34,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+
 using namespace std;
 
 /**
@@ -41,7 +42,7 @@ using namespace std;
  * @param n number of targets.
  */
 Constellation::Constellation (int n) :
-    numTargets(n)
+        numTargets(n)
 {
     // Set size for container of trajectories.
     t10s.resize(numTargets);
@@ -54,9 +55,10 @@ Constellation::Constellation (int n) :
  * Constellation copy constuctor.
  */
 Constellation::Constellation (const Constellation& copy) :
-    numTargets(copy.numTargets)
+        numTargets(copy.numTargets)
 {
     t10s.resize(copy.numTargets);
+
     for (int i = 0; i < numTargets; i++)
         t10s[i] = copy.t10s[i];
 }
@@ -77,7 +79,8 @@ Constellation::print(void)
 {
     cout << "CONSTELLATION PRINTOUT FOR " << numTargets;
     cout << " SATELLITES" << endl;
-    for (int i=0; i<numTargets; i++)
+
+    for (int i = 0; i < numTargets; i++)
     {
         cout << "Satellite " << i << endl;
         t10s[i].print();
@@ -94,7 +97,7 @@ Constellation::print(void)
 void
 Constellation::set_all(Traj t)
 {
-    for (int i=0; i<numTargets; i++)
+    for (int i = 0; i < numTargets; i++)
     {
         t10s[i] = t;
     }
@@ -114,10 +117,11 @@ void
 Constellation::distribute(Traj t)
 {
     double M = t.get_M();
-    for (int i=0; i < numTargets; i++)
+
+    for (int i = 0; i < numTargets; i++)
     {
         t10s[i] = t;
-        t10s[i].set_M( fmod(M + i*2.0*M_PI/numTargets, 2.0*M_PI));
+        t10s[i].set_M( fmod(M + i*2.0*M_PI / numTargets, 2.0*M_PI));
     }
 }
 
@@ -130,7 +134,8 @@ void
 Constellation::noise(double n)
 {
     double a, e, i, raan, w, f;
-    for (int j=0; j < numTargets; j++)
+
+    for (int j = 0; j < numTargets; j++)
     {
         a = t10s[j].get_a();
         e = t10s[j].get_e();
@@ -139,12 +144,12 @@ Constellation::noise(double n)
         w = t10s[j].get_w();
         f = t10s[j].get_f();
 
-        a += 2.0*n*a*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*a);
-        e += 2.0*n*e*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*e);
-        i += 4.0*n*M_PI*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*2*M_PI);
-        raan += 4.0*n*M_PI*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*2*M_PI);
-        w += 4.0*n*M_PI*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*2*M_PI);
-        f += 4.0*n*M_PI*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*2*M_PI);
+        a += 2.0 * n * a * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * a);
+        e += 2.0 * n * e * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * e);
+        i += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        raan += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        w += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        f += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
 
         t10s[j].set_elorb(a, e, i, raan, w, f);
     }

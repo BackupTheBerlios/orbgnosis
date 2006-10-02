@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Kepler.h,v 1.5 2006/09/25 16:22:20 trs137 Exp $
+* $Id: Kepler.h,v 1.6 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -35,6 +35,7 @@
 #include "Vec3.h"
 #include <iostream>
 #include <math.h>
+
 using namespace std;
 
 /**
@@ -56,16 +57,21 @@ Traj
 kepler ( Traj traj_0, double t )
 {
     //srand (time (NULL));
-    if (t < 0) 
+
+    if (t < 0)
     {
         cout << "Kepler needs time > 0." << endl;
         exit(1);
     }
+
     if ( fabs( t ) <= SMALL )
     {
         cout << "Kepler: time was zero.  No movement." << endl;
         return traj_0; // Zero time, so no movement.
-    } else {
+    }
+
+    else
+    {
         // set up local variables
         double r0, v0;  // initial radius and velocity (magnitudes only)
         Vec3 rfinal, vfinal;      // final radius and velocity (vectors)
@@ -104,20 +110,24 @@ kepler ( Traj traj_0, double t )
         a = traj_0.get_a();
 
         // Set up initial guess for Xold.
+
         if ( alpha >= 0.0001 ) // was (alpha >= SMALL)
         {
             //cout << "**** Kepler is working on an ellipse ****" << endl;
             period = 2 * M_PI * sqrt( pow( fabs( a ), 3.0 ) );
+
             if ( fabs( t ) > fabs( period ) )
             {
                 // cout << "Kepler is dealing with >1 revolution." << endl;
                 t = fmod ( t, period ); // multirev
             }
+
             if ( fabs( alpha - 1.0 ) > 0.5 )
                 Xold = t * alpha;
             else
                 Xold = t * alpha * 0.97; // first guess can't be too close
-        } else {
+        } else
+        {
             if ( fabs(alpha) < 0.0001 ) // was (fabs(alpha) < SMALL )
             {
                 // Parabola
@@ -128,7 +138,8 @@ kepler ( Traj traj_0, double t )
                 W = atan( pow( tan(S), 1.0 / 3.0 ) );
                 Xold = sqrt(p) * ( 2.0 * ( 1.0 / tan( 2.0 * W ) ) );
                 // alpha = 0.0;  // experiment!!!
-            } else {
+            } else
+            {
                 // Hyperbola
                 // This only works correctly for positive t.
                 //cout << "**** Kepler is working on a hyperbola ****" << endl;
@@ -152,8 +163,8 @@ kepler ( Traj traj_0, double t )
                    r0 * ( 1.0 - Znew * C2new );
 
             if ((a > 0.0) &&
-                (fabs(Xnew) > 2*M_PI*sqrt(a)) &&
-                (ksi < 0.0))
+                    (fabs(Xnew) > 2*M_PI*sqrt(a)) &&
+                    (ksi < 0.0))
             {
                 /* XXX
                  * This adjusts the step size if things are going badly.
@@ -161,45 +172,67 @@ kepler ( Traj traj_0, double t )
                  * Why random?  Because I can't think of a good constant value.
                  * Vallado recommends 7 to 10.
                  */
-                adjust = 3.0*((double)rand()/((double)(RAND_MAX)+(double)(1)))+7.0;
+                adjust = 3.0 * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) + 7.0;
                 Xnew = Xold + (t - tnew) / (Rval * adjust);
                 adj_ctr++;
-            } else {
+            }
+
+            else
+            {
                 Xnew = Xold + ( t - tnew ) / Rval;
             }
+
             counter++;
             //cout << tnew-t << endl;
             Xold = Xnew;
-            if (( fabs( tnew - t ) < SMALL ) || ( counter >= limit )) break;
+
+            if (( fabs( tnew - t ) < SMALL ) || ( counter >= limit ))
+                break;
         }  // end while
 
         // Update Znew, C2new and C3new!
         // Vallado's original code doesn't have this.
-        // Not doing this will cause small errors, 
+        // Not doing this will cause small errors,
         // especially with parabolic cases.
         Xold2 = Xold * Xold;
+
         Znew = Xold2 * alpha;
+
         C2new = stumpff_C2( Znew );
+
         C3new = stumpff_C3( Znew );
+
         //---------------------------------------------------
 
         //cout << "Kepler finished iterating after " << counter << " times." << endl;
         // Calculate position and velocity vectors at new time
         Xnew2 = Xnew * Xnew;
+
         F = 1.0 - ( Xnew2 * C2new / r0 );
+
         G = t - Xnew2 * Xnew * C3new;
+
         rfinal = F * traj_0.get_r() + G * traj_0.get_v();
+
         Gdot = 1.0 - ( Xnew2 * C2new / norm( rfinal ) );
+
         Fdot = ( Xnew / ( r0 * norm( rfinal ) ) ) * ( Znew * C3new - 1.0 );
+
         vfinal = Fdot * traj_0.get_r() + Gdot * traj_0.get_v();
+
         temp = F * Gdot - Fdot * G;
 
-        if ( counter >= limit ) throw(1);
-        if ( fabs( temp - 1.0 ) > 0.00001 ) throw(2);
+        if ( counter >= limit )
+            throw(1);
+
+        if ( fabs( temp - 1.0 ) > 0.00001 )
+            throw(2);
 
         // Traj constructor automatically takes care of classical elements.
         result = Traj (rfinal, vfinal);
+
         result.do_J2_regression(t);
+
         return result;
     }
 }

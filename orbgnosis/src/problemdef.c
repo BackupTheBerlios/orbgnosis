@@ -1,4 +1,4 @@
-/* $Id: problemdef.c,v 1.2 2006/09/28 16:22:04 trs137 Exp $ */
+/* $Id: problemdef.c,v 1.3 2006/10/02 03:52:53 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -20,7 +20,7 @@
  * academic use, these can be used or modified  at will, however an      *
  * acknowledgement of developers at appropriate places would be highly   *
  * appreciated.                                                          *
- *************************************************************************/
+ *************************************************************************/ 
 /* Test problem definitions */
 
 # include <stdio.h>
@@ -29,6 +29,12 @@
 
 # include "global.h"
 # include "rand.h"
+
+/* # define wsp1 */  /* Static wandering salesman problem, 1 objective */
+/* # define wsp2 */  /* Static wandering salesman problem, 2 objectives */
+
+/* Dynamic wandering salesman problem w/ geocentric trajectories */
+/* # define wsp_astro */
 
 /* # define sch1 */
 /* # define sch2 */
@@ -43,7 +49,7 @@
 /* # define zdt5 */
 /* # define zdt6 */
 /* # define bnh */
- # define osy 
+/* # define osy */
 /* # define srn */
 /* # define tnk */
 /* # define ctp1 */
@@ -54,6 +60,49 @@
 /* # define ctp6 */
 /* # define ctp7 */
 /* # define ctp8 */
+
+/* Test problem wsp1
+ # of real variables = 1
+ # of bin variables = 0
+ # of objectives = 1
+ # of constraints = 0
+ */
+#ifdef wsp1
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+    return ;
+}
+
+#endif
+
+/* Test problem wsp2
+    # of real variables = 1
+    # of bin variables = 0
+    # of objectives = 2 
+    # of constraints = 0
+    */
+#ifdef wsp2
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+    return ;
+}
+
+#endif
+
+/* Test problem wsp_astro
+    # of real variables = 1 + (2* # of targets)
+    # of bin variables = 0
+    # of objectives = 2 
+    # of constraints = 0
+    */
+#ifdef wsp_astro
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+    return ;
+}
+
+#endif
+
 
 /*  Test problem SCH1
     # of real variables = 1

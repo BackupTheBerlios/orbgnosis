@@ -23,22 +23,25 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Constellation.h,v 1.4 2006/09/25 16:22:20 trs137 Exp $
+* $Id: Constellation.h,v 1.5 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #ifndef _CONSTELLATION_H_
 #define _CONSTELLATION_H_
-#include "Traj.h" 
+#include "Traj.h"
 #include <vector>
+
 using namespace std;
 
 /**
  * A group of target satellites to be visited.
  */
+
 class Constellation
 {
+
     public:
         Constellation (int);                    // constructor
         Constellation (const Constellation&);   // copy ctor

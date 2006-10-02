@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.h,v 1.7 2006/09/27 22:04:39 trs137 Exp $
+* $Id: Tour.h,v 1.8 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -37,6 +37,7 @@ using namespace std;
 /**
  * All possible permutations of tour order.
  */
+
 class Tour
 {
 

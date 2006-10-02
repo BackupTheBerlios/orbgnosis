@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.32 2006/09/25 18:44:10 trs137 Exp $
+* $Id: Traj.cpp,v 1.33 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -156,6 +156,7 @@ Traj::operator = ( Traj t )
         h_vector = t.h_vector;
         n_vector = t.n_vector;
     }
+
     return *this;
 }
 
@@ -515,37 +516,52 @@ Traj::set_M( double min )
     if (e > 1.0) // Hyperbolic trajectory if e is over 1.
     {
         // Set up initial guess
+
         if (e < 1.6)
         {
             if ((M < 0.0) && (M > -M_PI) || (M > M_PI))
             {
                 Eold = M - e;
-            } else {
+            }
+
+            else
+            {
                 Eold = M + e;
             }
-        } else {
+        }
+
+        else
+        {
             if ((e < 3.6) && (fabs(M) > M_PI))
             {
                 if (M > 0.0)
                 {
                     Eold = M - e;
-                } else {
+                }
+
+                else
+                {
                     Eold = M + e;
                 }
-            } else {
+            }
+
+            else
+            {
                 Eold = M / (e - 1.0);
             }
         }
-    
+
         count = 1;
         Enew = Eold + ((M - e * sinh(Eold) + Eold) / (E * cosh(Eold) - 1.0));
-        while ((fabs(Enew-Eold) > SMALL) && (count < limit))
+
+        while ((fabs(Enew - Eold) > SMALL) && (count < limit))
         {
-            Eold  = Enew;
-            Enew  = Eold + ((M - e * sinh(Eold) + Eold) / (E * cosh(Eold) - 1.0));
+            Eold = Enew;
+            Enew = Eold + ((M - e * sinh(Eold) + Eold) / (E * cosh(Eold) - 1.0));
             count = count + 1;
         }
-        sinf = -(sqrt(e*e-1.0) * sinh(Enew)) / (1.0 - e * cosh(Enew));
+
+        sinf = -(sqrt(e * e - 1.0) * sinh(Enew)) / (1.0 - e * cosh(Enew));
         cosf = (cosh(Enew) - e) / (1.0 - e * cosh(Enew));
         f = atan2(sinf, cosf);
     }
@@ -553,20 +569,27 @@ Traj::set_M( double min )
     {
         if (e > SMALL) // Elliptical
         {
+
             if (((M > 0.0) && (M > -M_PI)) || (M > M_PI))
             {
                 Eold = M - e;
-            } else {
+            }
+
+            else
+            {
                 Eold = M + e;
             }
+
             count = 1;
             Enew = Eold + (M - Eold + e * sin(Eold)) / (1.0 - e * cos(Eold));
-            while ((fabs(Enew-Eold) > SMALL) && (count <= limit))
+
+            while ((fabs(Enew - Eold) > SMALL) && (count <= limit))
             {
                 Eold = Enew;
                 Enew = Eold + (M - Eold + e * sin(Eold)) / (1.0 - e * cos(Eold));
                 count = count + 1;
             }
+
             sinf = (sqrt(1.0 - e * e) * sin(Enew)) / (1.0 - e * cos(Enew));
             cosf = (cos(Enew) - e) / (1.0 - e * cos(Enew));
             f = atan2(sinf, cosf);
@@ -578,11 +601,13 @@ Traj::set_M( double min )
             Enew = M;
         }
     }
+
     if (count > limit)
     {
         cerr << "set_M() failed to converge while calculating E from M." << endl;
         exit(1);
     }
+
     E = Enew;
     randv();
 }
@@ -637,7 +662,9 @@ Traj::randv()
     // and special-case orbital elements.
     // randv and elorb share this stuff, so it has its own function.
     anomalies();
+
     special();
+
     find_J2_rates();
 } // end randv
 
@@ -732,7 +759,9 @@ Traj::elorb( void )
     // Everything is solved except for the other anomalies
     // and special-case orbital elements.
     anomalies();
+
     special();
+
     find_J2_rates();
 }
 
@@ -844,8 +873,8 @@ Traj::find_J2_rates()
 {
     if (e < 1.0) // only do it if the orbit repeats
     {
-        double n = sqrt( 1.0 / (a*a*a)); // mean motion;
-        double p = a*(1-e*e);            // semiparameter;
+        double n = sqrt( 1.0 / (a * a * a)); // mean motion;
+        double p = a * (1 - e * e);            // semiparameter;
         raan_dot = -3.0 * n * J2 / (2.0 * p * p);
         w_dot = 3.0 * n * J2 * (4.0 - 5.0 * sin(i) * sin(i))
                 / (4.0 * p * p);
@@ -866,8 +895,8 @@ Traj::do_J2_regression(double dt)
     w = w + dt * w_dot;
 
     // make sure new raan and w values are between 0 and 2 pi.
-    raan = fmod(raan, 2*M_PI);
-    w = fmod(w, 2*M_PI);
+    raan = fmod(raan, 2 * M_PI);
+    w = fmod(w, 2 * M_PI);
 
     randv();
 }

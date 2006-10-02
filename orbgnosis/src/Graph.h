@@ -23,22 +23,25 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Graph.h,v 1.1 2006/09/27 22:04:39 trs137 Exp $
+* $Id: Graph.h,v 1.2 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
 
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
-#include "Vec3.h" 
+#include "Vec3.h"
 #include <vector>
+
 using namespace std;
 
 /**
  * A group of graph nodes to be visited.
  */
+
 class Graph
 {
+
     public:
         Graph (int);            // constructor
         Graph (const Graph&);   // copy ctor

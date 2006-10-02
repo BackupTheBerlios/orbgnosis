@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Tour.cpp,v 1.10 2006/09/27 22:04:39 trs137 Exp $
+* $Id: Tour.cpp,v 1.11 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  Frank Ruskey
@@ -41,9 +41,10 @@ using namespace std;
 /**
  * Tour constructor.  Tell it the # of nodes.
  */
+
 Tour::Tour (int numTargets) try
 :
-    cols( numTargets+1 ),
+    cols( numTargets + 1 ),
     rows( fact(numTargets) ),
     order( rows ),
     rowCtr( 0 )
@@ -51,32 +52,45 @@ Tour::Tour (int numTargets) try
     // Resize order to have (rows) rows.
     order.resize( rows );
     // Resize each row to hold (cols) columns.
-    for ( int i = 0; i < rows; i++ ) order[i].resize(cols);
+
+    for ( int i = 0; i < rows; i++ )
+        order[i].resize(cols);
 
     // create filename
     stringstream s;
+
     string snum;
+
     s << numTargets;
+
     s >> snum;
+
     // e.g. ifstream datafile ("data/5.dat");
     string filename = "data/" + snum + ".dat";
+
     ifstream datafile (filename.c_str());
 
     string line;
+
     if (datafile.is_open())
     {
-        for (int r=0; r < rows; r++)
+        for (int r = 0; r < rows; r++)
         {
             getline (datafile, line);
-            for (int c=0; c < cols; c++)
+
+            for (int c = 0; c < cols; c++)
             {
-                order[r][c] = atoi(line.substr(c,1).c_str());
+                order[r][c] = atoi(line.substr(c, 1).c_str());
             }
         }
+
         datafile.close();
     }
-    else cerr << "Could not open file.\n";
+
+    else
+        cerr << "Could not open file.\n";
 }
+
 catch ( ... )
 {
     cerr << "Tour constructor failed.\n";
@@ -111,7 +125,10 @@ int
 Tour::fact (const int k)
 {
     int f = 1;
-    for ( int i = 1; i <= k; i++ ) f = f * i;
+
+    for ( int i = 1; i <= k; i++ )
+        f = f * i;
+
     //cout << "The factorial of " << k << " is " << f << ".\n";
     return f;
 }

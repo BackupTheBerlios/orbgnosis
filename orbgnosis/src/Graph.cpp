@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Graph.cpp,v 1.1 2006/09/27 22:20:46 trs137 Exp $
+* $Id: Graph.cpp,v 1.2 2006/10/02 03:52:53 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -34,6 +34,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+
 using namespace std;
 
 /**
@@ -41,8 +42,8 @@ using namespace std;
  * @param n number of targets.
  */
 Graph::Graph (int n) :
-    node(n),
-    numTargets(n)
+        node(n),
+        numTargets(n)
 {
     // Set size for container of trajectories.
     node.resize(numTargets);
@@ -54,10 +55,11 @@ Graph::Graph (int n) :
  * Graph copy constuctor.
  */
 Graph::Graph (const Graph& copy) :
-    node(copy.numTargets),
-    numTargets(copy.numTargets)
+        node(copy.numTargets),
+        numTargets(copy.numTargets)
 {
     node.resize(copy.numTargets);
+
     for (int i = 0; i < numTargets; i++)
         node[i] = copy.node[i];
 }
@@ -78,7 +80,8 @@ Graph::print(void)
 {
     cout << "GRAPH PRINTOUT FOR " << numTargets;
     cout << " NODES" << endl;
-    for (int i=0; i<numTargets; i++)
+
+    for (int i = 0; i < numTargets; i++)
     {
         cout << "Node # " << i << ": " << node[i] << endl;
     }
@@ -93,7 +96,7 @@ Graph::print(void)
 void
 Graph::set_all(Vec3 t)
 {
-    for (int i=0; i<numTargets; i++)
+    for (int i = 0; i < numTargets; i++)
     {
         node[i] = t;
     }
@@ -108,15 +111,16 @@ void
 Graph::noise(double n)
 {
     double x, y, z;
-    for (int j=0; j < numTargets; j++)
+
+    for (int j = 0; j < numTargets; j++)
     {
         x = node[j].getX();
         y = node[j].getY();
         z = node[j].getZ();
 
-        x += 2.0*n*x*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*x);
-        y += 2.0*n*y*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*y);
-        z += 2.0*n*z*((double)rand()/((double)(RAND_MAX)+(double)(1)))-(n*z);
+        x += 2.0 * n * x * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * x);
+        y += 2.0 * n * y * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * y);
+        z += 2.0 * n * z * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * z);
 
         node[j].set3(x, y, z);
     }
