@@ -1,3 +1,4 @@
+/* $Id: SJT.c,v 1.2 2006/10/02 03:40:45 trs137 Exp $ */
 /*===================================================================*/
 /* C program for distribution from the Combinatorial Object Server.  */
 /* Generate permutations by transposing adjacent elements            */
@@ -23,16 +24,18 @@ void PrintPerm() {
      count = count + 1;
      printf( "[%8d] ", count ); 
   */
+  printf("0");
   for (i=1; i <= NN; ++i) printf( "%d", p[i] );
 } /* PrintPerm */;
 
 void PrintTrans( int x, int y ) {
-  printf( "    (%d %d)", x, y );  printf( "\n" );
+  /*printf( "    (%d %d)", x, y );*/
+  printf( "\n" );
 } /* PrintTrans */;
 
 void Move( int x, int d ) {
   int z;
-  PrintTrans( pi[x], pi[x]+d );
+  PrintTrans( pi[x], pi[x]+d ); 
   z = p[pi[x]+d];
   p[pi[x]] = z;
   p[pi[x]+d] = x;
@@ -52,15 +55,16 @@ void Perm ( int n ) {
   }
 } /* of Perm */;
 
-void main () {
-  printf( "Enter n: " );  scanf( "%d", &NN );
-  printf( "\n" );
+int main (int argc, char **argv) {
+  if (argc < 2)
+  {
+    printf ("\nUsage: enter integer 1-9.\n");
+    exit(1);
+  }
+  NN = (int)atoi(argv[1]);
   for (i=1; i<=NN; ++i) {
     dir[i] = -1;  p[i] = i;  pi[i] = i;
   }
   Perm ( 1 );
   printf( "\n" );
 }
-
-
-
