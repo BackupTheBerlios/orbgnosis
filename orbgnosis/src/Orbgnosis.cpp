@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.23 2006/09/28 16:04:49 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.24 2006/10/02 06:58:09 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -36,6 +36,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Constellation.h"
 #include "Graph.h"
 #include "ULambert.h"
 #include "Orbgnosis.h"
@@ -48,6 +49,12 @@
 # include <unistd.h>
 # include "global.h"
 # include "rand.h"
+using namespace std;
+
+// XXX Future work, pick one:
+//     1. Wrap all of NSGA-II in a class, or refactor some other way.
+//     2. Rewrite NSGA-II from scratch (mandatory for commercial use).
+// declare a bunch of global vars for NSGA-II
 int nreal;
 int nbin;
 int nobj;
@@ -77,54 +84,64 @@ int obj3;
 int angle1;
 int angle2;
 
-using namespace std;
 
-int main (int argc, char **argv)
+/* OMG THIS ACTUALLY COMPILED */
+extern Tour mytour(TARGETS);
+extern Graph mygraph(TARGETS+1);
+
+/****************************************************************/
+/* PROBLEM DEFINITION GOES HERE. DON'T USE problemdef.c         */
+
+# define wsp1  /* Static wandering salesman problem, 1 objective */
+/* # define wsp2 */  /* Static wandering salesman problem, 2 objectives */
+
+/* Dynamic wandering salesman problem w/ geocentric trajectories */
+/* # define wsp_astro */
+
+#ifdef wsp1
+void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
+{
+    /*
+     * Add up the length of the Hamiltonian path, going in the order
+     * specified by mytour.
+     */
+    int start, end; // each edge of the graph has a start node and an end node.
+    double d, dtot; // edge weight (distance) and total path distance.
+    d = dtot = 0.0;
+    /*
+     * NOTE! We're using a real coded variable for "key".
+     * Real coding the tour permutation key lets us take advantage of the
+     * Steinhaus-Johnson-Trotter ordering of the permutation data files.. i.e.
+     * adjacent permutation differ by exactly one transposition.  It's a kind
+     * of combinatoric gray coding.
+     */
+    int key;        // the corresponding row number in mytour.
+    key = (int)xreal[0];  // convert double to int.
+
+    for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
+    {
+        start = mytour.get_target(key, c);    // initially, mytour column 0
+        end   = mytour.get_target(key, c+1);  // initially, mytour column 1
+        d = norm(mygraph.node[start] - mygraph.node[end]);
+        dtot = dtot + d;
+    }
+    obj[0] = dtot;
+    return ;
+}
+#endif // wsp1
+/****************************************************************/
+
+
+int main (int argc, char **argv) // arg is a random seed {0...1}
 {
     srand (time(NULL));
-    const int targets = 5;
-    int start, end;
-    int bestkey = -999;
-    double bestd = INF;
-    double d, dtot;   // distance of path
-    Tour mytour(targets);
-    //mytour.printOrder();
-
-    Graph mygraph(targets + 1); // include initial position of chaser, too.
-    mygraph.set_all(Vec3(100.0, 100.0, 100.0));
+    mygraph.set_all(Vec3(100.0, 100.0, 0.0));
     mygraph.noise(1.0);
+
     mygraph.print();
     cout << endl;
-    cout << "There are " << mytour.rows << " permutations." << endl;
+    mytour.printOrder();
     cout << endl;
-
-    for (int r = 0; r < mytour.rows; r++)
-    {
-        d = dtot = 0.0;
-
-        for (int c = 0; c < mytour.cols - 1; c++) // c is the starting node of each edge
-        {
-            start = mytour.get_target(r, c);
-            end = mytour.get_target(r, c + 1);
-            //cout << "starting at " << start;
-            //cout << " and going to " << end;
-            d = norm(mygraph.node[start] - mygraph.node[end]);
-            //cout << " edge length = " << d << endl;
-            dtot = dtot + d;
-        }
-        //cout << "Total path length = " << dtot << endl << endl;
-        cout << r << ", " << dtot << endl;
-
-        if (dtot < bestd)
-        {
-            bestd = dtot;
-            bestkey = r;
-        }
-    }
-
-    cout << endl;
-    cout << "The very best tour was # " << bestkey << endl;
-    cout << "Its length was " << bestd << endl;
 
     /*******************************************************/
     int i;
@@ -140,7 +157,7 @@ int main (int argc, char **argv)
 
     if (argc < 2)
     {
-        printf("\n Usage ./nsga2r random_seed \n");
+        printf("\n Usage ./orbgnosis random_seed \n");
         exit(1);
     }
 

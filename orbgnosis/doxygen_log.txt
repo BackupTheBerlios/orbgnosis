@@ -1,17 +1,18 @@
-/usr/home/trs137/orbgnosis/src/global.h:56: Warning: Compound lists is not documented.
-/usr/home/trs137/orbgnosis/src/global.h:50: Warning: Compound population is not documented.
-/usr/home/trs137/orbgnosis/src/global.h:37: Warning: Compound individual is not documented.
-/usr/home/trs137/orbgnosis/src/Constellation.h:64: Warning: Member t10s (variable) of class Constellation is not documented.
-/usr/home/trs137/orbgnosis/src/Constellation.h:65: Warning: Member numTargets (variable) of class Constellation is not documented.
-/usr/home/trs137/orbgnosis/src/Graph.h:55: Warning: Member node (variable) of class Graph is not documented.
-/usr/home/trs137/orbgnosis/src/Graph.h:56: Warning: Member numTargets (variable) of class Graph is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:47: Warning: Member printOrder(void) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:48: Warning: Member fact(const int) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:51: Warning: Member get_target(int, int) (function) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:53: Warning: Member cols (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member rows (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:57: Warning: Member order (variable) of class Tour is not documented.
-/usr/home/trs137/orbgnosis/src/Tour.h:58: Warning: Member rowCtr (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/global.h:61: Warning: Compound lists is not documented.
+/usr/home/trs137/orbgnosis/src/global.h:54: Warning: Compound population is not documented.
+/usr/home/trs137/orbgnosis/src/global.h:40: Warning: Compound individual is not documented.
+/usr/home/trs137/orbgnosis/src/Orbgnosis.h:41: Warning: Member TARGETS (define) of file Orbgnosis.h is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:67: Warning: Member t10s (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Constellation.h:68: Warning: Member numTargets (variable) of class Constellation is not documented.
+/usr/home/trs137/orbgnosis/src/Graph.h:58: Warning: Member node (variable) of class Graph is not documented.
+/usr/home/trs137/orbgnosis/src/Graph.h:59: Warning: Member numTargets (variable) of class Graph is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:48: Warning: Member printOrder(void) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:49: Warning: Member fact(const int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:52: Warning: Member get_target(int, int) (function) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:54: Warning: Member cols (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:55: Warning: Member rows (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:58: Warning: Member order (variable) of class Tour is not documented.
+/usr/home/trs137/orbgnosis/src/Tour.h:59: Warning: Member rowCtr (variable) of class Tour is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:69: Warning: Member get_a(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:70: Warning: Member get_e(void) (function) of class Traj is not documented.
 /usr/home/trs137/orbgnosis/src/Traj.h:71: Warning: Member get_i(void) (function) of class Traj is not documented.
@@ -34,8 +35,8 @@
 /usr/home/trs137/orbgnosis/src/Traj.cpp:55: Warning: The following parameters of Traj::Traj(double ain, double ein, double iin, double raanin, double win, double fin) are not documented:
   parameter iin
 
-/usr/home/trs137/orbgnosis/src/Traj.cpp:445: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
-/usr/home/trs137/orbgnosis/src/Traj.cpp:445: Warning: The following parameters of Traj::set_f(double fin) are not documented:
+/usr/home/trs137/orbgnosis/src/Traj.cpp:446: Warning: argument `f' of command @param is not found in the argument list of Traj::set_f(double fin)
+/usr/home/trs137/orbgnosis/src/Traj.cpp:446: Warning: The following parameters of Traj::set_f(double fin) are not documented:
   parameter fin
 
 /usr/home/trs137/orbgnosis/src/ULambert.cpp:156: Warning: parameters of member ULambert::universal are not (all) documented
