@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.16 2006/09/28 16:04:49 trs137 Exp $
+# $Id: Makefile,v 1.17 2006/10/09 14:08:48 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -166,7 +166,7 @@ $(DEPDIR)/%.d : $(SRCDIR)/%.c*
 $(FULLNAME)-src.tbz : $(SOURCES) $(HEADERS) $(MAKEFILE)
 	@rm -rf $@~
 	@mkdir -p $@~/$(FULLNAME)-src/
-	@cp -r $(SRCDIR) $(MAKEFILE) $@~/$(FULLNAME)-src/
+	@cp -r $(SRCDIR) data $(MAKEFILE) $@~/$(FULLNAME)-src/
 	@cp LICENSE.orbgnosis LICENSE.Makefile $@~/$(FULLNAME)-src/
 	@rm -rf $@~/$(FULLNAME)-src/src/CVS
 	@cd $@~ && $(TAR) $@ $(FULLNAME)-src

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Constellation.cpp,v 1.6 2006/10/02 03:52:53 trs137 Exp $
+* $Id: Constellation.cpp,v 1.7 2006/10/09 14:08:48 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -146,10 +146,10 @@ Constellation::noise(double n)
 
         a += 2.0 * n * a * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * a);
         e += 2.0 * n * e * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * e);
-        i += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
-        raan += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
-        w += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
-        f += 4.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        i += 2.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        raan += 2.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        w += 2.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
+        f += 2.0 * n * M_PI * ((double)rand() / ((double)(RAND_MAX) + (double)(1))) - (n * 2 * M_PI);
 
         t10s[j].set_elorb(a, e, i, raan, w, f);
     }
