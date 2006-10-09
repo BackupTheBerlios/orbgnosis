@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.27 2006/10/02 12:00:38 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.28 2006/10/09 19:17:45 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -220,6 +220,7 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         t_depart[i] = 0.0;
         t_arrive[i] = 0.0;
     }
+
     for (int i = 0; i < TARGETS; i++)
     {
         dwell[i] = xreal[2*i+1];
@@ -227,18 +228,12 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     }
 
     t_depart[0] = dwell[0];
-    t_depart[1] = dwell[0] + TOF[0] + dwell[1];
-    t_depart[2] = dwell[0] + TOF[0] + dwell[1] + TOF[1] + dwell[2];
-    // etc...
-
-    t_arrive[0] = dwell[0] + TOF[0];
-    t_arrive[1] = dwell[0] + TOF[0] + dwell[1] + TOF[1];
-    t_arrive[2] = dwell[0] + TOF[0] + dwell[1] + TOF[1] + dwell[2] + TOF[2];
-    // etc...
-
-    // The time-of-flight objective function is quite simple.
-    // more general case: obj[0] = t_arrive[TARGETS-1];
-    obj[0] = t_arrive[2];
+    t_arrive[0] = dwell[0] + TOF[0]; 
+    for (int i = 1; i < TARGETS; i++)
+    {
+        t_depart[i] = t_depart[i-1] + TOF[i-1] + dwell[i];
+        t_arrive[i] = t_arrive[i-1] + dwell[i] + TOF[i];
+    }
 
     for (int c = 0; c < TARGETS - 1; c++) // always start at node #0
     {
@@ -285,6 +280,11 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         // Add the delta-V's onto the cumulative delta V for the entire mission.
         obj[1] = obj[1] + norm(deltaV1) + norm(deltaV2);
     }
+
+    // The time-of-flight objective function is quite simple.
+    // more general case: obj[0] = t_arrive[TARGETS];
+    obj[0] = t_arrive[TARGETS-1];
+
     // a negative constraint value means a violation.
     // We don't want "Star Trek" style maneuvers, so we will
     // constrain missions that use an obscene amount of delta-V.
@@ -295,25 +295,30 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     else
         constr[0] = 1.0;
 
-
     /* CLEAN UP MEMORY */
     delete dwell; dwell = NULL;
     delete TOF;   TOF = NULL;
     delete t_depart; t_depart = NULL;
     delete t_arrive; t_arrive = NULL;
-    return;
+    return;  // Returning from a void function, just to annoy Brian.
 }
 #endif // wsp_astro
 
 /****************************************************************/
 
-
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
     srand (time(NULL));
     Traj mytraj;
+    // International Space Station
     mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
     mycon.distribute(mytraj);
+
+
+    mycon.set_all(mytraj);
+    for (int i = 0; i <= TARGETS; i++) mycon.t10s[i].set_f(1.0 + i*0.1);
+
+    mycon.t10s [0].set_f(1.55);
     mycon.noise(0.00001);
 
 
