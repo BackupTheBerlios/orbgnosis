@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.28 2006/10/09 19:17:45 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.29 2006/10/14 03:01:03 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -205,11 +205,12 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     Vec3 V_end;
     Vec3 R_start;
     Vec3 R_end;
-    Vec3 deltaV1;
-    Vec3 deltaV2;
+    Vec3 dV1S, dV1L;  // deltaV1 for long and short
+    Vec3 dV2S, dV2L;  // deltaV2 for long and short
+    double dv_long, dv_short;  // longway and shortway deltaV's
     Traj start_traj;
     Traj end_traj;
-    ULambert xfer;
+    ULambert s_xfer, l_xfer;
 
     double* dwell = new double [TARGETS];
     double* TOF = new double [TARGETS];
@@ -269,37 +270,67 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 
         // We already know the TOF for this transfer arc: TOF[c].
         // Get ready for universal Lambert problem.
-        xfer.setRo(R_start);
-        xfer.setR(R_end);
-        xfer.sett(TOF[c]);
-        // xfer.universal(false, 0) Long-way = false, multiple revs = 0.
-        xfer.universal(false, 0);
-        deltaV1 = xfer.getVo() - V_start;
-        deltaV2 = xfer.getV() - V_end;
+        s_xfer.setRo(R_start);
+        s_xfer.setR(R_end);
+        s_xfer.sett(TOF[c]);
+        l_xfer.setRo(R_start);
+        l_xfer.setR(R_end);
+        l_xfer.sett(TOF[c]);
 
-        // Add the delta-V's onto the cumulative delta V for the entire mission.
-        obj[1] = obj[1] + norm(deltaV1) + norm(deltaV2);
+        /*
+         * Lambert's problem has FOUR solutions:
+         * prograde, short-way
+         * prograde, long-way
+         * retrograde, short-way
+         * retrograde, long-way
+         *
+         * The retrograde solutions are a huge delta-V penalty.
+         * Try both long-way and short-way prograde transfers
+         * and use whichever is best.
+         */
+
+        // foo.universal(false, 0 ) means SHORT WAY
+        // foo.universal(true, 0 )  means LONG WAY
+
+        s_xfer.universal(false, 0);  // short-way
+        dV1S = s_xfer.getVo() - V_start;
+        dV2S = s_xfer.getV() - V_end;
+
+        l_xfer.universal(true, 0);  // long-way
+        dV1L = l_xfer.getVo() - V_start;
+        dV2L = l_xfer.getV() - V_end;
+
+        dv_short = norm(dV1S) + norm(dV2S);
+        dv_long = norm(dV1L) + norm(dV2L);
+
+        if (dv_short > dv_long)     // long-way was cheaper
+            obj[1] = obj[1] + dv_long;
+        else                        // short-way was cheaper
+            obj[1] = obj[1] + dv_short;
     }
 
     // The time-of-flight objective function is quite simple.
     // more general case: obj[0] = t_arrive[TARGETS];
     obj[0] = t_arrive[TARGETS-1];
 
-    // a negative constraint value means a violation.
-    // We don't want "Star Trek" style maneuvers, so we will
-    // constrain missions that use an obscene amount of delta-V.
-    // Remember, units of deltaV are canonical...
-    // Earth radii per time unit.
-    if (obj[1] > 30) // the cutoff is arbitrary
-        constr[0] = -1.0;
-    else
-        constr[0] = 1.0;
-
     /* CLEAN UP MEMORY */
     delete dwell; dwell = NULL;
     delete TOF;   TOF = NULL;
     delete t_depart; t_depart = NULL;
     delete t_arrive; t_arrive = NULL;
+
+    // convert units from canonical to km and s.
+    obj[0] *= TU_MIN;
+    obj[1] *= ERTU;  
+
+    // a negative constraint value means a violation.
+    // We don't want "Star Trek" style maneuvers, so we will
+    // constrain missions that use an obscene amount of delta-V.
+    if (obj[1] > 10000) // the cutoff is arbitrary
+        constr[0] = -1.0;
+    else
+        constr[0] = 1.0;
+
     return;  // Returning from a void function, just to annoy Brian.
 }
 #endif // wsp_astro
@@ -308,7 +339,6 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
-    srand (time(NULL));
     Traj mytraj;
     // International Space Station
     mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
@@ -319,7 +349,9 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     for (int i = 0; i <= TARGETS; i++) mycon.t10s[i].set_f(1.0 + i*0.1);
 
     mycon.t10s [0].set_f(1.55);
-    mycon.noise(0.00001);
+    //mycon.noise(0.001);
+    mycon.print();
+    cout << endl;
 
 
     /* WSP2 stuff
@@ -394,6 +426,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
         printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
         exit(1);
     }
+    srand (seed * 2*RAND_MAX);
 
     fpt1 = fopen("initial_pop.out", "w");
     fpt2 = fopen("final_pop.out", "w");

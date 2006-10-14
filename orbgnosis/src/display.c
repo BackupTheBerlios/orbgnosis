@@ -1,4 +1,4 @@
-/* $Id: display.c,v 1.2 2006/10/02 03:52:53 trs137 Exp $ */
+/* $Id: display.c,v 1.3 2006/10/14 03:01:03 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -31,6 +31,7 @@
 
 # include "global.h"
 # include "rand.h"
+# include "Orbgnosis.h"
 
 /* Function to display the current population for the subsequent generation */
 void onthefly_display (population *pop, FILE *gp, int ii)
@@ -64,7 +65,11 @@ void onthefly_display (population *pop, FILE *gp, int ii)
     else
     {
         if (choice != 3)
-            fprintf(gp, "set title 'Generation #%d'\n unset key\n plot 'plot.out' w points pointtype 6 pointsize 1\n", ii);
+        {
+            fprintf(gp, "set title 'Solutions with %d targets. Generation #%d'\n unset key\n plot 'plot.out' w points pointtype 6 pointsize 1\n", TARGETS, ii);
+            fprintf(gp, "set xlabel 'Time of Flight (minutes)'\n");
+            fprintf(gp, "set ylabel 'Total delta-V (m/sec)'\n");
+        }
         else
             fprintf(gp, "set title 'Generation #%d'\n set view %d,%d\n unset key\n splot 'plot.out' w points pointtype 6 pointsize 1\n", ii, angle1, angle2);
 

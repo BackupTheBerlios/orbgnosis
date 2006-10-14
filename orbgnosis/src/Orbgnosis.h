@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.30 2006/10/09 19:17:45 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.31 2006/10/14 03:01:03 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -65,6 +65,7 @@
 #define ER 6378.137    //!< Earth radius in km... (km per canonical length unit)
 #define TU_SEC 806.81112382429    //!< seconds per canonical time unit
 #define TU_MIN 13.44685206374     //!< minutes per canonical time unit
+#define ERTU 7905.36693228        //!< (m/s) per (ER/TU)
 
 #define J2 0.00108263             //!< Earth J2, canonical.
 
