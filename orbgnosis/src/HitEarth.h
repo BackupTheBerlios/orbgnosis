@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: HitEarth.h,v 1.1 2006/10/15 04:12:13 trs137 Exp $
+* $Id: HitEarth.h,v 1.2 2006/10/15 07:56:55 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -46,11 +46,11 @@ using namespace std;
 inline bool
 hit_Earth (const Vec3 r1, const Vec3 r2, const Vec3 v1, const Vec3 v2)
 {
-    cout << "hit_Earth() is checking...";
+    //cout << "hit_Earth() is checking...";
     // Are the inital or final points inside the Earth?
     if ((norm(r1) < 1.0) || (norm(r2) < 1.0))
     {
-        cout << "HIT!" << endl;
+        //cout << "HIT! initial or final radius was inside Earth." << endl;
         return true;
     }
     // From Vallado's book: Recall the properties of the flight path angle
@@ -64,26 +64,31 @@ hit_Earth (const Vec3 r1, const Vec3 r2, const Vec3 v1, const Vec3 v2)
 
     if ((dot(r1, v1) < 0.0) && (dot(r2, v2) > 0.0))
     {
-        double h;           // angular momentum of arc
+        Vec3 h;             // angular momentum vector of arc
         double ksi;         // specific mechanical energy of arc
         double rp;          // radius of perigee of arc
         double a;           // semimajor axis of arc
         double e;           // eccentricity of arc
-        double p;           // semilatus rectum arc
         double vv2 = norm(v2);
-        ksi = 0.5 * vv2 * vv2 - (1.0 / norm(r1));
-        h = norm(cross(r1, v1));
-        p = h * h;
-        a = -1.0 / (2 * a);
-        e = sqrt((a - p) / a);
-        rp = a * (1 - e);
-        // Is the perigee lower than the radius of Earth?
-        if (rp <= 1.0)
+        double rr1 = norm(r1);
+        h = cross(r1, v1);
+        e = norm( cross(v1, h) - (r1 / rr1) );
+        ksi = 0.5 * vv2 * vv2 - (1.0 / rr1);
+        a = -1.0 / (2.0 * ksi);
+        if (fabs(ksi) > 0.00001)
         {
-            cout << "HIT!" << endl;
+            rp = a * ( 1 - e);
+        }
+        else rp = 0.5 * a * (1 - e * e); // parabolic
+
+        // Is the perigee lower than the radius of Earth?
+        if (rp < 1.0)
+        {
+            //cout << e;
+            //cout << " HIT! rp is " << rp << endl;
             return true;
         }
     }
-    cout << "miss." << endl;
+    //cout << "miss." << endl;
     return false;
 }

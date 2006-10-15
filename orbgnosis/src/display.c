@@ -1,4 +1,4 @@
-/* $Id: display.c,v 1.3 2006/10/14 03:01:03 trs137 Exp $ */
+/* $Id: display.c,v 1.4 2006/10/15 07:56:55 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -66,7 +66,7 @@ void onthefly_display (population *pop, FILE *gp, int ii)
     {
         if (choice != 3)
         {
-            fprintf(gp, "set title 'Solutions with %d targets. Generation #%d'\n unset key\n plot 'plot.out' w points pointtype 6 pointsize 1\n", TARGETS, ii);
+            fprintf(gp, "set title 'Non-dominated solutions. %d targets. Generation #%d'\n unset key\n plot 'plot.out' w points pointtype 6 pointsize 1\n", TARGETS, ii);
             fprintf(gp, "set xlabel 'Time of Flight (minutes)'\n");
             fprintf(gp, "set ylabel 'Total delta-V (m/sec)'\n");
         }

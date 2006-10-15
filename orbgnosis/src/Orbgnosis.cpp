@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.31 2006/10/15 04:12:13 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.32 2006/10/15 07:56:55 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -39,6 +39,7 @@
 #include "Constellation.h"
 #include "Traj.h"
 #include "Graph.h"
+#include "HitEarth.h"
 #include "Kepler.h"
 #include "ULambert.h"
 #include "Orbgnosis.h"
@@ -216,6 +217,7 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     Traj start_traj;
     Traj end_traj;
     ULambert xfer;
+    bool x_clean, t_clean;
 
     double* dwell = new double [TARGETS];
     double* TOF = new double [TARGETS];
@@ -256,8 +258,10 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         cout << endl;
     */
 
+    t_clean = true;  // tour starts out clean.
     for (int c = 0; c < TARGETS; c++) // always start at node #0
     {
+        x_clean = false;  // each xfer starts dirty and must be proven clean.
         start = mytour.get_target(key, c);
         end = mytour.get_target(key, c + 1);
 
@@ -268,12 +272,10 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         // t_depart[c] is the time at which we leave upon the c-th transfer arc.
         // start_traj is the location of the start-th node at time t_depart[c].
         // the start-th node is where the chaser is right now.
-
         try
         {
             start_traj = kepler(mycon.t10s[start], t_depart[c]);
         }
-
         catch (...)
         {
             cout << "Kepler 1 was bad." << endl;
@@ -289,12 +291,10 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         // t_arrive[c] is the time at which we will complete the c-th transfer arc.
         // end_traj is the location of the end-th node at time t_arrive[c].
         // the end-th node is where the chaser is headed.
-
         try
         {
             end_traj = kepler(mycon.t10s[end], t_arrive[c]);
         }
-
         catch (...)
         {
             cout << "Kepler 2 was bad." << endl;
@@ -335,37 +335,37 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         {
             dv_short = INF;
             dv_long = INF;
-
             xfer.universal(false, revs);  // short-way
-
-            if (!xfer.isFailure())
+            if (   !(xfer.isFailure())  // if it didn't fail and didn't hit Earth...
+                && !(hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
             {
-                // XXX check hit earth
-                // requires: R_start,
-                //           R_end,
-                //           xfer.getVo(),
-                //           xfer.getV(),
                 dv_short = norm(xfer.getVo() - V_start)
                            + norm(xfer.getV() - V_end);
             }
 
             xfer.universal(true, revs);  // long-way
-
-            if (!xfer.isFailure())
+            if (   !(xfer.isFailure())
+                && !(hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
             {
-                // XXX check hit earth
                 dv_long = norm(xfer.getVo() - V_start)
                           + norm(xfer.getV() - V_end);
             }
 
             if (dv_short < dv_best)
+            {
                 dv_best = dv_short;
+                x_clean = true;  // we found at least 1 good xfer.
+            }
 
             if (dv_long < dv_best)
+            {
                 dv_best = dv_long;
+                x_clean = true; // we found at least 1 good xfer.
+            }
         }
         // XXX we don't remember which solution (long/short, #revs) was best.
         obj[1] = obj[1] + dv_best;
+        if ( ! x_clean ) t_clean = false; // any failed leg causes a failed tour.
     }
 
     // The time-of-flight objective function is quite simple.
@@ -374,24 +374,16 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 
     /* CLEAN UP MEMORY */
     delete dwell;
-
     dwell = NULL;
-
     delete TOF;
-
     TOF = NULL;
-
     delete t_depart;
-
     t_depart = NULL;
-
     delete t_arrive;
-
     t_arrive = NULL;
 
     // convert units from canonical to km and s.
     obj[0] *= TU_MIN;
-
     obj[1] *= ERTU;
 
     // a negative constraint value means a violation.
@@ -401,6 +393,12 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         constr[0] = -1.0;
     else
         constr[0] = 1.0;
+
+    if ( ! t_clean )
+    {
+        constr[0] = -1.0;
+        //cout << "dirty tour." << endl;
+    }
 
     return ;  // Returning from a void function, just to annoy Brian.
 }
@@ -466,6 +464,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     //    mycon.t10s[8].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0156788020);
     //    mycon.t10s[9].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0313576039);
 
+    mycon.noise(0.001);
     mycon.print();
     cout << endl;
 
