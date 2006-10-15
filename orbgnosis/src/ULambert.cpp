@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.cpp,v 1.11 2006/09/11 15:16:13 trs137 Exp $
+* $Id: ULambert.cpp,v 1.12 2006/10/15 02:31:19 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -233,7 +233,7 @@ ULambert::universal ( const bool Lin, const int multirev )
         Lower = -8.0 * M_PI;
     }
 
-    else
+    else // Multi-rev partitioning... not guaranteed to always converge.
     {
         Upper = -SMALL + 4.0 * ( ( revs / 2 ) + 1 ) * ( ( revs / 2 ) + 1 ) * M_PI * M_PI;
         Lower = SMALL + 4.0 * ( revs / 2 ) * ( revs / 2 ) * M_PI * M_PI;

@@ -1,4 +1,4 @@
-/* $Id: global.h,v 1.3 2006/10/02 06:58:09 trs137 Exp $ */
+/* $Id: global.h,v 1.4 2006/10/15 02:31:19 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -27,7 +27,7 @@
 # define _GLOBAL_H_
 
 /*# define SMALL 1.0e-14 */
-# define INF 1.0e14
+/*# define INF 1.0e14 */
 # define EPS 1.0e-14
 /* # define E  2.71828182845905  */ // collides with "double E" in Traj YAY GLOBAL C VARIABLES ARE MY FAVORITE THING EVAR
 # define PI 3.14159265358979

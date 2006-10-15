@@ -1,4 +1,4 @@
-/* $Id: crowddist.c,v 1.2 2006/10/02 03:52:53 trs137 Exp $ */
+/* $Id: crowddist.c,v 1.3 2006/10/15 02:31:19 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -29,6 +29,7 @@
 
 # include "global.h"
 # include "rand.h"
+# include "Orbgnosis.h"
 
 /* Routine to compute crowding distance based on ojbective function values when the population in in the form of a list */
 void assign_crowding_distance_list (population *pop, list *lst, int front_size)

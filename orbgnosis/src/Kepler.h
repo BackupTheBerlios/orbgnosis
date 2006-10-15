@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Kepler.h,v 1.6 2006/10/02 03:52:53 trs137 Exp $
+* $Id: Kepler.h,v 1.7 2006/10/15 02:31:19 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -56,8 +56,6 @@ using namespace std;
 Traj
 kepler ( Traj traj_0, double t )
 {
-    //srand (time (NULL));
-
     if (t < 0)
     {
         cout << "Kepler needs time > 0." << endl;
@@ -69,7 +67,6 @@ kepler ( Traj traj_0, double t )
         cout << "Kepler: time was zero.  No movement." << endl;
         return traj_0; // Zero time, so no movement.
     }
-
     else
     {
         // set up local variables
@@ -230,7 +227,6 @@ kepler ( Traj traj_0, double t )
 
         // Traj constructor automatically takes care of classical elements.
         result = Traj (rfinal, vfinal);
-
         result.do_J2_regression(t);
 
         return result;

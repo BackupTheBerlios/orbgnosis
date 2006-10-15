@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.17 2006/10/09 14:08:48 trs137 Exp $
+# $Id: Makefile,v 1.18 2006/10/15 02:31:18 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -29,6 +29,7 @@ BINARY      := orbgnosis
 VERSION     := 0.9
 BUILDDATE   := $(shell date +%m%d%Y)
 BUILD_TYPE  := CVS
+#BUILD_DEBUG := true
 
 # output directories
 OBJDIR := obj

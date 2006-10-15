@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.29 2006/10/14 03:01:03 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.30 2006/10/15 02:31:19 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -45,12 +45,15 @@
 #include "Tour.h"
 #include "Vec3.h"
 
+#include <exception>
+
 //# include <stdio.h>    // from old nsga2r.c
 //# include <stdlib.h>   // from old nsga2r.c
 # include <math.h>
 # include <unistd.h>
 # include "global.h"
 # include "rand.h"
+
 using namespace std;
 
 // XXX Future work, pick one:
@@ -89,15 +92,15 @@ int angle2;
 
 /* OMG THIS ACTUALLY COMPILED */
 extern Tour mytour(TARGETS);
-extern Graph mygraph(TARGETS+1);
-extern Constellation mycon(TARGETS+1);
+extern Graph mygraph(TARGETS + 1);
+extern Constellation mycon(TARGETS + 1);  // constellation also has chaser.
 
 /****************************************************************/
 /* PROBLEM DEFINITION GOES HERE. DON'T USE problemdef.c         */
 
 // # define wsp1             /* Static wandering salesman problem, 1 objective */
 // # define wsp2             /* Static wandering salesman problem, 2 objectives */
- # define wsp_astro        /* Dynamic wsp where nodes are satellites */
+# define wsp_astro        /* Dynamic wsp where nodes are satellites */
 
 // Single objective = total length of the tour.
 #ifdef wsp1
@@ -123,13 +126,15 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
     {
         start = mytour.get_target(key, c);    // initially, mytour column 0
-        end   = mytour.get_target(key, c+1);  // initially, mytour column 1
+        end = mytour.get_target(key, c + 1);  // initially, mytour column 1
         d = norm(mygraph.node[start] - mygraph.node[end]);
         dtot = dtot + d;
     }
+
     obj[0] = dtot;
     return ;
 }
+
 #endif // wsp1
 
 // Two objectives: the horizontal and vertical components of the total tour length.
@@ -158,35 +163,37 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
     {
         start = mytour.get_target(key, c);    // initially, mytour column 0
-        end   = mytour.get_target(key, c+1);  // initially, mytour column 1
+        end = mytour.get_target(key, c + 1);  // initially, mytour column 1
         edge = mygraph.node[start] - mygraph.node[end];
         x = fabs(edge.getX());
         y = fabs(edge.getY());
         xtot = xtot + x;
         ytot = ytot + y;
     }
+
     obj[0] = xtot;
     obj[1] = ytot;
     return ;
 }
+
 #endif // wsp2
 
 #ifdef wsp_astro
 void test_problem (double *xreal, double *xbin, int **gene, double *obj, double *constr)
 {
-/* CHROMOSOME STRUCTURE:
- * xreal[0] = key  (the tour order)
- * xreal[1] = dwell0
- * xreal[2] = TOF0
- * xreal[3] = dwell1
- * xreal[4] = TOF1
- * xreal[5] = dwell2
- * xreal[6] = TOF2
- * etc...
- *
- * obj[0] = total time of flight
- * obj[1] = total delta-V
- */
+    /* CHROMOSOME STRUCTURE:
+     * xreal[0] = key  (the tour order)
+     * xreal[1] = dwell0
+     * xreal[2] = TOF0
+     * xreal[3] = dwell1
+     * xreal[4] = TOF1
+     * xreal[5] = dwell2
+     * xreal[6] = TOF2
+     * etc...
+     *
+     * obj[0] = total time of flight
+     * obj[1] = total delta-V
+     */
     obj[0] = 0.0;
     obj[1] = 0.0;
 
@@ -205,17 +212,16 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     Vec3 V_end;
     Vec3 R_start;
     Vec3 R_end;
-    Vec3 dV1S, dV1L;  // deltaV1 for long and short
-    Vec3 dV2S, dV2L;  // deltaV2 for long and short
-    double dv_long, dv_short;  // longway and shortway deltaV's
+    double dv_long, dv_short, dv_best;  // longway and shortway deltaV's
     Traj start_traj;
     Traj end_traj;
-    ULambert s_xfer, l_xfer;
+    ULambert xfer;
 
     double* dwell = new double [TARGETS];
     double* TOF = new double [TARGETS];
     double* t_depart = new double [TARGETS];
     double* t_arrive = new double [TARGETS];
+
     for (int i = 0; i < TARGETS; i++)
     {
         t_depart[i] = 0.0;
@@ -224,58 +230,94 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 
     for (int i = 0; i < TARGETS; i++)
     {
-        dwell[i] = xreal[2*i+1];
-        TOF[i]  = xreal[2*i+2];
+        dwell[i] = xreal[2 * i + 1];
+        TOF[i] = xreal[2 * i + 2];
     }
 
     t_depart[0] = dwell[0];
-    t_arrive[0] = dwell[0] + TOF[0]; 
+    t_arrive[0] = dwell[0] + TOF[0];
+
     for (int i = 1; i < TARGETS; i++)
     {
-        t_depart[i] = t_depart[i-1] + TOF[i-1] + dwell[i];
-        t_arrive[i] = t_arrive[i-1] + dwell[i] + TOF[i];
+        t_depart[i] = t_depart[i - 1] + TOF[i - 1] + dwell[i];
+        t_arrive[i] = t_arrive[i - 1] + dwell[i] + TOF[i];
     }
 
-    for (int c = 0; c < TARGETS - 1; c++) // always start at node #0
+    /*
+        for (int i = 0; i < TARGETS; i++)
+        {
+            cout << i;
+            cout << ": dwell = " << dwell[i];
+            cout << ", TOF = " << TOF[i];
+            cout << ", depart = " << t_depart[i];
+            cout << ", arrive = " << t_arrive[i];
+            cout << endl;
+        }
+        cout << endl;
+    */
+
+    for (int c = 0; c < TARGETS; c++) // always start at node #0
     {
         start = mytour.get_target(key, c);
-        end   = mytour.get_target(key, c+1);
+        end = mytour.get_target(key, c + 1);
 
         /*
          * Figure out where the chaser is at the time of burn #1 on the current xfer arc.
-         */
+         */ 
         // mycon.t10s[start] is the trajectory at the beginning of this edge (the c-th edge)
         // t_depart[c] is the time at which we leave upon the c-th transfer arc.
         // start_traj is the location of the start-th node at time t_depart[c].
         // the start-th node is where the chaser is right now.
-        start_traj = kepler(mycon.t10s[start], t_depart[c]);
+
+        try
+        {
+            start_traj = kepler(mycon.t10s[start], t_depart[c]);
+        }
+
+        catch (...)
+        {
+            cout << "Kepler 1 was bad." << endl;
+            exit(1);
+        }
+
 
         /*
          * Figure out where the current target will be at the time of intercept.. i.e.
          * at the time of burn #2 on the current xfer arc.
-         */
+         */ 
         // mycon.t10s[end] is the trajectory at the end of this edge.
         // t_arrive[c] is the time at which we will complete the c-th transfer arc.
         // end_traj is the location of the end-th node at time t_arrive[c].
         // the end-th node is where the chaser is headed.
-        end_traj = kepler(mycon.t10s[end], t_arrive[c]);
+
+        try
+        {
+            end_traj = kepler(mycon.t10s[end], t_arrive[c]);
+        }
+
+        catch (...)
+        {
+            cout << "Kepler 2 was bad." << endl;
+            exit(1);
+        }
 
         // Extract initial state vector from start_traj.
         R_start = start_traj.get_r();
+
         V_start = start_traj.get_v();
 
         // Extract final state vector from end_traj.
         R_end = end_traj.get_r();
+
         V_end = end_traj.get_v();
 
         // We already know the TOF for this transfer arc: TOF[c].
         // Get ready for universal Lambert problem.
-        s_xfer.setRo(R_start);
-        s_xfer.setR(R_end);
-        s_xfer.sett(TOF[c]);
-        l_xfer.setRo(R_start);
-        l_xfer.setR(R_end);
-        l_xfer.sett(TOF[c]);
+        xfer.setRo(R_start);
+
+        xfer.setR(R_end);
+
+        xfer.sett(TOF[c]);
 
         /*
          * Lambert's problem has FOUR solutions:
@@ -287,69 +329,143 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
          * The retrograde solutions are a huge delta-V penalty.
          * Try both long-way and short-way prograde transfers
          * and use whichever is best.
-         */
-
+         */ 
         // foo.universal(false, 0 ) means SHORT WAY
         // foo.universal(true, 0 )  means LONG WAY
 
-        s_xfer.universal(false, 0);  // short-way
-        dV1S = s_xfer.getVo() - V_start;
-        dV2S = s_xfer.getV() - V_end;
+        dv_best = INF;
 
-        l_xfer.universal(true, 0);  // long-way
-        dV1L = l_xfer.getVo() - V_start;
-        dV2L = l_xfer.getV() - V_end;
+        for (int revs = 0; revs < 15; revs++) // multirev kludge
+        {
+            dv_short = INF;
+            dv_long = INF;
 
-        dv_short = norm(dV1S) + norm(dV2S);
-        dv_long = norm(dV1L) + norm(dV2L);
+            xfer.universal(false, revs);  // short-way
 
-        if (dv_short > dv_long)     // long-way was cheaper
-            obj[1] = obj[1] + dv_long;
-        else                        // short-way was cheaper
-            obj[1] = obj[1] + dv_short;
+            if (!xfer.isFailure())
+            {
+                // XXX check hit earth
+                dv_short = norm(xfer.getVo() - V_start)
+                           + norm(xfer.getV() - V_end);
+            }
+
+            xfer.universal(true, revs);  // long-way
+
+            if (!xfer.isFailure())
+            {
+                // XXX check hit earth
+                dv_long = norm(xfer.getVo() - V_start)
+                          + norm(xfer.getV() - V_end);
+            }
+
+            if (dv_short < dv_best)
+                dv_best = dv_short;
+
+            if (dv_long < dv_best)
+                dv_best = dv_long;
+        }
+        // XXX we don't remember which solution (long/short, #revs) was best.
+        obj[1] = obj[1] + dv_best;
     }
 
     // The time-of-flight objective function is quite simple.
     // more general case: obj[0] = t_arrive[TARGETS];
-    obj[0] = t_arrive[TARGETS-1];
+    obj[0] = t_arrive[TARGETS - 1];
 
     /* CLEAN UP MEMORY */
-    delete dwell; dwell = NULL;
-    delete TOF;   TOF = NULL;
-    delete t_depart; t_depart = NULL;
-    delete t_arrive; t_arrive = NULL;
+    delete dwell;
+
+    dwell = NULL;
+
+    delete TOF;
+
+    TOF = NULL;
+
+    delete t_depart;
+
+    t_depart = NULL;
+
+    delete t_arrive;
+
+    t_arrive = NULL;
 
     // convert units from canonical to km and s.
     obj[0] *= TU_MIN;
-    obj[1] *= ERTU;  
+
+    obj[1] *= ERTU;
 
     // a negative constraint value means a violation.
     // We don't want "Star Trek" style maneuvers, so we will
     // constrain missions that use an obscene amount of delta-V.
-    if (obj[1] > 10000) // the cutoff is arbitrary
+    if (obj[1] > 200)  // the cutoff is arbitrary
         constr[0] = -1.0;
     else
         constr[0] = 1.0;
 
-    return;  // Returning from a void function, just to annoy Brian.
+    return ;  // Returning from a void function, just to annoy Brian.
 }
+
 #endif // wsp_astro
 
 /****************************************************************/
 
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
+
+    if (argc < 2)
+    {
+        printf("\n Usage ./orbgnosis random_seed \n");
+        exit(1);
+    }
+
+    seed = (double)atof(argv[1]);
+
+    if (seed <= 0.0 || seed >= 1.0)
+    {
+        printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
+        exit(1);
+    }
+
+    srand (seed * 2*RAND_MAX);
+
+
+
     Traj mytraj;
     // International Space Station
-    mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
-    mycon.distribute(mytraj);
+    //mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
+    //mycon.set_all(mytraj);
+    //mycon.distribute(mytraj);
+    //for (int i = 0; i <= TARGETS; i++) mycon.t10s[i].set_f(1.0 + i*0.1);
+    //mycon.t10s [0].set_f(1.55);
+    //mycon.noise(0.05);
 
+    /*
+    // 9 sats in 3 planes, spaced widely and evenly
+    mycon.t10s[0].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 0.1);
+    mycon.t10s[1].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 0.2617993878);
+    mycon.t10s[2].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 2.3561944902);
+    mycon.t10s[3].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 4.4505895926);
+    mycon.t10s[4].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 0.2617993878);
+    mycon.t10s[5].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 2.3561944902);
+    mycon.t10s[6].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 4.4505895926);
+    mycon.t10s[7].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 0.2617993878);
+    mycon.t10s[8].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 2.3561944902);
+    mycon.t10s[9].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 4.4505895926);
+    */
 
-    mycon.set_all(mytraj);
-    for (int i = 0; i <= TARGETS; i++) mycon.t10s[i].set_f(1.0 + i*0.1);
+    // 9 sats in 3 planes, leader-follower spaced 100km, planes 0.5 deg apart
+    mycon.t10s[0].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 0.98);
+    mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0);
+    mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0156788020);
+    mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0313576039);
+    //    mycon.t10s[4].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0);
+    //    mycon.t10s[5].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0156788020);
+    //    mycon.t10s[6].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0313576039);
 
-    mycon.t10s [0].set_f(1.55);
-    //mycon.noise(0.001);
+    //    mycon.t10s[7].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0);
+    //    mycon.t10s[8].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0156788020);
+    //    mycon.t10s[9].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0313576039);
+
     mycon.print();
     cout << endl;
 
@@ -412,21 +528,6 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     population *parent_pop;
     population *child_pop;
     population *mixed_pop;
-
-    if (argc < 2)
-    {
-        printf("\n Usage ./orbgnosis random_seed \n");
-        exit(1);
-    }
-
-    seed = (double)atof(argv[1]);
-
-    if (seed <= 0.0 || seed >= 1.0)
-    {
-        printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
-        exit(1);
-    }
-    srand (seed * 2*RAND_MAX);
 
     fpt1 = fopen("initial_pop.out", "w");
     fpt2 = fopen("final_pop.out", "w");
@@ -851,6 +952,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
 
         /* Comment the four lines above for no display */
         printf("\n gen = %d", i);
+
         // sleep(1);
     }
 
@@ -908,12 +1010,12 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     free (mixed_pop);
     printf("\n Routine successfully exited \n");
 
-/*
-    cout << "The shortest horizontal tour was # " << key_xbest << ", length = ";
-    cout << xbest << endl;
-    cout << "The shortest vertical tour was # " << key_ybest << ", length = ";
-    cout << ybest << endl;
-*/
+    /*
+        cout << "The shortest horizontal tour was # " << key_xbest << ", length = ";
+        cout << xbest << endl;
+        cout << "The shortest vertical tour was # " << key_ybest << ", length = ";
+        cout << ybest << endl;
+    */
 
 
     return EXIT_SUCCESS;
