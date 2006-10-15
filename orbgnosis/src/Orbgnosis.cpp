@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.30 2006/10/15 02:31:19 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.31 2006/10/15 04:12:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -301,22 +301,18 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
             exit(1);
         }
 
-        // Extract initial state vector from start_traj.
+        // Extract initial pre-burn #1 state vector from start_traj.
         R_start = start_traj.get_r();
-
         V_start = start_traj.get_v();
 
-        // Extract final state vector from end_traj.
+        // Extract final post-burn #2 state vector from end_traj.
         R_end = end_traj.get_r();
-
         V_end = end_traj.get_v();
 
         // We already know the TOF for this transfer arc: TOF[c].
         // Get ready for universal Lambert problem.
         xfer.setRo(R_start);
-
         xfer.setR(R_end);
-
         xfer.sett(TOF[c]);
 
         /*
@@ -345,6 +341,10 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
             if (!xfer.isFailure())
             {
                 // XXX check hit earth
+                // requires: R_start,
+                //           R_end,
+                //           xfer.getVo(),
+                //           xfer.getV(),
                 dv_short = norm(xfer.getVo() - V_start)
                            + norm(xfer.getV() - V_end);
             }

@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.cpp,v 1.12 2006/10/15 02:31:19 trs137 Exp $
+* $Id: ULambert.cpp,v 1.13 2006/10/15 04:12:13 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -146,7 +146,6 @@ ULambert::isFailure( void )
     {
         return true;
     }
-
     else
     {
         return false;
