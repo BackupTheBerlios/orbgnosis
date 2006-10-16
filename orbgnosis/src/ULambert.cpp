@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: ULambert.cpp,v 1.13 2006/10/15 04:12:13 trs137 Exp $
+* $Id: ULambert.cpp,v 1.14 2006/10/16 12:00:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valladodl@worldnet.att.net>
@@ -158,7 +158,7 @@ ULambert::isFailure( void )
  * Astrodynamics and Applications".
  */
 void
-ULambert::universal ( const bool Lin, const int multirev )
+ULambert::universal ( const bool Lin, const int revs )
 {
     /// True if desired solution is to be the "long way", e.g.
     /// the swept angle is greater than pi or 180 degrees.
@@ -188,8 +188,6 @@ ULambert::universal ( const bool Lin, const int multirev )
 
     double Ro4; //<! magnitude of the Vec3 Ro.  The naming convention traces back to Vallado's Ada version which used the 4th element of an array to hold the vector norm of the first 3 elements.
     double R4;  //<! magnitude of the Vec3 R.
-
-    const int revs = multirev; //<! is only roughly related to the number of multiple revolutions when attempting to find multi-rev solutions.
 
     failure = false;
 
@@ -231,11 +229,10 @@ ULambert::universal ( const bool Lin, const int multirev )
         Upper = 4.0 * M_PI * M_PI;
         Lower = -8.0 * M_PI;
     }
-
     else // Multi-rev partitioning... not guaranteed to always converge.
     {
-        Upper = -SMALL + 4.0 * ( ( revs / 2 ) + 1 ) * ( ( revs / 2 ) + 1 ) * M_PI * M_PI;
-        Lower = SMALL + 4.0 * ( revs / 2 ) * ( revs / 2 ) * M_PI * M_PI;
+        Upper = -SMALL + 4.0 * ((0.5 * revs) + 1) * ((0.5 * revs) + 1) * M_PI * M_PI;
+        Lower = SMALL + 4.0 * (0.5 * revs) * (0.5 * revs) * M_PI * M_PI;
     }
 
     // Determine if the orbit is possible at all

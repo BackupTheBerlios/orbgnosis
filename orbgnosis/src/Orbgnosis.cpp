@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.32 2006/10/15 07:56:55 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.33 2006/10/16 12:00:44 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -46,20 +46,16 @@
 #include "Tour.h"
 #include "Vec3.h"
 
-#include <exception>
-
-//# include <stdio.h>    // from old nsga2r.c
-//# include <stdlib.h>   // from old nsga2r.c
 # include <math.h>
 # include <unistd.h>
 # include "global.h"
 # include "rand.h"
-
 using namespace std;
 
-// XXX Future work, pick one:
+// XXX Future work:
 //     1. Wrap all of NSGA-II in a class, or refactor some other way.
 //     2. Rewrite NSGA-II from scratch (mandatory for commercial use).
+
 // declare a bunch of global vars for NSGA-II
 int nreal;
 int nbin;
@@ -90,17 +86,14 @@ int obj3;
 int angle1;
 int angle2;
 
-
-/* OMG THIS ACTUALLY COMPILED */
+// declare externs
 extern Tour mytour(TARGETS);
 extern Graph mygraph(TARGETS + 1);
 extern Constellation mycon(TARGETS + 1);  // constellation also has chaser.
 
-/****************************************************************/
-/* PROBLEM DEFINITION GOES HERE. DON'T USE problemdef.c         */
 
-// # define wsp1             /* Static wandering salesman problem, 1 objective */
-// # define wsp2             /* Static wandering salesman problem, 2 objectives */
+// # define wsp1           /* Static wandering salesman problem, 1 objective */
+// # define wsp2           /* Static wandering salesman problem, 2 objectives */
 # define wsp_astro        /* Dynamic wsp where nodes are satellites */
 
 // Single objective = total length of the tour.
@@ -123,7 +116,6 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
      */
     int key;        // the corresponding row number in mytour.
     key = (int)xreal[0];  // convert double to int.
-
     for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
     {
         start = mytour.get_target(key, c);    // initially, mytour column 0
@@ -131,11 +123,9 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         d = norm(mygraph.node[start] - mygraph.node[end]);
         dtot = dtot + d;
     }
-
     obj[0] = dtot;
-    return ;
+    return;
 }
-
 #endif // wsp1
 
 // Two objectives: the horizontal and vertical components of the total tour length.
@@ -151,16 +141,8 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     double y, ytot; // vertical component edge weight (distance) and total path distance.
     Vec3 edge;
     x = y = xtot = ytot = 0.0;
-    /*
-     * NOTE! We're using a real coded variable for "key".
-     * Real coding the tour permutation key lets us take advantage of the
-     * Steinhaus-Johnson-Trotter ordering of the permutation data files.. i.e.
-     * adjacent permutation differ by exactly one transposition.  It's a kind
-     * of combinatoric gray coding.
-     */
     int key;        // the corresponding row number in mytour.
     key = (int)xreal[0];  // convert double to int.
-
     for (int c = 0; c < mytour.cols - 1; c++) // always start at node #0
     {
         start = mytour.get_target(key, c);    // initially, mytour column 0
@@ -171,12 +153,10 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
         xtot = xtot + x;
         ytot = ytot + y;
     }
-
     obj[0] = xtot;
     obj[1] = ytot;
-    return ;
+    return;
 }
-
 #endif // wsp2
 
 #ifdef wsp_astro
@@ -194,42 +174,32 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
      *
      * obj[0] = total time of flight
      * obj[1] = total delta-V
+     *
+     * constr[0]: Absurdly high delta-V.
+     * constr[1]: An algorithm failed to converge or the chaser crashed into Earth.
      */
     obj[0] = 0.0;
     obj[1] = 0.0;
-
     int start, end; // each edge of the graph has a start node and an end node.
-
-    /*
-     * NOTE! We're using a real coded variable for "key".
-     * Real coding the tour permutation key lets us take advantage of the
-     * Steinhaus-Johnson-Trotter ordering of the permutation data files.. i.e.
-     * adjacent permutation differ by exactly one transposition.  It's a kind
-     * of combinatoric gray coding.
-     */
-    int key;        // the corresponding row number in mytour.
-    key = (int)xreal[0];  // convert double to int.
-    Vec3 V_start;
-    Vec3 V_end;
-    Vec3 R_start;
-    Vec3 R_end;
+    int key = (int)xreal[0];  // convert double to int.
+    int rev_limit;
+    Vec3 V_start, V_end, R_start, R_end;
     double dv_long, dv_short, dv_best;  // longway and shortway deltaV's
-    Traj start_traj;
-    Traj end_traj;
+    Traj start_traj, end_traj;
     ULambert xfer;
     bool x_clean, t_clean;
-
-    double* dwell = new double [TARGETS];
-    double* TOF = new double [TARGETS];
+    double* dwell    = new double [TARGETS];
+    double* TOF      = new double [TARGETS];
     double* t_depart = new double [TARGETS];
     double* t_arrive = new double [TARGETS];
 
-    for (int i = 0; i < TARGETS; i++)
-    {
-        t_depart[i] = 0.0;
-        t_arrive[i] = 0.0;
-    }
+    // The tour starts out clean and becomes dirty if any legs of the tour
+    // fail completely.
+    t_clean = true;
 
+    // dwell and TOF are intermediate variables to make this easier to comprehend.
+    // Dwell is how long the chaser waits while rndz'd with each target.
+    // TOF is the time of flight (duh).
     for (int i = 0; i < TARGETS; i++)
     {
         dwell[i] = xreal[2 * i + 1];
@@ -238,114 +208,108 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 
     t_depart[0] = dwell[0];
     t_arrive[0] = dwell[0] + TOF[0];
-
     for (int i = 1; i < TARGETS; i++)
     {
         t_depart[i] = t_depart[i - 1] + TOF[i - 1] + dwell[i];
         t_arrive[i] = t_arrive[i - 1] + dwell[i] + TOF[i];
     }
 
-    /*
-        for (int i = 0; i < TARGETS; i++)
-        {
-            cout << i;
-            cout << ": dwell = " << dwell[i];
-            cout << ", TOF = " << TOF[i];
-            cout << ", depart = " << t_depart[i];
-            cout << ", arrive = " << t_arrive[i];
-            cout << endl;
-        }
-        cout << endl;
-    */
-
-    t_clean = true;  // tour starts out clean.
-    for (int c = 0; c < TARGETS; c++) // always start at node #0
+    for (int c = 0; c < TARGETS; c++)
     {
-        x_clean = false;  // each xfer starts dirty and must be proven clean.
-        start = mytour.get_target(key, c);
-        end = mytour.get_target(key, c + 1);
+        // Each leg of the tour is assumed to be impossible until at least one
+        // successful transfer is found.
+        x_clean = false;
 
-        /*
-         * Figure out where the chaser is at the time of burn #1 on the current xfer arc.
-         */ 
-        // mycon.t10s[start] is the trajectory at the beginning of this edge (the c-th edge)
+        start = mytour.get_target(key, c);   // Beginning point for this edge.
+        end = mytour.get_target(key, c + 1); // End point for this edge.
+
+        // mycon.t10s[start] is the target at the beginning of this edge (the c-th edge)
         // t_depart[c] is the time at which we leave upon the c-th transfer arc.
-        // start_traj is the location of the start-th node at time t_depart[c].
-        // the start-th node is where the chaser is right now.
+        // And so, start_traj is the state of the chaser at time t_depart[c] prior
+        // to the first burn.
         try
         {
             start_traj = kepler(mycon.t10s[start], t_depart[c]);
         }
-        catch (...)
+        catch (int e)
         {
-            cout << "Kepler 1 was bad." << endl;
-            exit(1);
+            // Mark the entire tour as dirty and abandon it.
+            cerr << "Kepler 1 ";
+            if (1 == e) cerr << "failed to converge." << endl;
+            if (2 == e) cerr << "was out of tolerance." << endl;
+            t_clean = false;
+            break;
         }
 
-
-        /*
-         * Figure out where the current target will be at the time of intercept.. i.e.
-         * at the time of burn #2 on the current xfer arc.
-         */ 
-        // mycon.t10s[end] is the trajectory at the end of this edge.
-        // t_arrive[c] is the time at which we will complete the c-th transfer arc.
-        // end_traj is the location of the end-th node at time t_arrive[c].
-        // the end-th node is where the chaser is headed.
+        // mycon.t10s[end] is the target at the end of this edge.
+        // t_arrive[c] is the time of intercept.
+        // end_traj is the state of the intercepted target at time t_arrive[c].
         try
         {
             end_traj = kepler(mycon.t10s[end], t_arrive[c]);
         }
-        catch (...)
+        catch (int e)
         {
-            cout << "Kepler 2 was bad." << endl;
-            exit(1);
+            // Mark the entire tour as dirty and abandon it.
+            cerr << "Kepler 1 ";
+            if (1 == e) cerr << "failed to converge." << endl;
+            if (2 == e) cerr << "was out of tolerance." << endl;
+            t_clean = false;
+            break;
         }
 
-        // Extract initial pre-burn #1 state vector from start_traj.
+        // Extract initial preburn state vector from start_traj.
         R_start = start_traj.get_r();
         V_start = start_traj.get_v();
 
-        // Extract final post-burn #2 state vector from end_traj.
+        // Extract final post-rndz state vector from end_traj.
         R_end = end_traj.get_r();
         V_end = end_traj.get_v();
 
-        // We already know the TOF for this transfer arc: TOF[c].
-        // Get ready for universal Lambert problem.
+        // Note: you *may* create more than one ULambert object if you want.
+        // TODO (maybe?): enforce singleton ULambert.
+        // Set up the universal Lambert problem.
         xfer.setRo(R_start);
         xfer.setR(R_end);
         xfer.sett(TOF[c]);
 
         /*
          * Lambert's problem has FOUR solutions:
-         * prograde, short-way
-         * prograde, long-way
-         * retrograde, short-way
-         * retrograde, long-way
+         * 1. prograde, short-way
+         * 2. prograde, long-way
+         * 3. retrograde, short-way
+         * 4. retrograde, long-way
          *
          * The retrograde solutions are a huge delta-V penalty.
-         * Try both long-way and short-way prograde transfers
-         * and use whichever is best.
-         */ 
-        // foo.universal(false, 0 ) means SHORT WAY
-        // foo.universal(true, 0 )  means LONG WAY
-
-        dv_best = INF;
-
-        for (int revs = 0; revs < 15; revs++) // multirev kludge
+         * So we just look at the long-way and short-way prograde transfers
+         * and pick whichever is best.
+         * 
+         * foo.universal(false, n ) means SHORT WAY, n revs.
+         * foo.universal(true, n )  means LONG WAY, n revs.
+         */
+    
+        dv_best = INF; // dv_best stores the best delta-V of all the attempts.
+        // Look for single and multi-rev solutions.
+        // Don't bother trying more revs than is possible for the given TOF.
+        rev_limit = 1 + 2 * (int)(TOF[c] / M_PI);
+        //cout << rev_limit << endl;
+        for (int revs = 0; revs < rev_limit; revs++) // multirev kludge
+        //for (int revs = 0; revs < 600; revs++) // multirev kludge
         {
             dv_short = INF;
             dv_long = INF;
             xfer.universal(false, revs);  // short-way
-            if (   !(xfer.isFailure())  // if it didn't fail and didn't hit Earth...
-                && !(hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
+            // if ULambert didn't fail to converge, and it didn't hit the Earth
+            if (   ! (xfer.isFailure())
+                && ! (hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
             {
                 dv_short = norm(xfer.getVo() - V_start)
                            + norm(xfer.getV() - V_end);
             }
 
             xfer.universal(true, revs);  // long-way
-            if (   !(xfer.isFailure())
-                && !(hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
+            if (   ! (xfer.isFailure())
+                && ! (hit_Earth(R_start, R_end, xfer.getVo(), xfer.getV())))
             {
                 dv_long = norm(xfer.getVo() - V_start)
                           + norm(xfer.getV() - V_end);
@@ -354,65 +318,59 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
             if (dv_short < dv_best)
             {
                 dv_best = dv_short;
-                x_clean = true;  // we found at least 1 good xfer.
+                x_clean = true;  // Found at least 1 good xfer.
             }
 
             if (dv_long < dv_best)
             {
                 dv_best = dv_long;
-                x_clean = true; // we found at least 1 good xfer.
+                x_clean = true; // Found at least 1 good xfer.
             }
         }
-        // XXX we don't remember which solution (long/short, #revs) was best.
+        // XXX we don't track which solution (long/short, #revs) was best.
         obj[1] = obj[1] + dv_best;
         if ( ! x_clean ) t_clean = false; // any failed leg causes a failed tour.
-    }
+    } // End doing Lambert problems for each leg of the tour.
 
     // The time-of-flight objective function is quite simple.
-    // more general case: obj[0] = t_arrive[TARGETS];
-    obj[0] = t_arrive[TARGETS - 1];
+    obj[0] = t_arrive[TARGETS-1];
 
     /* CLEAN UP MEMORY */
     delete dwell;
-    dwell = NULL;
     delete TOF;
-    TOF = NULL;
     delete t_depart;
-    t_depart = NULL;
     delete t_arrive;
+    dwell    = NULL;
+    TOF      = NULL;
+    t_depart = NULL;
     t_arrive = NULL;
 
-    // convert units from canonical to km and s.
-    obj[0] *= TU_MIN;
-    obj[1] *= ERTU;
+    obj[0] *= TU_MIN; // convert from TU to minutes.
+    obj[1] *= ERTU;   // convert from ER/TU to m/s.
 
-    // a negative constraint value means a violation.
     // We don't want "Star Trek" style maneuvers, so we will
     // constrain missions that use an obscene amount of delta-V.
-    if (obj[1] > 200)  // the cutoff is arbitrary
-        constr[0] = -1.0;
+    // A negative constraint value means a violation.
+    if (obj[1] > 1000)  // the cutoff is arbitrary
+        constr[0] = -1.0; // constrained.
     else
-        constr[0] = 1.0;
+        constr[0] = 1.0;  // not constrained.
 
     if ( ! t_clean )
-    {
-        constr[0] = -1.0;
-        //cout << "dirty tour." << endl;
-    }
+        constr[0] = -1.0; // constrained.
+    else
+        constr[1] = 1.0;  // not constrained.
 
-    return ;  // Returning from a void function, just to annoy Brian.
+    return ;// Returning from a void function, just to annoy Brian.
 }
-
 #endif // wsp_astro
 
 /****************************************************************/
-
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
-
     if (argc < 2)
     {
-        printf("\n Usage ./orbgnosis random_seed \n");
+        cout << "Usage ./orbgnosis random_seed" << endl;
         exit(1);
     }
 
@@ -420,56 +378,27 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
 
     if (seed <= 0.0 || seed >= 1.0)
     {
-        printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
+        cout << "\nEntered seed value is wrong, seed value must be in (0,1)\n";
         exit(1);
     }
-
-    srand (seed * 2*RAND_MAX);
-
-
+    srand (seed * 2*RAND_MAX); // XXX probably bad on some weird arch
 
     Traj mytraj;
     // International Space Station
     //mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
-    //mycon.set_all(mytraj);
-    //mycon.distribute(mytraj);
-    //for (int i = 0; i <= TARGETS; i++) mycon.t10s[i].set_f(1.0 + i*0.1);
-    //mycon.t10s [0].set_f(1.55);
-    //mycon.noise(0.05);
 
-    /*
-    // 9 sats in 3 planes, spaced widely and evenly
-    mycon.t10s[0].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 0.1);
-    mycon.t10s[1].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 0.2617993878);
-    mycon.t10s[2].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 2.3561944902);
-    mycon.t10s[3].set_elorb(1.106, 0.0035, 0.959931, 0.2617993878, 1.5708, 4.4505895926);
-    mycon.t10s[4].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 0.2617993878);
-    mycon.t10s[5].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 2.3561944902);
-    mycon.t10s[6].set_elorb(1.106, 0.0035, 0.959931, 2.3561944902, 1.5708, 4.4505895926);
-    mycon.t10s[7].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 0.2617993878);
-    mycon.t10s[8].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 2.3561944902);
-    mycon.t10s[9].set_elorb(1.106, 0.0035, 0.959931, 4.4505895926, 1.5708, 4.4505895926);
-    */
-
-    // 9 sats in 3 planes, leader-follower spaced 100km, planes 0.5 deg apart
+    // 3 sats in 1 planes, leader-follower spaced 100km, planes 0.5 deg apart
     mycon.t10s[0].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 0.98);
-    mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0);
-    mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0156788020);
-    mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 1.0313576039);
-    //    mycon.t10s[4].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0);
-    //    mycon.t10s[5].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0156788020);
-    //    mycon.t10s[6].set_elorb(1.106, 0.0035, 1.4835298642, 0.0959931089, 1.5708, 1.0313576039);
+    mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 2.5708, 1.0);
+    mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 3.5708, 1.0156788020);
+    mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 4.5708, 1.0313576039);
 
-    //    mycon.t10s[7].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0);
-    //    mycon.t10s[8].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0156788020);
-    //    mycon.t10s[9].set_elorb(1.106, 0.0035, 1.4835298642, 0.1047197551, 1.5708, 1.0313576039);
-
-    mycon.noise(0.001);
+    //mycon.noise(0.001);
     mycon.print();
     cout << endl;
 
 
-    /* WSP2 stuff
+    /* WSP2 stuff  ****************************************************
 
     mygraph.set_all(Vec3(100.0, 100.0, 0.0));
     mygraph.noise(1.0);
@@ -514,9 +443,11 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
             key_ybest = r;
         }
     }
-    */
+    *******************************************************/
 
-    /*******************************************************/
+
+    // NSGA-II follows below here.
+
     int i;
     FILE *fpt1;
     FILE *fpt2;
