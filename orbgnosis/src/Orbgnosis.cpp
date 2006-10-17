@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.33 2006/10/16 12:00:44 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.34 2006/10/17 21:15:05 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -351,7 +351,7 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     // We don't want "Star Trek" style maneuvers, so we will
     // constrain missions that use an obscene amount of delta-V.
     // A negative constraint value means a violation.
-    if (obj[1] > 1000)  // the cutoff is arbitrary
+    if (obj[1] > 2000)  // the cutoff is arbitrary
         constr[0] = -1.0; // constrained.
     else
         constr[0] = 1.0;  // not constrained.
@@ -388,10 +388,25 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     //mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
 
     // 3 sats in 1 planes, leader-follower spaced 100km, planes 0.5 deg apart
-    mycon.t10s[0].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 0.98);
-    mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 2.5708, 1.0);
-    mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 3.5708, 1.0156788020);
-    mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 4.5708, 1.0313576039);
+    //mycon.t10s[0].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.5708, 0.98);
+    //mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 2.5708, 1.0);
+    //mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 3.5708, 1.0156788020);
+    //mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 4.5708, 1.0313576039);
+
+    //mycon.t10s[0].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 1.0, 0.98);
+    //mycon.t10s[1].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 2.0, 1.0);
+    //mycon.t10s[2].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 3.0, 1.0156788020);
+    //mycon.t10s[3].set_elorb(1.106, 0.0035, 1.4835298642, 0.872664626, 4.0, 1.0313576039);
+
+    // 1 Plane of Globalstar, chaser starts co-planar and lower with same apogee height.
+    mycon.t10s[0].set_elorb(1.200000, 0.018080, 0.907658, 5.759587, 2.002129, 1.745329);
+    mycon.t10s[1].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 0.124533);
+    mycon.t10s[2].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 1.221730);
+    mycon.t10s[3].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 2.268928);
+    mycon.t10s[4].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 3.316126);
+    mycon.t10s[5].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 4.363323);
+    mycon.t10s[6].set_elorb(1.221580, 0.000092, 0.907658, 5.759587, 2.002129, 5.410521);
+
 
     //mycon.noise(0.001);
     mycon.print();

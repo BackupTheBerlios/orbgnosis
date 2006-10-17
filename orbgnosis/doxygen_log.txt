@@ -39,5 +39,5 @@
 /usr/home/trs137/orbgnosis/src/Traj.cpp:446: Warning: The following parameters of Traj::set_f(double fin) are not documented:
   parameter fin
 
-/usr/home/trs137/orbgnosis/src/ULambert.cpp:156: Warning: parameters of member ULambert::universal are not (all) documented
+/usr/home/trs137/orbgnosis/src/ULambert.cpp:155: Warning: parameters of member ULambert::universal are not (all) documented
 /usr/home/trs137/orbgnosis/src/Vec3.h:100: Warning: Member e[3] (variable) of class Vec3 is not documented.
