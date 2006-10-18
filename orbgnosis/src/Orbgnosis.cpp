@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.34 2006/10/17 21:15:05 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.35 2006/10/18 02:34:36 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -351,13 +351,14 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     // We don't want "Star Trek" style maneuvers, so we will
     // constrain missions that use an obscene amount of delta-V.
     // A negative constraint value means a violation.
-    if (obj[1] > 2000)  // the cutoff is arbitrary
+    //if (obj[1] > 1000)  // the cutoff is arbitrary
+    if (2.0 * obj[1] > obj[0])
         constr[0] = -1.0; // constrained.
     else
         constr[0] = 1.0;  // not constrained.
 
     if ( ! t_clean )
-        constr[0] = -1.0; // constrained.
+        constr[1] = -1.0; // constrained.
     else
         constr[1] = 1.0;  // not constrained.
 
@@ -867,13 +868,9 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
         onthefly_display (parent_pop, gp, 1);
 
     fflush(fpt1);
-
     fflush(fpt2);
-
     fflush(fpt3);
-
     fflush(fpt4);
-
     fflush(fpt5);
 
     sleep(1);   /* XXX why? */
@@ -886,11 +883,10 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
         evaluate_pop(child_pop);
         merge (parent_pop, child_pop, mixed_pop);
         fill_nondominated_sort (mixed_pop, parent_pop);
-        /* Comment following four lines if information for all
-        generations is not desired, it will speed up the execution */
-        fprintf(fpt4, "# gen = %d\n", i);
-        report_pop(parent_pop, fpt4);
-        fflush(fpt4);
+
+        //fprintf(fpt4, "# gen = %d\n", i);
+        //report_pop(parent_pop, fpt4);
+        //fflush(fpt4);
 
         if (choice != 0)
             onthefly_display (parent_pop, gp, i);
