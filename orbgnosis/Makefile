@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.19 2006/10/25 11:55:54 trs137 Exp $
+# $Id: Makefile,v 1.20 2006/10/25 15:40:27 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -39,21 +39,20 @@ DOCDIR := doc
 TEMPDEPFILE := /tmp/orbgnosis_temp_deps
 
 # Set the compiler ...
-CC := g++41 -c -pipe
-CXX := g++41 -c -pipe
-LD := g++41
-DEP := g++41 -MM  # always use gcc to generate deps
+CC := g++ -c -pipe
+LD := g++
+DEP := g++ -MM  # always use gcc to generate deps
 ifeq ($(TARGET), "icc_p4")
-    CC := icpc -c -pipe
-    LD := icpc
+    CC  := icpc -c -pipe
+    LD  := icpc
 endif
 ifeq ($(TARGET), "hammer")
-    CC := icpc -c -pipe
-    LD := icpc
+    CC  := icpc -c -pipe
+    LD  := icpc
 endif
 ifeq ($(TARGET), "power")
-    CC := xlC -c
-    LD := xlC 
+    CC  := xlC++ -c
+    LD  := xlC++ 
 endif
 
 # This can be set from the shell to change the build type
@@ -131,7 +130,6 @@ build : $(BINARY)
 	@echo Completed build for $(FULLNAME).  Please read through the output above
 	@echo for any errors or warnings.
 	@echo CC = $(CC)
-	@echo CXX = $(CXX)
 	@echo CFLAGS = $(CFLAGS)
 
 #   rule to create the object file directory if needed
@@ -158,20 +156,20 @@ $(BINARY) : $(OBJDIR) $(OBJECTS)
 	@$(LD) -o $@ $(OBJECTS) $(LDFLAGS)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@echo compiling C file [$(BUILD_TYPE) Build] : $@
+	@echo compiling $@, [$(BUILD_TYPE) Build]
 	@$(CC) $< $(CFLAGS) -o $@
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	@echo compiling C++ file [$(BUILD_TYPE) Build] : $@
+	@echo compiling $@, [$(BUILD_TYPE) Build]
 	@$(CC) $< $(CFLAGS) -o $@
 
 $(DEPDIR)/%.d : $(SRCDIR)/%.c
-	@echo generating C dependencies for $<
+	@echo generating dependencies for $<
 	@echo $@ $(OBJDIR)/$(shell $(DEP) $<) > $(TEMPDEPFILE)
 	@echo $(OBJDIR)/$(basename $(@F))".o : $(MAKEFILE)" | /bin/cat - $(TEMPDEPFILE) > $@
 
 $(DEPDIR)/%.d : $(SRCDIR)/%.cpp
-	@echo generating C++ dependencies for $<
+	@echo generating dependencies for $<
 	@echo $@ $(OBJDIR)/$(shell $(DEP) $<) > $(TEMPDEPFILE)
 	@echo $(OBJDIR)/$(basename $(@F))".o : $(MAKEFILE)" | /bin/cat - $(TEMPDEPFILE) > $@
 
