@@ -1,4 +1,4 @@
-/* $Id: rank.c,v 1.3 2006/10/15 02:31:19 trs137 Exp $ */
+/* $Id: rank.c,v 1.4 2006/11/02 23:12:21 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -34,24 +34,19 @@
 /* Function to assign rank and crowding distance to a population of size pop_size*/
 void assign_rank_and_crowding_distance (population *new_pop)
 {
-    int flag;
-    int i;
-    int end;
-    int front_size;
+    int flag, i, end, front_size;
     int rank = 1;
-    list *orig;
-    list *cur;
-    list *temp1, *temp2;
+    list *orig, *cur, *temp1, *temp2;
     orig = (list *)malloc(sizeof(list));
-    cur = (list *)malloc(sizeof(list));
-    front_size = 0;
-    orig->index = -1;
+    cur  = (list *)malloc(sizeof(list));
+    front_size   = 0;
+    orig->index  = -1;
     orig->parent = NULL;
-    orig->child = NULL;
-    cur->index = -1;
-    cur->parent = NULL;
-    cur->child = NULL;
-    temp1 = orig;
+    orig->child  = NULL;
+    cur->index   = -1;
+    cur->parent  = NULL;
+    cur->child   = NULL;
+    temp1        = orig;
 
     for (i = 0; i < popsize; i++)
     {
@@ -91,18 +86,9 @@ void assign_rank_and_crowding_distance (population *new_pop)
                     front_size--;
                     temp2 = temp2->child;
                 }
-
-                if (flag == 0)
-                {
-                    temp2 = temp2->child;
-                }
-
-                if (flag == -1)
-                {
-                    end = 1;
-                }
+                if (flag == 0)  temp2 = temp2->child;
+                if (flag == -1) end = 1;
             }
-
             while (end != 1 && temp2 != NULL);
 
             if (flag == 0 || flag == 1)
@@ -114,21 +100,17 @@ void assign_rank_and_crowding_distance (population *new_pop)
 
             temp1 = temp1->child;
         }
-
         while (temp1 != NULL);
 
         temp2 = cur->child;
-
         do
         {
             new_pop->ind[temp2->index].rank = rank;
             temp2 = temp2->child;
         }
-
         while (temp2 != NULL);
 
         assign_crowding_distance_list (new_pop, cur->child, front_size);
-
         temp2 = cur->child;
 
         do
@@ -136,17 +118,12 @@ void assign_rank_and_crowding_distance (population *new_pop)
             temp2 = del (temp2);
             temp2 = temp2->child;
         }
-
         while (cur->child != NULL);
-
         rank += 1;
     }
-
     while (orig->child != NULL);
-
+    
     free (orig);
-
     free (cur);
-
     return ;
 }

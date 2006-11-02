@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Kepler.h,v 1.7 2006/10/15 02:31:19 trs137 Exp $
+* $Id: Kepler.h,v 1.8 2006/11/02 23:12:21 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *                  David Vallado <valldodl@worldnet.att.net>
@@ -41,8 +41,7 @@ using namespace std;
 /**
  * Solve Kepler's problem.  Given a state vector (Traj) and a time interval,
  * find the state vector after the time interval has elapsed.  This function
- * calculates r and v vectors and does not consider J2.  If you need J2, 
- * use PKepler() instead.
+ * calculates r and v vectors and does not consider J2.
  * @param traj_0 the initial trajectory at time zero.
  * @param t amount of time, in canonical units.
  *
@@ -227,7 +226,7 @@ kepler ( Traj traj_0, double t )
 
         // Traj constructor automatically takes care of classical elements.
         result = Traj (rfinal, vfinal);
-        result.do_J2_regression(t);
+        //result.do_J2_regression(t);
 
         return result;
     }

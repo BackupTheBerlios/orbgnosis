@@ -1,4 +1,4 @@
-/* $Id: crossover.c,v 1.1 2006/09/28 16:06:27 trs137 Exp $ */
+/* $Id: crossover.c,v 1.2 2006/11/02 23:12:21 trs137 Exp $ */
 /*************************************************************************
  * Copyright Notice:                                                     *
  * Source code for random number generator (files rand.h & rand.c) has   *
@@ -34,16 +34,8 @@
 /* Function to cross two individuals */
 void crossover (individual *parent1, individual *parent2, individual *child1, individual *child2)
 {
-    if (nreal != 0)
-    {
-        realcross (parent1, parent2, child1, child2);
-    }
-
-    if (nbin != 0)
-    {
-        bincross (parent1, parent2, child1, child2);
-    }
-
+    if (nreal != 0) realcross (parent1, parent2, child1, child2);
+    if (nbin != 0) bincross (parent1, parent2, child1, child2);
     return ;
 }
 
