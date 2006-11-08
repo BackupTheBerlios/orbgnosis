@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.36 2006/10/25 11:55:55 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.37 2006/11/08 21:37:24 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -371,9 +371,9 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
 /****************************************************************/
 int main (int argc, char **argv) // arg is a random seed {0...1}
 {
-    if (argc < 2)
+    if (argc < 3)
     {
-        cout << "Usage ./orbgnosis random_seed" << endl;
+        cout << "Usage ./orbgnosis [random_seed] [output_file_prefix]" << endl;
         exit(1);
     }
 
@@ -386,6 +386,9 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     }
     srand (seed * 2*RAND_MAX); // XXX probably bad on some weird arch
 
+
+
+	#ifdef wsp_astro
     Traj mytraj;
     // International Space Station
     //mytraj.set_elorb(1.05354259105, 0.0012287, 0.90124090184, 0.55411411224, 0.46170940032, 1.01);
@@ -414,9 +417,10 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     //mycon.noise(0.001);
     mycon.print();
     cout << endl;
+	#endif /* wsp_astro */
 
 
-    /* WSP2 stuff  ****************************************************
+	#ifdef wsp2 /*----------------------------------------------*/
 
     mygraph.set_all(Vec3(100.0, 100.0, 0.0));
     mygraph.noise(1.0);
@@ -461,7 +465,7 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
             key_ybest = r;
         }
     }
-    *******************************************************/
+	#endif /* wsp2 -----------------------------------------------*/
 
 
     // NSGA-II follows below here.
@@ -477,11 +481,24 @@ int main (int argc, char **argv) // arg is a random seed {0...1}
     population *child_pop;
     population *mixed_pop;
 
-    fpt1 = fopen("initial_pop.out", "w");
-    fpt2 = fopen("final_pop.out", "w");
-    fpt3 = fopen("best_pop.out", "w");
-    fpt4 = fopen("all_pop.out", "w");
-    fpt5 = fopen("params.out", "w");
+	char initial_pop[80];
+	char final_pop[80];
+	char best_pop[80];
+	char all_pop[80];
+	char params[80];
+
+
+    sprintf(initial_pop, "%s_initial_pop.out", argv[2]);
+    sprintf(final_pop, "%s_final_pop.out", argv[2]);
+    sprintf(best_pop, "%s_best_pop.out", argv[2]);
+    sprintf(all_pop, "%s_all_pop.out", argv[2]);
+    sprintf(params, "%s_params.out", argv[2]);
+
+    fpt1 = fopen(initial_pop, "w");
+    fpt2 = fopen(final_pop, "w");
+    fpt3 = fopen(best_pop, "w");
+    fpt4 = fopen(all_pop, "w");
+    fpt5 = fopen(params, "w");
     fprintf(fpt1, "# This file contains the data of initial population\n");
     fprintf(fpt2, "# This file contains the data of final population\n");
     fprintf(fpt3, "# This file contains the data of final feasible population (if found)\n");
