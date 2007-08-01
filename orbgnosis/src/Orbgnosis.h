@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.h,v 1.34 2006/10/25 11:55:55 trs137 Exp $
+* $Id: Orbgnosis.h,v 1.35 2007/08/01 16:09:00 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -69,6 +69,6 @@
 
 #define J2 0.00108263             //!< Earth J2, canonical.
 
-#define nan std::numeric_limits<double>::quiet_nan(); //!< ifndef NAN...
+#define NAN std::numeric_limits<double>::quiet_NaN()
 
 #endif /* _ORBGNOSIS_H_ */

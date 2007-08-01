@@ -7,7 +7,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # License for more details.
 #
-# $Id: Makefile,v 1.20 2006/10/25 15:40:27 trs137 Exp $
+# $Id: Makefile,v 1.21 2007/08/01 16:09:00 trs137 Exp $
 
 # This makefile depends on GNU make and gcc.  Optionally, you may
 # use a high performance commercial compiler by editing TARGET, but
@@ -17,12 +17,11 @@
 #
 # Choose the platform and compiler. Valid choices are:
 #
-# TARGET := "default"     # GNU compiler, any architecture
+ TARGET := "default"     # GNU compiler, any architecture
 # TARGET := "icc_p4"     # Intel compiler, Pentium 4 (arl1426.arl.psu.edu)
 # TARGET := "hammer"      # Intel compiler, Opteron (hammer.aset.psu.edu)
 # TARGET := "power"       # IBM VisualAge, Power5 (power.ics.psu.edu)
 #
-TARGET := "icc_p4"
 
 # The file name, ...
 BINARY      := orbgnosis
@@ -36,7 +35,7 @@ OBJDIR := obj
 DEPDIR := dep
 SRCDIR := src
 DOCDIR := doc
-TEMPDEPFILE := /tmp/orbgnosis_temp_deps
+TEMPDEPFILE := ./tmp/orbgnosis_temp_deps
 
 # Set the compiler ...
 CC := g++ -c -pipe

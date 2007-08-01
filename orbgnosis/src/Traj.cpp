@@ -23,7 +23,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Traj.cpp,v 1.33 2006/10/02 03:52:53 trs137 Exp $
+* $Id: Traj.cpp,v 1.34 2007/08/01 16:09:00 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 */
@@ -34,6 +34,7 @@
 #include "Vec3.h"
 #include <iostream>
 #include <math.h>
+#include <limits>
 
 using namespace std;
 

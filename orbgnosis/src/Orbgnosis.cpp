@@ -22,7 +22,7 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 *
-* $Id: Orbgnosis.cpp,v 1.37 2006/11/08 21:37:24 trs137 Exp $
+* $Id: Orbgnosis.cpp,v 1.38 2007/08/01 16:09:00 trs137 Exp $
 *
 * Contributor(s):  Ted Stodgell <trs137@psu.edu>
 *
@@ -352,7 +352,7 @@ void test_problem (double *xreal, double *xbin, int **gene, double *obj, double 
     // constrain missions that use an obscene amount of delta-V.
     // A negative constraint value means a violation.
     //if (obj[1] > 1000)  // the cutoff is arbitrary
-    if (2.0 * obj[1] > obj[0])  // this seems to work better.
+    if (4.0 * obj[1] > obj[0])  // this seems to work better.
         constr[0] = -1.0; // constrained.
     else
         constr[0] = 1.0;  // not constrained.
